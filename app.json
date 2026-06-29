@@ -39,6 +39,44 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-font",
+        {
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "SUIT",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/SUIT-Regular.otf",
+                    "weight": 400
+                  },
+                  {
+                    "path": "./assets/fonts/SUIT-Medium.otf",
+                    "weight": 500
+                  },
+                  {
+                    "path": "./assets/fonts/SUIT-SemiBold.otf",
+                    "weight": 600
+                  },
+                  {
+                    "path": "./assets/fonts/SUIT-Bold.otf",
+                    "weight": 700
+                  }
+                ]
+              }
+            ]
+          },
+          "ios": {
+            "fonts": [
+              "./assets/fonts/SUIT-Regular.otf",
+              "./assets/fonts/SUIT-Medium.otf",
+              "./assets/fonts/SUIT-SemiBold.otf",
+              "./assets/fonts/SUIT-Bold.otf"
+            ]
+          }
+        }
       ]
     ],
     "experiments": {
