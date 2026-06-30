@@ -1,6 +1,6 @@
 name: "📋 이슈 생성"
 description: "이슈 생성 시 브랜치가 자동으로 만들어집니다"
-title: " "
+title: "[태그] 작업 내용"
 body:
   - type: dropdown
     id: branchType
