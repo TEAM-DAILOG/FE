@@ -1,0 +1,123 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit 설정 파일
+
+# ─────────────────────────────────────────
+# 🌐 언어 설정
+# ─────────────────────────────────────────
+language: "ko-KR"
+
+# ─────────────────────────────────────────
+# 🔍 코드래빗 리뷰 기본 설정
+# ─────────────────────────────────────────
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: false
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  sequence_diagrams: false
+  changed_files_summary: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+    base_branches:
+      - "main" # main 브랜치로 들어오는 PR 리뷰
+
+  # ── 리뷰에서 제외할 파일/폴더 패턴 (Expo/React Native 기준으로 조정) ──
+  path_filters:
+    - "!**/node_modules/**"
+    - "!**/.expo/**" # Expo 로컬 캐시 제외
+    - "!**/.expo-shared/**"
+    - "!android/**" # 네이티브 빌드 폴더 제외
+    - "!ios/**"
+    - "!**/dist/**"
+    - "!**/build/**"
+    - "!**/coverage/**"
+    - "!**/__snapshots__/**"
+    - "!**/*.lock"
+    - "!**/pnpm-lock.yaml"
+    - "!**/*.min.js"
+    - "!**/*.min.css"
+    - "!**/assets/**" # 이미지/폰트 등 정적 리소스 제외
+
+  # ── 폴더별 컨벤션 지침 ──
+  path_instructions:
+    - path: "app/**"
+      instructions: |
+        Expo Router 라우트 파일을 리뷰할 때 다음을 확인해주세요:
+        - 파일명은 kebab-case로 작성 (ex. user-profile.tsx)
+        - 동적 라우트는 대괄호 표기 사용 (ex. [userId].tsx)
+        - 화면 컴포넌트는 export function 형태로 작성
+
+    - path: "components/**"
+      instructions: |
+        React Native 컴포넌트를 리뷰할 때 다음을 확인해주세요:
+        - 파일명은 PascalCase, 컴포넌트명과 일치 (ex. UserCard.tsx)
+        - 컴포넌트는 export function Name() {} 형태로 작성 (화살표 함수 + export default 지양)
+        - props 타입은 파일 상단에 type XxxProps = {} 형태로 선언
+        - View / Text / Pressable 등 react-native 기본 요소 사용 확인 (div, span 같은 웹 태그 사용 금지)
+        - 불필요한 리렌더링을 유발하는 코드가 없는지
+
+    - path: "hooks/**"
+      instructions: |
+        커스텀 훅을 리뷰할 때 다음을 확인해주세요:
+        - 훅 이름과 파일명은 use로 시작하는 camelCase (ex. useDebounce.ts, useAuthStore.ts)
+        - 훅은 export function 형태로 작성
+        - 의존성 배열(dependency array)이 올바르게 설정되어 있는지
+
+    - path: "services/**"
+      instructions: |
+        API 서비스 코드를 리뷰할 때 다음을 확인해주세요:
+        - 도메인(auth, user 등) 기준으로 파일 구성
+        - 여러 메서드를 하나의 객체로 묶어 export const xxxService = { ... } 형태로 작성
+        - URI는 상수화하지 않고 함수 내부에 문자열로 직접 작성
+        - try/catch는 서비스 함수 내부가 아닌 호출부(컴포넌트/훅)에서 처리
+        - console.log가 남아있지 않은지
+        - 토큰 등 민감 정보가 하드코딩되어 있지 않은지
+
+    - path: "stores/**"
+      instructions: |
+        Zustand 스토어를 리뷰할 때 다음을 확인해주세요:
+        - export const useXxxStore = create(...) 형태로 작성
+        - 상태(state)와 액션(action)이 명확히 구분되어 있는지
+
+    - path: "types/**"
+      instructions: |
+        타입 정의 코드를 리뷰할 때 다음을 확인해주세요:
+        - 파일명은 camelCase + .types.ts (ex. user.types.ts)
+        - 도메인 기준으로 파일 분리
+        - any 타입 사용 지양
+
+    - path: "constants/**"
+      instructions: |
+        상수 파일을 리뷰할 때 다음을 확인해주세요:
+        - 파일명은 camelCase (ex. colors.ts)
+        - 상수 값은 UPPER_SNAKE_CASE로 작성 (ex. MAX_RETRY_COUNT)
+
+  # ── 전체 공통 리뷰 지침 ──
+  instructions: |
+    다음 팀 컨벤션을 기준으로 리뷰해주세요:
+    - 커밋 메시지는 "태그 : 작업내용" 형식을 따릅니다 (ex. Feat : 로그인 화면 구현)
+    - 커밋 타입: Feat, Fix, UI, Design, Docs, Refactor, Test, Chore, Setting, Build, Asset, Comment, Rename, Remove, Hotfix
+    - TypeScript에서 any 타입 사용은 지양합니다
+    - 절대경로 import(@/) 사용을 권장합니다
+    - 코드 스타일(포매팅)은 Prettier가 담당하므로 리뷰하지 않아도 됩니다
+
+# ─────────────────────────────────────────
+# 💬 채팅(코멘트 답변) 설정
+# ─────────────────────────────────────────
+chat:
+  auto_reply: false
+
+# ─────────────────────────────────────────
+# 🧠 지식베이스 설정
+# ─────────────────────────────────────────
+knowledge_base:
+  opt_out: false
+  web_search:
+    enabled: true
+  learnings:
+    scope: local
