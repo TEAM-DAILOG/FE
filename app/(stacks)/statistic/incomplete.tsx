@@ -2,10 +2,10 @@ import { Text } from "react-native";
 
 import { ScreenContainer } from "@/src/components/common";
 
-export default function ScheduleScreen() {
+export default function StatisticIncompleteScreen() {
   return (
-    <ScreenContainer>
-      <Text>일정등록</Text>
+    <ScreenContainer variant="stack">
+      <Text>미완료 일정</Text>
     </ScreenContainer>
   );
 }
