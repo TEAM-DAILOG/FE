@@ -2,14 +2,12 @@ name: "📋 이슈 생성"
 description: "이슈 생성 시 브랜치가 자동으로 만들어집니다"
 title: "[태그] 작업 내용"
 body:
-  - type: dropdown
+  - type: input
     id: branchType
     attributes:
       label: "🌿 브랜치 유형"
-      options:
-        - feature
-        - fix
-        - refactor
+      description: "소문자로 작성 (예: feat, refactor)"
+      placeholder: "feat"
     validations:
       required: true
 
