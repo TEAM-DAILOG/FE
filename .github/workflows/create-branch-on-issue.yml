@@ -29,7 +29,7 @@ jobs:
 
           echo "TYPE=${TYPE}, WORK=${WORK}"
 
-          if ! [[ "$TYPE" =~ ^(feature|fix|refactor)$ ]]; then
+          if ! [[ "$TYPE" =~ ^[a-z0-9_-]+$ ]]; then
             echo "Invalid TYPE: $TYPE" && exit 1
           fi
           if ! [[ "$WORK" =~ ^[a-zA-Z0-9_-]+$ ]]; then
