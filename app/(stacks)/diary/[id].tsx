@@ -2,10 +2,10 @@ import { Text } from "react-native";
 
 import { ScreenContainer } from "@/src/components/common";
 
-export default function HomeScreen() {
+export default function DiaryDetailScreen() {
   return (
-    <ScreenContainer>
-      <Text>홈</Text>
+    <ScreenContainer variant="stack">
+      <Text>작성한 일기</Text>
     </ScreenContainer>
   );
 }
