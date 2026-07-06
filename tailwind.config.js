@@ -5,6 +5,7 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./constants/**/*.{js,jsx,ts,tsx}",
     "./hooks/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   presets: [require("nativewind/preset")],
   theme: {
@@ -60,123 +61,56 @@ module.exports = {
         },
       },
       fontFamily: {
-        suit: ["SUIT"],
-      },
-      fontSize: {
-        "h-01": [
-          "20px",
-          {
-            lineHeight: "30px",
-            letterSpacing: "-0.4px",
-            fontWeight: "600",
-          },
-        ],
-        "h-02": [
-          "18px",
-          {
-            lineHeight: "27px",
-            letterSpacing: "-0.36px",
-            fontWeight: "500",
-          },
-        ],
-        "b-01": [
-          "18px",
-          {
-            lineHeight: "27px",
-            letterSpacing: "-0.36px",
-            fontWeight: "600",
-          },
-        ],
-        "b-02-sb": [
-          "16px",
-          {
-            lineHeight: "24px",
-            letterSpacing: "-0.32px",
-            fontWeight: "600",
-          },
-        ],
-        "b-02-m": [
-          "16px",
-          {
-            lineHeight: "24px",
-            letterSpacing: "-0.32px",
-            fontWeight: "500",
-          },
-        ],
-        "b-02-r": [
-          "16px",
-          {
-            lineHeight: "24px",
-            letterSpacing: "-0.32px",
-            fontWeight: "400",
-          },
-        ],
-        "b-03-sb": [
-          "14px",
-          {
-            lineHeight: "21px",
-            letterSpacing: "-0.28px",
-            fontWeight: "600",
-          },
-        ],
-        "b-03-m": [
-          "14px",
-          {
-            lineHeight: "21px",
-            letterSpacing: "-0.28px",
-            fontWeight: "500",
-          },
-        ],
-        "b-03-r": [
-          "14px",
-          {
-            lineHeight: "21px",
-            letterSpacing: "-0.28px",
-            fontWeight: "400",
-          },
-        ],
-        "b-04-sb": [
-          "12px",
-          {
-            lineHeight: "18px",
-            letterSpacing: "-0.24px",
-            fontWeight: "600",
-          },
-        ],
-        "b-04-m": [
-          "12px",
-          {
-            lineHeight: "18px",
-            letterSpacing: "-0.24px",
-            fontWeight: "500",
-          },
-        ],
-        "b-04-r": [
-          "12px",
-          {
-            lineHeight: "18px",
-            letterSpacing: "-0.24px",
-            fontWeight: "400",
-          },
-        ],
-        "b-05-b": [
-          "11px",
-          {
-            lineHeight: "15.4px",
-            letterSpacing: "-0.22px",
-            fontWeight: "700",
-          },
-        ],
-        "b-05-m": [
-          "11px",
-          {
-            lineHeight: "15.4px",
-            letterSpacing: "-0.22px",
-            fontWeight: "500",
-          },
-        ],
+        suit: ["SUIT-Regular"],
+        "suit-medium": ["SUIT-Medium"],
+        "suit-semibold": ["SUIT-SemiBold"],
+        "suit-bold": ["SUIT-Bold"],
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require("tailwindcss/plugin")(function ({ addUtilities }) {
+      const FONT_FAMILY_BY_WEIGHT = {
+        400: "SUIT-Regular",
+        500: "SUIT-Medium",
+        600: "SUIT-SemiBold",
+        700: "SUIT-Bold",
+      };
+
+      // [fontSize, lineHeight, letterSpacing, fontWeight]
+      const TEXT_STYLES = {
+        "h-01": ["20px", "30px", "-0.4px", 600],
+        "h-02": ["18px", "27px", "-0.36px", 500],
+        "b-01": ["18px", "27px", "-0.36px", 600],
+        "b-02-sb": ["16px", "24px", "-0.32px", 600],
+        "b-02-m": ["16px", "24px", "-0.32px", 500],
+        "b-02-r": ["16px", "24px", "-0.32px", 400],
+        "b-03-sb": ["14px", "21px", "-0.28px", 600],
+        "b-03-m": ["14px", "21px", "-0.28px", 500],
+        "b-03-r": ["14px", "21px", "-0.28px", 400],
+        "b-04-sb": ["12px", "18px", "-0.24px", 600],
+        "b-04-m": ["12px", "18px", "-0.24px", 500],
+        "b-04-r": ["12px", "18px", "-0.24px", 400],
+        "b-05-b": ["11px", "15.4px", "-0.22px", 700],
+        "b-05-m": ["11px", "15.4px", "-0.22px", 500],
+      };
+
+      addUtilities(
+        Object.fromEntries(
+          Object.entries(TEXT_STYLES).map(
+            ([name, [fontSize, lineHeight, letterSpacing, fontWeight]]) => [
+              `.text-${name}`,
+              {
+                fontFamily: FONT_FAMILY_BY_WEIGHT[fontWeight],
+                fontSize,
+                lineHeight,
+                letterSpacing,
+                fontWeight: String(fontWeight),
+              },
+            ]
+          )
+        )
+      );
+    }),
+  ],
 };
