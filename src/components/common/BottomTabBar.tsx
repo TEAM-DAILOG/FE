@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { View, Pressable, Text } from "react-native";
+import { View, Pressable, Text, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -24,6 +24,9 @@ const TAB_ICONS = {
 export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const [isOpen, setIsOpen] = useState(false);
+
+  // 현재 폰의 가로 사이즈를 자동으로 가져옴
+  const { width } = useWindowDimensions();
 
   // 애니메이션 값 설정 (0: 닫힘/플러스, 1: 열림/엑스)
   const animationProgress = useSharedValue(0);
@@ -50,13 +53,17 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
   });
 
   return (
-    <View
-      className="absolute left-[16px] top-[750px] h-[60px] w-[358px] flex-row items-center gap-[8px]"
+    <View // BottomTabBar 전체 컨테이너
+      className="absolute left-[16px] h-[60px] flex-row items-center gap-[8px]"
+      style={{ 
+        width: width - 32, 
+        bottom: insets.bottom > 0 ? insets.bottom + 10 : 30 
+      }}
     >
       {/* ----------------- 왼쪽 박스 영역 ----------------- */}
       {!isOpen ? (
         <View
-          className="h-[60px] w-[290px] flex-row items-center justify-between rounded-full bg-[#FCFDFD] px-3"
+          className="h-[60px] flex-1 flex-row items-center justify-between rounded-full bg-[#FCFDFD] px-3"  
           style={{
             shadowColor: "#4D826C",
             shadowOffset: { width: 0, height: 4 },
@@ -84,7 +91,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
                 key={route.key}
                 onPress={onPress}
                 className={cn(
-                  "h-[40px] w-[52px] items-center justify-center rounded-full p-[10px]",
+                  "h-[40px] w-[52px] flex-shrink-0 items-center justify-center rounded-full p-[10px]",
                   isFocused ? "bg-[#4D826C]" : "bg-[#FCFDFD]"
                 )}
                 style={{ outlineStyle: "none" } as any}
@@ -101,7 +108,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
       ) : (
         // 플러스 버튼 열린 상태 (일정등록 | 일기작성)
         <View
-          className="h-[60px] w-[290px] flex-row items-center justify-center gap-[40px] rounded-full bg-[#FCFDFD] px-[28px] border-[1px] border-[#4D826C]"
+          className="h-[60px] flex-1 flex-row items-center justify-center gap-[40px] rounded-full bg-[#FCFDFD] px-[28px] border-[1px] border-[#4D826C]"
           style={{
             shadowColor: "#4D826C",
             shadowOffset: { width: 0, height: 4 },
