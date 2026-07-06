@@ -1,9 +1,12 @@
 import { Pressable, Text } from "react-native";
 
-type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
-type CategoryCircleState = "default" | "selected" | "disabled";
+import { cn } from "@/src/lib/cn";
 
-type CategoryCircleProps = {
+export type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
+
+export type CategoryCircleState = "default" | "selected" | "disabled";
+
+export type CategoryCircleProps = {
   color?: CategoryColor;
   state?: CategoryCircleState;
   onPress?: () => void;
@@ -50,17 +53,19 @@ export function CategoryCircle({
     <Pressable
       disabled={isDisabled}
       onPress={onPress}
-      className={`h-9 w-9 items-center justify-center rounded-full ${
+      className={cn(
+        "h-9 w-9 items-center justify-center rounded-full",
         isDisabled
           ? CATEGORY_COLOR_CLASS_NAMES[color].soft
-          : CATEGORY_COLOR_CLASS_NAMES[color].solid
-      }`}
+          : CATEGORY_COLOR_CLASS_NAMES[color].solid,
+      )}
     >
       {isSelected || isDisabled ? (
         <Text
-          className={`font-suit text-b-02-sb ${
-            isDisabled ? "text-gray-400" : "text-white"
-          }`}
+          className={cn(
+            "text-b-02-sb",
+            isDisabled ? "text-gray-400" : "text-white",
+          )}
         >
           ✓
         </Text>
