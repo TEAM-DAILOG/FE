@@ -1,5 +1,6 @@
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
 
+import CheckIcon from "@/assets/icons/check.svg";
 import { cn } from "@/src/lib/cn";
 
 export type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
@@ -61,14 +62,11 @@ export function CategoryCircle({
       )}
     >
       {isSelected || isDisabled ? (
-        <Text
-          className={cn(
-            "text-b-02-sb",
-            isDisabled ? "text-gray-400" : "text-white",
-          )}
-        >
-          ✓
-        </Text>
+        <CheckIcon
+          width={24}
+          height={24}
+          color={isDisabled ? "#AEB2B0" : "bg-gray-0"}
+        />
       ) : null}
     </Pressable>
   );
