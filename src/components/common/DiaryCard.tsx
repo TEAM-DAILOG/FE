@@ -111,7 +111,7 @@ export function DiaryCard(props: DiaryCardProps) {
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          className="text-b-02-sb text-gray-800"
+          className="text-b-03-sb text-gray-900"
         >
           {props.title}
         </Text>
