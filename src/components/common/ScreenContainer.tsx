@@ -20,9 +20,7 @@ export function ScreenContainer({
   className,
 }: ScreenContainerProps) {
   return (
-    <View
-      className={`flex-1 px-4 py-5 ${VARIANT_BG[variant]} ${className ?? ""}`}
-    >
+    <View className={cn("flex-1", VARIANT_BG[variant], className)}>
       {children}
     </View>
   );
