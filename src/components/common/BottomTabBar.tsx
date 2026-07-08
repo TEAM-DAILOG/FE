@@ -1,24 +1,29 @@
-
-import { useState, useEffect } from "react";
-import { View, Pressable, Text, useWindowDimensions } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import DiaryIcon from "@/assets/icons/diary.svg";
+import ScheduleIcon from "@/assets/icons/schedule.svg";
+import TabCalendarIcon from "@/assets/icons/tab-calendar.svg";
+import TabCancleIcon from "@/assets/icons/tab-cancle.svg";
+import TabHomeIcon from "@/assets/icons/tab-home.svg";
+import TabPlusIcon from "@/assets/icons/tab-plus.svg";
+import TabSettingIcon from "@/assets/icons/tab-setting.svg";
+import TabStatisticIcon from "@/assets/icons/tab-statistic.svg";
 import { cn } from "@/src/lib/cn";
+import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Pressable, Text, useWindowDimensions, View } from "react-native";
 import Animated, {
-  useSharedValue,
   useAnimatedStyle,
+  useSharedValue,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { router } from "expo-router";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TAB_ICONS = {
-  index: "house.fill",
-  calendar: "calendar",
-  statistics: "chart.bar.fill",
-  settings: "gearshape.fill",
+  index: TabHomeIcon,
+  calendar: TabCalendarIcon,
+  statistics: TabStatisticIcon,
+  settings: TabSettingIcon,
 } as const;
 
 export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
@@ -46,7 +51,8 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
 
   // 피그마 디졸브 배경색 계산 (Reanimated 스타일)
   const animatedBoxStyle = useAnimatedStyle(() => {
-    const backgroundColor = animationProgress.value > 0.5 ? "#F5F9F6" : "#FCFDFD";
+    const backgroundColor =
+      animationProgress.value > 0.5 ? "#F5F9F6" : "#FCFDFD";
     return {
       backgroundColor,
     };
@@ -55,15 +61,15 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
   return (
     <View // BottomTabBar 전체 컨테이너
       className="absolute left-[16px] h-[60px] flex-row items-center gap-[8px]"
-      style={{ 
-        width: width - 32, 
-        bottom: insets.bottom > 0 ? insets.bottom + 10 : 30 
+      style={{
+        width: width - 32,
+        bottom: insets.bottom > 0 ? insets.bottom + 10 : 30,
       }}
     >
       {/* ----------------- 왼쪽 박스 영역 ----------------- */}
       {!isOpen ? (
         <View
-          className="h-[60px] flex-1 flex-row items-center justify-between rounded-full bg-[#FCFDFD] px-3"  
+          className="h-[60px] flex-1 flex-row items-center justify-between rounded-full bg-[#FCFDFD] px-3"
           style={{
             shadowColor: "#4D826C",
             shadowOffset: { width: 0, height: 4 },
@@ -74,8 +80,8 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
         >
           {state.routes.map((route, index) => {
             const isFocused = state.index === index;
-            const iconName =
-              TAB_ICONS[route.name as keyof typeof TAB_ICONS] ?? "house.fill";
+            const TabIcon =
+              TAB_ICONS[route.name as keyof typeof TAB_ICONS] ?? TabHomeIcon;
             const onPress = () => {
               const event = navigation.emit({
                 type: "tabPress",
@@ -96,10 +102,10 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
                 )}
                 style={{ outlineStyle: "none" } as any}
               >
-                <IconSymbol
-                  name={iconName}
-                  size={24}
-                  color={isFocused ? "#FFFFFF" : "#A2C9B1"}
+                <TabIcon
+                  width={24}
+                  height={24}
+                  color={isFocused ? "#FFFFFF" : "#C2DBD1"}
                 />
               </Pressable>
             );
@@ -108,7 +114,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
       ) : (
         // 플러스 버튼 열린 상태 (일정등록 | 일기작성)
         <View
-          className="h-[60px] flex-1 flex-row items-center justify-center gap-[40px] rounded-full bg-[#FCFDFD] px-[28px] border-[1px] border-[#4D826C]"
+          className="h-[60px] flex-1 flex-row items-center justify-center gap-[40px] rounded-full border-[1px] border-[#4D826C] bg-[#FCFDFD] px-[28px]"
           style={{
             shadowColor: "#4D826C",
             shadowOffset: { width: 0, height: 4 },
@@ -139,11 +145,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
             >
               일정등록
             </Text>
-            <IconSymbol
-              name="calendar.badge.plus"
-              size={28}
-              color="#4D826C"
-            />
+            <ScheduleIcon color="#4D826C" />
           </Pressable>
 
           {/* 가운데 세로 구분선 */}
@@ -171,11 +173,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
             >
               일기작성
             </Text>
-            <IconSymbol
-              name="square.and.pencil"
-              size={28}
-              color="#4D826C"
-            />
+            <DiaryIcon color="#4D826C" />
           </Pressable>
         </View>
       )}
@@ -199,11 +197,11 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
           className="h-full w-full items-center justify-center rounded-full bg-transparent"
           style={{ outlineStyle: "none" } as any}
         >
-          <IconSymbol
-            name={isOpen ? "xmark" : "plus"}
-            size={24}
-            color="#4D826C"
-          />
+          {isOpen ? (
+            <TabCancleIcon width={24} height={24} color="#4D826C" />
+          ) : (
+            <TabPlusIcon width={24} height={24} color="#4D826C" />
+          )}
         </Pressable>
       </Animated.View>
     </View>
