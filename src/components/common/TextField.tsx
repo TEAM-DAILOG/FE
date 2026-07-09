@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Text,
-  TextInput,
-  type TextInputProps,
-  View,
-} from "react-native";
+import { Text, TextInput, type TextInputProps, View } from "react-native";
 
 import { cn } from "@/src/lib/cn";
 
@@ -42,7 +37,7 @@ export function TextField({
         isTextarea ? "h-[108px] items-start p-3" : "h-12 items-center px-3",
         isFocused ? "border-gray-400" : "border-gray-200",
         disabled && "opacity-50",
-        containerClassName,
+        containerClassName
       )}
     >
       <TextInput
@@ -52,9 +47,9 @@ export function TextField({
         placeholderTextColor="#949997"
         textAlignVertical={isTextarea ? "top" : "center"}
         className={cn(
-          "flex-1 text-b-03-r text-gray-800",
+          "flex-1 text-gray-800 text-b-03-m",
           isTextarea ? "self-stretch p-0 text-left" : "h-full p-0",
-          inputClassName,
+          inputClassName
         )}
         onFocus={(event) => {
           setIsFocused(true);
@@ -67,7 +62,7 @@ export function TextField({
       />
 
       {rightText ? (
-        <Text className="ml-3 self-center text-b-03-r text-green-600">
+        <Text className="ml-3 self-center text-green-600 text-b-03-sb">
           {rightText}
         </Text>
       ) : null}
