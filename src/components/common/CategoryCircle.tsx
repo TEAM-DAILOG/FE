@@ -58,7 +58,7 @@ export function CategoryCircle({
         "h-9 w-9 items-center justify-center rounded-full",
         isDisabled
           ? CATEGORY_COLOR_CLASS_NAMES[color].soft
-          : CATEGORY_COLOR_CLASS_NAMES[color].solid,
+          : CATEGORY_COLOR_CLASS_NAMES[color].solid
       )}
     >
       {isSelected || isDisabled ? (
