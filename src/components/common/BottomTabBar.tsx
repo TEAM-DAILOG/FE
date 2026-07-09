@@ -26,6 +26,14 @@ const TAB_ICONS = {
   settings: TabSettingIcon,
 } as const;
 
+const TAB_BAR_SHADOW_STYLE = {
+  shadowColor: "#4D826C",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.14,
+  shadowRadius: 16,
+  elevation: 6,
+} as const;
+
 export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const [isOpen, setIsOpen] = useState(false);
@@ -69,14 +77,8 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
       {/* ----------------- 왼쪽 박스 영역 ----------------- */}
       {!isOpen ? (
         <View
-          className="h-[60px] flex-1 flex-row items-center justify-between rounded-full bg-[#FCFDFD] px-3"
-          style={{
-            shadowColor: "#4D826C",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.14,
-            shadowRadius: 16,
-            elevation: 6,
-          }}
+          className="h-[60px] flex-1 flex-row items-center justify-between rounded-full bg-gray-0 px-3"
+          style={TAB_BAR_SHADOW_STYLE}
         >
           {state.routes.map((route, index) => {
             const isFocused = state.index === index;
@@ -97,10 +99,9 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
                 key={route.key}
                 onPress={onPress}
                 className={cn(
-                  "h-[40px] w-[52px] flex-shrink-0 items-center justify-center rounded-full p-[10px]",
-                  isFocused ? "bg-[#4D826C]" : "bg-[#FCFDFD]"
+                  "h-[40px] w-[52px] flex-shrink-0 items-center justify-center rounded-full p-[10px] web:outline-none",
+                  isFocused ? "bg-green-600" : "bg-gray-0"
                 )}
-                style={{ outlineStyle: "none" } as any}
               >
                 <TabIcon
                   width={24}
@@ -114,14 +115,8 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
       ) : (
         // 플러스 버튼 열린 상태 (일정등록 | 일기작성)
         <View
-          className="h-[60px] flex-1 flex-row items-center justify-center gap-[40px] rounded-full border-[1px] border-[#4D826C] bg-[#FCFDFD] px-[28px]"
-          style={{
-            shadowColor: "#4D826C",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.14,
-            shadowRadius: 16,
-            elevation: 6,
-          }}
+          className="h-[60px] flex-1 flex-row items-center justify-center gap-[40px] rounded-full border-[1px] border-green-600 bg-gray-0 px-[28px]"
+          style={TAB_BAR_SHADOW_STYLE}
         >
           {/* 일정등록 버튼 */}
           <Pressable
@@ -132,24 +127,14 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
             }}
             className="h-[24px] w-[55px] flex-row items-center justify-center gap-[8px]"
           >
-            <Text
-              style={{
-                fontFamily: "SUIT-SemiBold",
-                fontWeight: "600",
-                fontSize: 16,
-                lineHeight: 24, // 16px * 150%
-                letterSpacing: -0.32, // 16px * -2%
-                textAlign: "center",
-                color: "#4D826C",
-              }}
-            >
+            <Text className="text-center text-b-02-sb text-green-600">
               일정등록
             </Text>
             <ScheduleIcon color="#4D826C" />
           </Pressable>
 
           {/* 가운데 세로 구분선 */}
-          <View className="h-[20px] w-[1px] bg-[#4D826C]" />
+          <View className="h-[28px] w-[1px] bg-green-600" />
 
           {/* 일기작성 버튼 */}
           <Pressable
@@ -160,17 +145,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
             }}
             className="h-[24px] w-[55px] flex-row items-center justify-center gap-[8px]"
           >
-            <Text
-              style={{
-                fontFamily: "SUIT-SemiBold",
-                fontWeight: "600",
-                fontSize: 16,
-                lineHeight: 24,
-                letterSpacing: -0.32,
-                textAlign: "center",
-                color: "#4D826C",
-              }}
-            >
+            <Text className="text-center text-b-02-sb text-green-600">
               일기작성
             </Text>
             <DiaryIcon color="#4D826C" />
@@ -183,19 +158,12 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
         className="h-[60px] w-[60px] items-center justify-center rounded-full p-[10px]"
         style={[
           animatedBoxStyle,
-          {
-            shadowColor: "#4D826C",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.14,
-            shadowRadius: 16,
-            elevation: 6,
-          },
+          TAB_BAR_SHADOW_STYLE,
         ]}
       >
         <Pressable
           onPress={() => setIsOpen(!isOpen)}
-          className="h-full w-full items-center justify-center rounded-full bg-transparent"
-          style={{ outlineStyle: "none" } as any}
+          className="h-full w-full items-center justify-center rounded-full bg-transparent web:outline-none"
         >
           {isOpen ? (
             <TabCancleIcon width={24} height={24} color="#4D826C" />
