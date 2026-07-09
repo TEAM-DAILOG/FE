@@ -57,7 +57,9 @@ export function ScheduleCheckItem({
         hitSlop={8}
         className={
           "h-[20px] w-[20px] items-center justify-center rounded-[4px] border-[1.5px] " +
-          (checked ? "border-[#4D826C] bg-[#4D826C]" : "border-[#D9E3DC] bg-transparent")
+          (checked
+            ? "border-[#4D826C] bg-[#4D826C]"
+            : "border-[#D9E3DC] bg-transparent")
         }
         style={{ outlineStyle: "none" } as any}
       >

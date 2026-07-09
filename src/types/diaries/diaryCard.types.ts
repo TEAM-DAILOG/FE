@@ -40,11 +40,7 @@ export type DiaryCardThreeImagesProps = DiaryCardBaseProps & {
   variant: "three-images";
   title: string;
   content: string;
-  images: [
-    ImageSourcePropType,
-    ImageSourcePropType,
-    ImageSourcePropType,
-  ];
+  images: [ImageSourcePropType, ImageSourcePropType, ImageSourcePropType];
 };
 
 export type DiaryCardProps =
@@ -54,7 +50,4 @@ export type DiaryCardProps =
   | DiaryCardTwoImagesProps
   | DiaryCardThreeImagesProps;
 
-export type DiaryCardImageVariant =
-  | "one-image"
-  | "two-images"
-  | "three-images";
+export type DiaryCardImageVariant = "one-image" | "two-images" | "three-images";

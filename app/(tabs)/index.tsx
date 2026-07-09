@@ -14,11 +14,41 @@ type Schedule = {
 };
 
 const MOCK_SCHEDULES: Schedule[] = [
-  { id: "1", categoryLabel: "CATEGORY", categoryColor: "#5B8FD9", description: "Lorem ipsum dolor sit amet consectetur.", checked: false },
-  { id: "2", categoryLabel: "CATEGORY", categoryColor: "#D9A05B", description: "Lorem ipsum dolor sit amet consectetur.", checked: false },
-  { id: "3", categoryLabel: "CATEGORY", categoryColor: "#5FAE72", description: "Lorem ipsum dolor sit amet consectetur.", checked: false },
-  { id: "4", categoryLabel: "CATEGORY", categoryColor: "#9B7ED9", description: "Lorem ipsum dolor sit amet consectetur.", checked: false },
-  { id: "5", categoryLabel: "CATEGORY", categoryColor: "#D95B8F", description: "Lorem ipsum dolor sit amet consectetur.", checked: false },
+  {
+    id: "1",
+    categoryLabel: "CATEGORY",
+    categoryColor: "#5B8FD9",
+    description: "Lorem ipsum dolor sit amet consectetur.",
+    checked: false,
+  },
+  {
+    id: "2",
+    categoryLabel: "CATEGORY",
+    categoryColor: "#D9A05B",
+    description: "Lorem ipsum dolor sit amet consectetur.",
+    checked: false,
+  },
+  {
+    id: "3",
+    categoryLabel: "CATEGORY",
+    categoryColor: "#5FAE72",
+    description: "Lorem ipsum dolor sit amet consectetur.",
+    checked: false,
+  },
+  {
+    id: "4",
+    categoryLabel: "CATEGORY",
+    categoryColor: "#9B7ED9",
+    description: "Lorem ipsum dolor sit amet consectetur.",
+    checked: false,
+  },
+  {
+    id: "5",
+    categoryLabel: "CATEGORY",
+    categoryColor: "#D95B8F",
+    description: "Lorem ipsum dolor sit amet consectetur.",
+    checked: false,
+  },
 ];
 
 function useFormattedDate() {
@@ -127,7 +157,10 @@ export default function HomeScreen() {
             className="w-full items-center justify-center rounded-2xl py-4"
             style={{ backgroundColor: "#4D826C", outlineStyle: "none" } as any}
           >
-            <Text className="text-white" style={{ fontSize: 16, fontWeight: "600" }}>
+            <Text
+              className="text-white"
+              style={{ fontSize: 16, fontWeight: "600" }}
+            >
               질문 받기
             </Text>
           </Pressable>

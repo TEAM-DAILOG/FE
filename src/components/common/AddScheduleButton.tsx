@@ -21,7 +21,7 @@ export function AddScheduleButton({
       )}
       {...rest}
     >
-      <Text className="text-b-03-m text-gray-800">{label}</Text>
+      <Text className="text-gray-800 text-b-03-m">{label}</Text>
       <PlusIcon width={24} height={24} color="#2F3131" />
     </Pressable>
   );

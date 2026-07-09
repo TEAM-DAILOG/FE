@@ -127,7 +127,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
             }}
             className="h-[24px] w-[55px] flex-row items-center justify-center gap-[8px]"
           >
-            <Text className="text-center text-b-02-sb text-green-600">
+            <Text className="text-center text-green-600 text-b-02-sb">
               일정등록
             </Text>
             <ScheduleIcon color="#4D826C" />
@@ -145,7 +145,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
             }}
             className="h-[24px] w-[55px] flex-row items-center justify-center gap-[8px]"
           >
-            <Text className="text-center text-b-02-sb text-green-600">
+            <Text className="text-center text-green-600 text-b-02-sb">
               일기작성
             </Text>
             <DiaryIcon color="#4D826C" />
@@ -156,10 +156,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
       {/* ----------------- 오른쪽 박스: 플러스 / 엑스 버튼 ----------------- */}
       <Animated.View
         className="h-[60px] w-[60px] items-center justify-center rounded-full p-[10px]"
-        style={[
-          animatedBoxStyle,
-          TAB_BAR_SHADOW_STYLE,
-        ]}
+        style={[animatedBoxStyle, TAB_BAR_SHADOW_STYLE]}
       >
         <Pressable
           onPress={() => setIsOpen(!isOpen)}
