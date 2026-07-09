@@ -26,5 +26,3 @@ export function AddScheduleButton({
     </Pressable>
   );
 }
-
-export default AddScheduleButton;

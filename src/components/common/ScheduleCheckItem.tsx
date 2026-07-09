@@ -1,6 +1,6 @@
-// src/components/schedule/ScheduleCheckItem.tsx
-import { Pressable, Text, View } from "react-native";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+
+import { Text, View } from "react-native";
+import { Checkbox } from "@/src/components/common/Checkbox";
 
 export type ScheduleCheckItemProps = {
   categoryLabel: string;
@@ -18,53 +18,28 @@ export function ScheduleCheckItem({
   onToggle,
 }: ScheduleCheckItemProps) {
   return (
-    <View className="h-[48px] w-full flex-row items-center justify-between">
+    <View
+      className="w-full flex-row items-center justify-between rounded-xl border bg-gray-0 px-3 py-2"
+      style={{ borderColor: `${categoryColor}33` }}
+    >
       {/* 왼쪽: 카테고리 dot + 텍스트 */}
-      <View className="flex-1 flex-row items-start gap-[8px] pr-[12px]">
-        <View
-          className="mt-[4px] h-[8px] w-[8px] rounded-full"
-          style={{ backgroundColor: categoryColor }}
-        />
-        <View className="flex-1">
-          <Text
-            style={{
-              fontFamily: "SUIT-SemiBold",
-              fontWeight: "600",
-              fontSize: 11,
-              letterSpacing: 0.2,
-              color: categoryColor,
-            }}
-          >
+      <View className="flex-1 gap-0.5">
+        <View className="flex-row items-center gap-1">
+          <View
+            className="h-2 w-2 rounded-full"
+            style={{ backgroundColor: categoryColor }}
+          />
+          <Text className="text-b-05-b" style={{ color: categoryColor }}>
             {categoryLabel.toUpperCase()}
           </Text>
-          <Text
-            numberOfLines={1}
-            style={{
-              fontFamily: "SUIT-Regular",
-              fontSize: 14,
-              lineHeight: 20,
-              color: "#3A3A3A",
-            }}
-          >
-            {description}
-          </Text>
         </View>
+        <Text numberOfLines={1} className="text-gray-800 text-b-03-m">
+          {description}
+        </Text>
       </View>
 
       {/* 오른쪽: 체크박스 (공용 컴포넌트) */}
-      <Pressable
-        onPress={onToggle}
-        hitSlop={8}
-        className={
-          "h-[20px] w-[20px] items-center justify-center rounded-[4px] border-[1.5px] " +
-          (checked
-            ? "border-[#4D826C] bg-[#4D826C]"
-            : "border-[#D9E3DC] bg-transparent")
-        }
-        style={{ outlineStyle: "none" } as any}
-      >
-        {checked && <IconSymbol name="checkmark" size={12} color="#FFFFFF" />}
-      </Pressable>
+      <Checkbox checked={checked} onToggle={onToggle} />
     </View>
   );
 }
