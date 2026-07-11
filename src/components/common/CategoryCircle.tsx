@@ -1,6 +1,6 @@
 import { Pressable } from "react-native";
 
-import CheckIcon from "@/assets/icons/check.svg";
+import CheckIcon from "@/assets/icons/checkIcon.svg";
 import { cn } from "@/src/lib/cn";
 
 export type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
