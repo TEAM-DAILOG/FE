@@ -61,7 +61,7 @@ export function TimeWheelPicker({
   return (
     <View
       className={cn(
-        "w-full flex-row items-center justify-center gap-6",
+        "w-full flex-row items-center justify-center gap-6 overflow-hidden",
         className
       )}
     >
