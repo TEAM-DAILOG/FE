@@ -10,7 +10,7 @@ import { cn } from "@/src/lib/cn";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, Text, useWindowDimensions, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -37,9 +37,6 @@ const TAB_BAR_SHADOW_STYLE = {
 export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const [isOpen, setIsOpen] = useState(false);
-
-  // 현재 폰의 가로 사이즈를 자동으로 가져옴
-  const { width } = useWindowDimensions();
 
   // 애니메이션 값 설정 (0: 닫힘/플러스, 1: 열림/엑스)
   const animationProgress = useSharedValue(0);
@@ -68,9 +65,8 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
 
   return (
     <View // BottomTabBar 전체 컨테이너
-      className="absolute left-[16px] h-[60px] flex-row items-center gap-[8px]"
+      className="absolute left-4 right-4 h-[60px] flex-row items-center gap-2"
       style={{
-        width: width - 32,
         bottom: insets.bottom > 0 ? insets.bottom + 10 : 30,
       }}
     >
@@ -99,7 +95,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
                 key={route.key}
                 onPress={onPress}
                 className={cn(
-                  "h-[40px] w-[52px] flex-shrink-0 items-center justify-center rounded-full p-[10px] web:outline-none",
+                  "h-10 w-[52px] flex-shrink-0 items-center justify-center rounded-full p-2.5 web:outline-none",
                   isFocused ? "bg-green-600" : "bg-gray-0"
                 )}
               >
@@ -115,7 +111,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
       ) : (
         // 플러스 버튼 열린 상태 (일정등록 | 일기작성)
         <View
-          className="h-[60px] flex-1 flex-row items-center justify-center gap-[40px] rounded-full border-[1px] border-green-600 bg-gray-0 px-[28px]"
+          className="h-[60px] flex-1 flex-row items-center justify-between rounded-full border border-green-600 bg-gray-0 px-[28px]"
           style={TAB_BAR_SHADOW_STYLE}
         >
           {/* 일정등록 버튼 */}
@@ -125,16 +121,16 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
               setIsOpen(false);
               router.push("/schedule");
             }}
-            className="h-[24px] w-[55px] flex-row items-center justify-center gap-[8px]"
+            className="h-7 flex-row items-center justify-center gap-2"
           >
             <Text className="text-center text-green-600 text-b-02-sb">
               일정등록
             </Text>
-            <ScheduleIcon color="#4D826C" />
+            <ScheduleIcon width={28} height={28} color="#4D826C" />
           </Pressable>
 
           {/* 가운데 세로 구분선 */}
-          <View className="h-[28px] w-[1px] bg-green-600" />
+          <View className="h-7 w-[1px] bg-green-600" />
 
           {/* 일기작성 버튼 */}
           <Pressable
@@ -143,19 +139,19 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
               setIsOpen(false);
               router.push("/diary/write");
             }}
-            className="h-[24px] w-[55px] flex-row items-center justify-center gap-[8px]"
+            className="h-7 flex-row items-center justify-center gap-2"
           >
             <Text className="text-center text-green-600 text-b-02-sb">
               일기작성
             </Text>
-            <DiaryIcon color="#4D826C" />
+            <DiaryIcon width={28} height={28} color="#4D826C" />
           </Pressable>
         </View>
       )}
 
       {/* ----------------- 오른쪽 박스: 플러스 / 엑스 버튼 ----------------- */}
       <Animated.View
-        className="h-[60px] w-[60px] items-center justify-center rounded-full p-[10px]"
+        className="h-[60px] w-[60px] items-center justify-center rounded-full"
         style={[animatedBoxStyle, TAB_BAR_SHADOW_STYLE]}
       >
         <Pressable
