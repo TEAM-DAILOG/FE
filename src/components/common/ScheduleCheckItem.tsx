@@ -1,5 +1,5 @@
-
 import { Text, View } from "react-native";
+
 import { Checkbox } from "@/src/components/common/Checkbox";
 
 export type ScheduleCheckItemProps = {
@@ -26,7 +26,7 @@ export function ScheduleCheckItem({
       <View className="flex-1 gap-0.5">
         <View className="flex-row items-center gap-1">
           <View
-            className="h-2 w-2 rounded-full"
+            className="h-4 w-4 rounded-full"
             style={{ backgroundColor: categoryColor }}
           />
           <Text className="text-b-05-b" style={{ color: categoryColor }}>
