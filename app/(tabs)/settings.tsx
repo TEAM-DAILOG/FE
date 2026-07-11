@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -6,6 +7,7 @@ import { Divider, LogoHeader, ScreenContainer } from "@/src/components/common";
 import { PillButton, PushAlarmCard } from "@/src/components/settings";
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(false);
   const [isDiaryReplyEnabled, setIsDiaryReplyEnabled] = useState(false);
@@ -41,6 +43,7 @@ export default function SettingsScreen() {
           isDiaryWriteEnabled={isDiaryWriteEnabled}
           onChangeDiaryWriteEnabled={setIsDiaryWriteEnabled}
           diaryWriteTimeLabel="오후 09:30"
+          onPressDiaryWriteTime={() => router.push("/alarm")}
           isDiaryReplyEnabled={isDiaryReplyEnabled}
           onChangeDiaryReplyEnabled={setIsDiaryReplyEnabled}
         />
