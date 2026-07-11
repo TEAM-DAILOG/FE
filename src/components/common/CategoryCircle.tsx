@@ -65,7 +65,7 @@ export function CategoryCircle({
         <CheckIcon
           width={24}
           height={24}
-          color={isDisabled ? "#AEB2B0" : "bg-gray-0"}
+          color={isDisabled ? "#AEB2B0" : "#FCFDFD"}
         />
       ) : null}
     </Pressable>
