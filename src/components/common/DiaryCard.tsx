@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Image,
-  type LayoutChangeEvent,
-  Text,
-  View,
-} from "react-native";
+import { Image, type LayoutChangeEvent, Text, View } from "react-native";
 
 import { cn } from "@/src/lib/cn";
 import type {
@@ -36,10 +31,7 @@ const CONTENT_LINE_COUNTS: Record<
   "three-images": 5,
 };
 
-const IMAGE_CONTAINER_CLASS_NAMES: Record<
-  DiaryCardImageVariant,
-  string
-> = {
+const IMAGE_CONTAINER_CLASS_NAMES: Record<DiaryCardImageVariant, string> = {
   "one-image": "w-full items-center",
   "two-images": "w-full flex-row gap-2",
   "three-images": "w-full flex-row gap-2",
@@ -58,13 +50,13 @@ export function DiaryCard(props: DiaryCardProps) {
         style={CARD_SHADOW_STYLE}
         className={cn(
           "h-12 w-full justify-center rounded-xl bg-gray-0 px-4",
-          props.containerClassName,
+          props.containerClassName
         )}
       >
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          className="text-b-03-m text-gray-900"
+          className="text-gray-900 text-b-03-m"
         >
           {props.summary}
         </Text>
@@ -72,8 +64,7 @@ export function DiaryCard(props: DiaryCardProps) {
     );
   }
 
-  const imageVariant =
-    props.variant === "no-image" ? null : props.variant;
+  const imageVariant = props.variant === "no-image" ? null : props.variant;
 
   const images = props.variant === "no-image" ? [] : props.images;
 
@@ -88,7 +79,7 @@ export function DiaryCard(props: DiaryCardProps) {
       style={CARD_SHADOW_STYLE}
       className={cn(
         "w-full gap-2 rounded-xl bg-gray-0 px-4 py-3",
-        props.containerClassName,
+        props.containerClassName
       )}
     >
       {imageVariant ? (
@@ -111,7 +102,7 @@ export function DiaryCard(props: DiaryCardProps) {
         <Text
           numberOfLines={1}
           ellipsizeMode="tail"
-          className="text-b-03-sb text-gray-900"
+          className="text-gray-900 text-b-03-sb"
         >
           {props.title}
         </Text>
@@ -119,7 +110,7 @@ export function DiaryCard(props: DiaryCardProps) {
         <Text
           numberOfLines={CONTENT_LINE_COUNTS[props.variant]}
           ellipsizeMode="tail"
-          className="text-b-04-m text-gray-800"
+          className="text-gray-800 text-b-04-m"
         >
           {props.content}
         </Text>
