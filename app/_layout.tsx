@@ -12,6 +12,7 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { ModalPage } from "@/src/components/modals/ModalPage";
 import "../global.css";
 
 export const unstable_settings = {
@@ -47,6 +48,7 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
         </Stack>
+        <ModalPage />
         <StatusBar style="auto" />
       </ThemeProvider>
     </SafeAreaProvider>
