@@ -1,5 +1,5 @@
-import type { DatePickerModalProps } from "@/src/types/modals/datepickerModal.types";
 import { useBaseModal } from "@/src/store/modals/baseModal";
+import type { DatePickerModalProps } from "@/src/types/modals/datepickerModal.types";
 
 import { ModalBackground } from "./ModalBackground";
 import { DatePickerModal } from "./schedule/DatePickerModal";
@@ -13,7 +13,7 @@ export function ModalPage() {
 
   return (
     <ModalBackground>
-      {modalType === "scheduleDatePickerModal" ? (
+      {modalType === "datePickerModal" ? (
         <DatePickerModal {...(modalProps as unknown as DatePickerModalProps)} />
       ) : null}
     </ModalBackground>

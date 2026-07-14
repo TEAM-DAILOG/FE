@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { Pressable, Text, View } from "react-native";
+import Animated, { Easing, FadeIn, FadeOut } from "react-native-reanimated";
 
 import CalendarIcon from "@/assets/icons/calendar.svg";
 import DownIcon from "@/assets/icons/downIcon.svg";
@@ -61,7 +62,11 @@ export function DatePickerRecurringPanel({
           </Pressable>
 
           {isRepeatTypeMenuOpen ? (
-            <View className="shadow-dropdown absolute right-0 top-full z-50 mt-1 w-[120px]">
+            <Animated.View
+              entering={FadeIn.duration(300).easing(Easing.out(Easing.ease))}
+              exiting={FadeOut.duration(300).easing(Easing.out(Easing.ease))}
+              className="shadow-dropdown absolute right-0 top-full z-50 mt-1 w-[120px]"
+            >
               <View className="gap-1.5 overflow-hidden rounded-lg bg-white px-3 py-1.5">
                 {REPEAT_TYPE_OPTIONS.map((option) => (
                   <Pressable
@@ -78,7 +83,7 @@ export function DatePickerRecurringPanel({
                   </Pressable>
                 ))}
               </View>
-            </View>
+            </Animated.View>
           ) : null}
         </View>
 
