@@ -1,10 +1,4 @@
-import CalendarIcon from "@/assets/icons/calendar.svg";
-import { BackHeader, ScreenContainer } from "@/src/components/common";
-import { Button } from "@/src/components/common/Button";
-import { CategoryChip } from "@/src/components/common/CategoryChip";
-import type { CategoryColor } from "@/src/components/common/CategoryCircle";
-import { TextField } from "@/src/components/common/TextField";
-import { formatDate } from "@/src/utils";
+import dayjs from "dayjs";
 import { useMemo, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -14,6 +8,20 @@ import {
   Text,
   View,
 } from "react-native";
+
+import CalendarIcon from "@/assets/icons/calendar.svg";
+import { BackHeader, ScreenContainer } from "@/src/components/common";
+import { Button } from "@/src/components/common/Button";
+import { CategoryChip } from "@/src/components/common/CategoryChip";
+import type { CategoryColor } from "@/src/components/common/CategoryCircle";
+import { TextField } from "@/src/components/common/TextField";
+import { cn } from "@/src/lib/cn";
+import { useBaseModal } from "@/src/store/modals/baseModal";
+import type {
+  DatePickerModalResult,
+  ScheduleRepeatValue,
+} from "@/src/types/modals/datepickerModal.types";
+import { formatScheduleDate, formatScheduleRepeatSummary } from "@/src/utils";
 
 type CategoryOption = {
   id: string;
@@ -33,12 +41,19 @@ const CATEGORY_OPTIONS: CategoryOption[] = [
 export default function ScheduleAddScreen() {
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [date] = useState(() => new Date());
   const [memo, setMemo] = useState("");
+  const [date, setDate] = useState(() => dayjs().format("YYYY-MM-DD"));
+  const [repeat, setRepeat] = useState<ScheduleRepeatValue>({ mode: "none" });
+
+  const openModal = useBaseModal((state) => state.openModal);
 
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const dateLabel = useMemo(() => formatDate(date), [date]);
+  const dateLabel = useMemo(() => formatScheduleDate(date), [date]);
+  const repeatLabel = useMemo(
+    () => formatScheduleRepeatSummary(repeat),
+    [repeat]
+  );
   const canSave = title.trim().length > 0;
 
   const handleMemoFocus = () => {
@@ -46,6 +61,22 @@ export default function ScheduleAddScreen() {
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 100);
+  };
+
+  const openDatePicker = () => {
+    openModal("datePickerModal", {
+      props: {
+        initialDate: date,
+        initialRepeat: repeat,
+        onApply: ({
+          date: nextDate,
+          repeat: nextRepeat,
+        }: DatePickerModalResult) => {
+          setDate(nextDate);
+          setRepeat(nextRepeat);
+        },
+      },
+    });
   };
 
   return (
@@ -96,8 +127,10 @@ export default function ScheduleAddScreen() {
           <View className="-mx-4 border-t-2 border-gray-100" />
 
           <View className="gap-4">
-            {/* TODO: 날짜 선택 모달 연동 */}
-            <Pressable className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3">
+            <Pressable
+              onPress={openDatePicker}
+              className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3"
+            >
               <Text className="text-gray-900 text-b-02-m">날짜</Text>
               <View className="flex-row items-center gap-1">
                 <CalendarIcon width={24} height={24} color="#020303" />
@@ -105,10 +138,19 @@ export default function ScheduleAddScreen() {
               </View>
             </Pressable>
 
-            {/* TODO: 반복 옵션 선택 모달 연동 */}
-            <Pressable className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3">
+            <Pressable
+              onPress={openDatePicker}
+              className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3"
+            >
               <Text className="text-gray-900 text-b-02-m">반복</Text>
-              <Text className="text-gray-400 text-b-03-m">없음</Text>
+              <Text
+                className={cn(
+                  "text-b-03-m",
+                  repeat.mode === "none" ? "text-gray-400" : "text-gray-800"
+                )}
+              >
+                {repeatLabel}
+              </Text>
             </Pressable>
           </View>
 
