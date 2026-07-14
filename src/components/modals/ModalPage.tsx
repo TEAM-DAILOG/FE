@@ -1,10 +1,8 @@
+import type { DatePickerModalProps } from "@/src/types/modals/datepickerModal.types";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 
 import { ModalBackground } from "./ModalBackground";
-import {
-  DatePickerModal,
-  DatePickerModalProps,
-} from "./schedule/DatePickerModal";
+import { DatePickerModal } from "./schedule/DatePickerModal";
 
 export function ModalPage() {
   const isModalOpen = useBaseModal((state) => state.isModalOpen);
