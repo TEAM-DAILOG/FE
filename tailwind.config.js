@@ -66,6 +66,11 @@ module.exports = {
         "suit-semibold": ["SUIT-SemiBold"],
         "suit-bold": ["SUIT-Bold"],
       },
+      boxShadow: {
+        "card-1": "0px 1px 8px 0px rgba(77, 130, 108, 0.08)",
+        "card-2": "0px 1px 4px 0px rgba(59, 99, 82, 0.08)",
+        dropdown: "-4px 4px 100px 0px rgba(211, 214, 217, 0.50)",
+      },
     },
   },
   plugins: [
@@ -93,6 +98,8 @@ module.exports = {
         "b-04-r": ["12px", "18px", "-0.24px", 400],
         "b-05-b": ["11px", "15.4px", "-0.22px", 700],
         "b-05-m": ["11px", "15.4px", "-0.22px", 500],
+        "cap-sb": ["10px", "14px", "-0.2px", 600],
+        "cap-r": ["10px", "14px", "-0.2px", 400],
       };
 
       addUtilities(
