@@ -1,4 +1,8 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 import { cn } from "@/src/lib/cn";
 
@@ -29,30 +33,55 @@ export function WeekdaySelector({
     <View
       className={cn("w-full flex-row items-center justify-between", className)}
     >
-      {WEEKDAYS.map(({ key, label }) => {
-        const isSelected = selectedDays.includes(key);
-
-        return (
-          <Pressable
-            key={key}
-            onPress={() => onToggleDay(key)}
-            className={cn(
-              "size-10 items-center justify-center rounded-[100px]",
-              isSelected && "bg-green-600"
-            )}
-          >
-            <Text
-              className={
-                isSelected
-                  ? "text-gray-0 text-b-02-m"
-                  : "text-gray-800 text-b-02-r"
-              }
-            >
-              {label}
-            </Text>
-          </Pressable>
-        );
-      })}
+      {WEEKDAYS.map(({ key, label }) => (
+        <WeekdayToggle
+          key={key}
+          label={label}
+          isSelected={selectedDays.includes(key)}
+          onPress={() => onToggleDay(key)}
+        />
+      ))}
     </View>
+  );
+}
+
+function WeekdayToggle({
+  label,
+  isSelected,
+  onPress,
+}: {
+  label: string;
+  isSelected: boolean;
+  onPress: () => void;
+}) {
+  const backgroundStyle = useAnimatedStyle(() => ({
+    backgroundColor: withTiming(isSelected ? "#4D826CFF" : "#4D826C00", {
+      duration: 300,
+    }),
+  }));
+
+  const textStyle = useAnimatedStyle(() => ({
+    color: withTiming(isSelected ? "#FCFDFD" : "#2F3131", { duration: 300 }),
+  }));
+
+  return (
+    <Pressable
+      onPress={onPress}
+      className="size-10 items-center justify-center rounded-[100px]"
+    >
+      <Animated.View
+        pointerEvents="none"
+        collapsable={false}
+        className="absolute inset-0 rounded-[100px]"
+        style={backgroundStyle}
+      />
+
+      <Animated.Text
+        className={isSelected ? "text-b-02-m" : "text-b-02-r"}
+        style={textStyle}
+      >
+        {label}
+      </Animated.Text>
+    </Pressable>
   );
 }
