@@ -9,14 +9,14 @@ import {
   View,
 } from "react-native";
 
-import CalendarIcon from "@/assets/icons/calendar.svg";
+import CalendarIcon from "@/assets/icons/calendarIcon.svg";
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { CategoryChip } from "@/src/components/common/CategoryChip";
-import type { CategoryColor } from "@/src/components/common/CategoryCircle";
 import { TextField } from "@/src/components/common/TextField";
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
+import { CategoryColor } from "@/src/types/categories/category.types";
 import type {
   DatePickerModalResult,
   ScheduleRepeatValue,
@@ -169,7 +169,7 @@ export default function ScheduleAddScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <View className="px-4 pb-5 pt-2">
+      <View className="px-4 pb-12 pt-2">
         <Button label="저장" disabled={!canSave} />
       </View>
     </ScreenContainer>
