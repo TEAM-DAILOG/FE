@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { Pressable, Text, View } from "react-native";
 import Animated, { Easing, FadeIn, FadeOut } from "react-native-reanimated";
 
-import CalendarIcon from "@/assets/icons/calendar.svg";
+import CalendarIcon from "@/assets/icons/calendarIcon.svg";
 import DownIcon from "@/assets/icons/downIcon.svg";
 import CheckIcon from "@/assets/icons/lightCheckIcon.svg";
 import { DatePickerGrid } from "@/src/components/modals/schedule/DatePickerGrid";

@@ -9,8 +9,8 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { cn } from "@/src/lib/cn";
+import { CategoryColor } from "@/src/types/categories/category.types";
 
-import type { CategoryColor } from "./CategoryCircle";
 
 export type CategoryChipProps = {
   color?: CategoryColor;
