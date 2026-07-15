@@ -18,7 +18,7 @@ export function AddButton({ label, className, ...rest }: AddButtonProps) {
       {...rest}
     >
       <PlusIcon width={16} height={16} color="#82B5A0" />
-      <Text className="text-b-04-m text-green-400">{label}</Text>
+      <Text className="text-green-400 text-b-04-m">{label}</Text>
     </Pressable>
   );
 }
