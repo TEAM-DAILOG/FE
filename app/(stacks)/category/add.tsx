@@ -7,9 +7,9 @@ import { Button } from "@/src/components/common/Button";
 import { TextField } from "@/src/components/common/TextField";
 import {
   CategoryCircle,
-  type CategoryColor,
   type CategoryCircleState,
 } from "@/src/components/common/CategoryCircle";
+import type { CategoryColor } from "@/src/types/categories/category.types";
 
 const CATEGORY_COLORS: CategoryColor[] = [
   "blue",
@@ -47,7 +47,7 @@ export default function CategoryAddScreen() {
     <ScreenContainer variant="stack">
       <BackHeader label="카테고리 설정" />
 
-      <View className="flex-1 gap-3 px-4 pt-4">
+      <View className="flex-1 gap-4 px-4 pt-5">
         <View className="gap-3">
           <Text className="text-b-02-m text-gray-900">카테고리명</Text>
           <TextField
@@ -59,7 +59,7 @@ export default function CategoryAddScreen() {
 
         <View className="gap-3">
           <Text className="text-b-02-m text-gray-900">색상 설정</Text>
-          <View className="flex-row justify-between rounded-xl border border-gray-100 px-4 py-3">
+          <View className="flex-row justify-between rounded-xl border border-gray-100 bg-white px-4 py-3">
             {CATEGORY_COLORS.map((color) => (
               <CategoryCircle
                 key={color}
@@ -71,13 +71,9 @@ export default function CategoryAddScreen() {
           </View>
         </View>
       </View>
-      
-      <View className="px-4 pb-4">
-        <Button
-          label="저장"
-          onPress={handleSave}
-          disabled={!canSave}
-        />
+
+      <View className="px-4 pb-12">
+        <Button label="저장" onPress={handleSave} disabled={!canSave} />
       </View>
     </ScreenContainer>
   );

@@ -1,4 +1,4 @@
-import type { CategoryColor } from "@/src/components/common/CategoryCircle";
+export type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
 
 export type Category = {
   id: string;
