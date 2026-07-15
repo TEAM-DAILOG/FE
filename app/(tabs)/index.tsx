@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { AddScheduleButton } from "@/src/components/common/AddScheduleButton";
 import { ScheduleCheckItem } from "@/src/components/common/ScheduleCheckItem";
+import { LogoHeader } from "@/src/components/common/Header";
+import { Button } from "@/src/components/common/Button";
 
 type Schedule = {
   id: string;
@@ -63,6 +65,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const dateLabel = useFormattedDate();
   const [schedules, setSchedules] = useState<Schedule[]>(MOCK_SCHEDULES);
+  const [isQuestionAnswered, setIsQuestionAnswered] = useState(false);
   const hasSchedules = schedules.length > 0;
 
   const toggleSchedule = (id: string) => {
@@ -72,98 +75,89 @@ export default function HomeScreen() {
   };
 
   return (
-    <View
-      className="flex-1"
-      style={{
-        backgroundColor: "#F5F9F6",
-        paddingTop: insets.top + 20,
-        paddingHorizontal: 16,
-      }}
-    >
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* 로고 영역 */}
-        <View className="mb-2 h-[32px] items-start justify-center">
-          <Text style={{ fontSize: 22, fontWeight: "700", color: "#4D826C" }}>
-            DA·LOG
-          </Text>
-        </View>
+    <View className="flex-1 bg-bg">
 
+      {/* 로고 영역 */}
+      <LogoHeader />
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingTop: 20,
+          paddingBottom: 100,
+        }}
+      >
         {/* 날짜 */}
-        <Text
-          className="mb-3"
-          style={{
-            fontFamily: "SUIT-SemiBold",
-            fontWeight: "600",
-            fontSize: 20,
-            lineHeight: 30, // 20 * 150%
-            letterSpacing: -0.4, // 20 * -2%
-            color: "#15231D",
-          }}
-        >
-          {dateLabel}
-        </Text>
+        <Text className="mb-3 text-h-01 text-green-900">{dateLabel}</Text>
 
         {/* 일정 카드 */}
-        <View className="w-full rounded-2xl bg-white px-4 py-4">
-          <Text
-            className="mb-2"
-            style={{
-              fontFamily: "SUIT-Regular",
-              fontWeight: "400",
-              fontSize: 16,
-              lineHeight: 24, // 16 * 150%
-              letterSpacing: -0.32, // 16 * -2%
-              color: "#020303",
-            }}
-          >
+        <View className="w-full gap-3 rounded-2xl bg-gray-0 px-3 py-4">
+          <Text className="text-gray-900 text-b-02-r">
             {hasSchedules
               ? "오늘 계획한 일정은 모두 마치셨나요?"
               : "오늘 계획된 일정이 없어요."}
           </Text>
-
-          {hasSchedules &&
-            schedules.map((s) => (
-              <ScheduleCheckItem
-                key={s.id}
-                categoryLabel={s.categoryLabel}
-                categoryColor={s.categoryColor}
-                description={s.description}
-                checked={s.checked}
-                onToggle={() => toggleSchedule(s.id)}
-              />
-            ))}
-
-          <View className={hasSchedules ? "mt-2" : ""}>
-            <AddScheduleButton onPress={() => router.push("/schedule")} />
-          </View>
+          {hasSchedules && (
+            <View className="gap-2">
+              {schedules.map((s) => (
+                <ScheduleCheckItem
+                  key={s.id}
+                  categoryLabel={s.categoryLabel}
+                  categoryColor={s.categoryColor}
+                  description={s.description}
+                  checked={s.checked}
+                  onToggle={() => toggleSchedule(s.id)}
+                />
+              ))}
+            </View>
+          )}
+          <AddScheduleButton onPress={() => router.push("/schedule")} />
         </View>
 
         {/* 오늘의 질문 */}
-        <View className="mt-6">
-          <Text
-            className="mb-3"
-            style={{
-              fontFamily: "SUIT-Medium",
-              fontWeight: "500",
-              fontSize: 18,
-              lineHeight: 27, // 18 * 150%
-              letterSpacing: -0.36, // 18 * -2%
-              color: "#15231D",
-            }}
-          >
-            오늘의 질문
-          </Text>
-          <Pressable
-            className="w-full items-center justify-center rounded-2xl py-4"
-            style={{ backgroundColor: "#4D826C", outlineStyle: "none" } as any}
-          >
-            <Text
-              className="text-white"
-              style={{ fontSize: 16, fontWeight: "600" }}
-            >
-              질문 받기
-            </Text>
-          </Pressable>
+        <View className="mt-7">
+          <Text className="mb-4 text-green-900 text-h-02">오늘의 질문</Text> 
+          {isQuestionAnswered ? (
+            <View className="gap-3">
+              {/* 질문 응답 카드 */}
+              <View
+                className="w-full items-center justify-center gap-2 rounded-lg border border-green-100 bg-gray-0 px-8 py-6"
+                style={{
+                  shadowColor: "#4D826C",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.08,
+                  shadowRadius: 8,
+                  elevation: 2,
+                }}
+              >
+                {/* 날짜 */}
+                <Text className="text-center text-green-700 text-b-03-sb">
+                  {dateLabel}
+                </Text>
+
+                {/* 구분선 */}
+                <View className="h-[1px] w-[278px] bg-green-100" />
+
+                {/* 질문 내용 */}
+                <Text className="text-center text-green-800 text-b-02-m">
+                  Lorem ipsum dolor sit amet consectetur. | 294
+                </Text>
+              </View>
+              <Button
+                label="질문 답변하기"
+                onPress={() => router.push("/diary/write")} // 질문 데이터 전달 필요
+                />
+            </View>
+          ) : (
+            <Button
+              label="질문 받기"
+              onPress={() => {
+                // TODO: 실제 질문 API 연동 시, 응답 받아온 뒤 setIsQuestionAnswered(true)
+                setIsQuestionAnswered(true);
+              }}
+            />
+          )}
         </View>
       </ScrollView>
     </View>
