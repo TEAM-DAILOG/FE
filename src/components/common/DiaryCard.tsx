@@ -37,7 +37,7 @@ export function DiaryCard(props: DiaryCardProps) {
     return (
       <View
         className={cn(
-          "shadow-card-1 h-12 w-full justify-center rounded-xl bg-gray-0 px-4",
+          "h-12 w-full justify-center rounded-xl bg-gray-0 px-4 shadow-card-1",
           props.containerClassName
         )}
       >
@@ -65,7 +65,7 @@ export function DiaryCard(props: DiaryCardProps) {
   return (
     <View
       className={cn(
-        "shadow-card-1 w-full gap-2 rounded-xl bg-gray-0 px-4 py-3",
+        "w-full gap-2 rounded-xl bg-gray-0 px-4 py-3 shadow-card-1",
         props.containerClassName
       )}
     >

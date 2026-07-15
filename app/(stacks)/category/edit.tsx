@@ -1,6 +1,6 @@
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Modal, Text, View } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
@@ -66,7 +66,7 @@ export default function CategoryEditScreen() {
         {/* TODO: 이 구분선(h-px bg-gray-100)은 category/index.tsx의 ItemSeparatorComponent와
             중복됨 -> 공용 컴포넌트 분리 PR 머지되면 그걸로 교체 */}
         <View className="gap-4 rounded-lg border border-gray-100 bg-white px-4 py-6">
-          <Text className="text-b-02-sb text-gray-800">{DUMMY_NAME}</Text>
+          <Text className="text-gray-800 text-b-02-sb">{DUMMY_NAME}</Text>
           <View className="h-px bg-gray-100" />
           <View className="flex-row justify-between">
             {CATEGORY_COLORS.map((color) => (
@@ -104,22 +104,22 @@ export default function CategoryEditScreen() {
                 <View
                   className={cn(
                     "h-6 w-6 rounded-full",
-                    CATEGORY_DOT_CLASS_NAMES[selectedColor],
+                    CATEGORY_DOT_CLASS_NAMES[selectedColor]
                   )}
                 />
                 <Text
                   className={cn(
                     "text-b-02-sb",
-                    CATEGORY_TEXT_CLASS_NAMES[selectedColor],
+                    CATEGORY_TEXT_CLASS_NAMES[selectedColor]
                   )}
                 >
                   {DUMMY_NAME}
                 </Text>
-                <Text className="text-b-02-m text-gray-900">
+                <Text className="text-gray-900 text-b-02-m">
                   를 삭제할까요?
                 </Text>
               </View>
-              <Text className="text-b-04-m text-gray-900">
+              <Text className="text-gray-900 text-b-04-m">
                 등록된 일정은 삭제되지 않아요
               </Text>
             </View>

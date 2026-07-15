@@ -1,14 +1,14 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
-import { useRouter } from "expo-router";
 
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
-import { TextField } from "@/src/components/common/TextField";
 import {
   CategoryCircle,
   type CategoryCircleState,
 } from "@/src/components/common/CategoryCircle";
+import { TextField } from "@/src/components/common/TextField";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 const CATEGORY_COLORS: CategoryColor[] = [
@@ -26,7 +26,7 @@ export default function CategoryAddScreen() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [selectedColor, setSelectedColor] = useState<CategoryColor | null>(
-    null,
+    null
   );
 
   const canSave = name.trim().length > 0 && selectedColor !== null;
@@ -49,7 +49,7 @@ export default function CategoryAddScreen() {
 
       <View className="flex-1 gap-4 px-4 pt-5">
         <View className="gap-3">
-          <Text className="text-b-02-m text-gray-900">카테고리명</Text>
+          <Text className="text-gray-900 text-b-02-m">카테고리명</Text>
           <TextField
             value={name}
             onChangeText={setName}
@@ -58,7 +58,7 @@ export default function CategoryAddScreen() {
         </View>
 
         <View className="gap-3">
-          <Text className="text-b-02-m text-gray-900">색상 설정</Text>
+          <Text className="text-gray-900 text-b-02-m">색상 설정</Text>
           <View className="flex-row justify-between rounded-xl border border-gray-100 bg-white px-4 py-3">
             {CATEGORY_COLORS.map((color) => (
               <CategoryCircle

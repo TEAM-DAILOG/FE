@@ -29,7 +29,7 @@ export function PushAlarmCard({
 }: PushAlarmCardProps) {
   return (
     <View
-      className={cn("shadow-card-2 gap-4 rounded-xl bg-white p-3", className)}
+      className={cn("gap-4 rounded-xl bg-white p-3 shadow-card-2", className)}
     >
       <View className="flex-row items-center justify-between">
         <Text className="text-gray-900 text-b-03-m">PUSH 알림</Text>
