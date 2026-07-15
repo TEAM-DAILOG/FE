@@ -41,27 +41,21 @@ export default function CategoryListScreen() {
   const isEmpty = categories.length === 0;
   const isMaxReached = categories.length >= MAX_CATEGORY_COUNT;
 
-  const renderItem = ({
-    item,
-    drag,
-    isActive,
-  }: RenderItemParams<Category>) => (
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<Category>) => (
     <View
       className={cn(
         "h-14 flex-row items-center px-4",
         // TODO: 드래그 중 배경색(bg-gray-50) 디자인 확인 대기 중
-        isActive && "bg-gray-50",
+        isActive && "bg-gray-50"
       )}
     >
       <View
         className={cn(
           "h-5 w-5 rounded-full",
-          CATEGORY_DOT_CLASS_NAMES[item.color],
+          CATEGORY_DOT_CLASS_NAMES[item.color]
         )}
       />
-      <Text className="ml-2 flex-1 text-b-03-m text-gray-900">
-        {item.name}
-      </Text>
+      <Text className="ml-2 flex-1 text-gray-900 text-b-03-m">{item.name}</Text>
       <Pressable
         onPress={() =>
           router.push({
@@ -88,7 +82,7 @@ export default function CategoryListScreen() {
           {isEmpty ? (
             <View className="items-center justify-center gap-3">
               <InfoIcon width={96} height={96} color="#4D826C" />
-              <Text className="text-b-02-sb text-green-600">
+              <Text className="text-green-600 text-b-02-sb">
                 등록된 카테고리가 없어요
               </Text>
             </View>
@@ -109,7 +103,7 @@ export default function CategoryListScreen() {
         </View>
 
         <View className="mb-12 gap-3">
-          <Text className="text-center text-b-03-m text-gray-600">
+          <Text className="text-center text-gray-600 text-b-03-m">
             카테고리는 최대 {MAX_CATEGORY_COUNT}개까지 생성 가능합니다
           </Text>
           <Button

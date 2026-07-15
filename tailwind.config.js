@@ -66,6 +66,10 @@ module.exports = {
         "suit-semibold": ["SUIT-SemiBold"],
         "suit-bold": ["SUIT-Bold"],
       },
+      boxShadow: {
+        "card-1": "0px 1px 8px 0px rgba(77, 130, 108, 0.08)",
+        "card-2": "0px 1px 4px 0px rgba(59, 99, 82, 0.08)",
+      },
     },
   },
   plugins: [

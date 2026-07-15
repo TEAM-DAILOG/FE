@@ -1,6 +1,6 @@
 import { Pressable, Text, type PressableProps } from "react-native";
 
-import PlusIcon from "@/assets/icons/plus.svg";
+import PlusIcon from "@/assets/icons/plusIcon.svg";
 import { cn } from "@/src/lib/cn";
 
 export type AddScheduleButtonProps = Omit<PressableProps, "children"> & {
