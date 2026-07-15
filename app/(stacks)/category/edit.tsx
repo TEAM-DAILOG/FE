@@ -4,11 +4,9 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
-import {
-  CategoryCircle,
-  type CategoryColor,
-} from "@/src/components/common/CategoryCircle";
+import { CategoryCircle } from "@/src/components/common/CategoryCircle";
 import { cn } from "@/src/lib/cn";
+import type { CategoryColor } from "@/src/types/categories/category.types";
 
 const CATEGORY_COLORS: CategoryColor[] = [
   "blue",
@@ -64,8 +62,10 @@ export default function CategoryEditScreen() {
     <ScreenContainer variant="stack">
       <BackHeader label="카테고리 설정" />
 
-      <View className="flex-1 px-4 pt-4">
-        <View className="gap-4 rounded-lg border border-gray-100 bg-white px-4 pt-6 pb-6">
+      <View className="flex-1 px-4 pt-5">
+        {/* TODO: 이 구분선(h-px bg-gray-100)은 category/index.tsx의 ItemSeparatorComponent와
+            중복됨 -> 공용 컴포넌트 분리 PR 머지되면 그걸로 교체 */}
+        <View className="gap-4 rounded-lg border border-gray-100 bg-white px-4 py-6">
           <Text className="text-b-02-sb text-gray-800">{DUMMY_NAME}</Text>
           <View className="h-px bg-gray-100" />
           <View className="flex-row justify-between">
@@ -81,7 +81,7 @@ export default function CategoryEditScreen() {
         </View>
       </View>
 
-      <View className="gap-2 px-4 mb-4">
+      <View className="mb-12 gap-3 px-4">
         <Button
           label="삭제"
           variant="stroke-green"
@@ -96,6 +96,7 @@ export default function CategoryEditScreen() {
         animationType="fade"
         onRequestClose={() => setIsDeleteModalOpen(false)}
       >
+        {/* bg-black/40 오버레이는 디자인 확인 완료된 값 */}
         <View className="flex-1 items-center justify-center bg-black/40 px-4">
           <View className="w-full overflow-hidden rounded-xl bg-white">
             <View className="items-center gap-3 px-4 py-10">
@@ -106,10 +107,13 @@ export default function CategoryEditScreen() {
                     CATEGORY_DOT_CLASS_NAMES[selectedColor],
                   )}
                 />
-                <Text className="text-b-02-sb">
-                  <Text className={CATEGORY_TEXT_CLASS_NAMES[selectedColor]}>
-                    {DUMMY_NAME}
-                  </Text>
+                <Text
+                  className={cn(
+                    "text-b-02-sb",
+                    CATEGORY_TEXT_CLASS_NAMES[selectedColor],
+                  )}
+                >
+                  {DUMMY_NAME}
                 </Text>
                 <Text className="text-b-02-m text-gray-900">
                   를 삭제할까요?

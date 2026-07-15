@@ -2,8 +2,7 @@ import { Pressable } from "react-native";
 
 import CheckIcon from "@/assets/icons/check.svg";
 import { cn } from "@/src/lib/cn";
-
-export type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
+import type { CategoryColor } from "@/src/types/categories/category.types";
 
 export type CategoryCircleState = "default" | "selected" | "disabled";
 

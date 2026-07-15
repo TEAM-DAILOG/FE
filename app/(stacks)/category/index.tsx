@@ -10,9 +10,11 @@ import EditIcon from "@/assets/icons/editIcon.svg";
 import DragIcon from "@/assets/icons/dragIcon.svg";
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
-import type { CategoryColor } from "@/src/components/common/CategoryCircle";
 import { cn } from "@/src/lib/cn";
-import type { Category } from "@/src/types/categories/category.types";
+import type {
+  Category,
+  CategoryColor,
+} from "@/src/types/categories/category.types";
 
 const MAX_CATEGORY_COUNT = 5;
 
@@ -47,6 +49,7 @@ export default function CategoryListScreen() {
     <View
       className={cn(
         "h-14 flex-row items-center px-4",
+        // TODO: 드래그 중 배경색(bg-gray-50) 디자인 확인 대기 중
         isActive && "bg-gray-50",
       )}
     >
@@ -56,7 +59,7 @@ export default function CategoryListScreen() {
           CATEGORY_DOT_CLASS_NAMES[item.color],
         )}
       />
-      <Text className="ml-2 flex-1 text-b-03-m text-gray-800">
+      <Text className="ml-2 flex-1 text-b-03-m text-gray-900">
         {item.name}
       </Text>
       <Pressable
@@ -68,10 +71,10 @@ export default function CategoryListScreen() {
         }
         hitSlop={8}
       >
-        <EditIcon width={20} height={20} />
+        <EditIcon width={24} height={24} />
       </Pressable>
-      <Pressable onPressIn={drag} hitSlop={8} className="ml-3">
-        <DragIcon width={20} height={20} />
+      <Pressable onPressIn={drag} hitSlop={8} className="ml-1">
+        <DragIcon width={24} height={24} />
       </Pressable>
     </View>
   );
@@ -80,17 +83,17 @@ export default function CategoryListScreen() {
     <ScreenContainer variant="stack">
       <BackHeader label="카테고리 설정" />
 
-      <View className="flex-1 justify-between px-4 pt-4">
-        <View>
+      <View className="flex-1 justify-between px-4 pt-5">
+        <View className={isEmpty ? "flex-1 items-center justify-center" : ""}>
           {isEmpty ? (
-            <View className="items-center justify-center gap-2 py-20">
+            <View className="items-center justify-center gap-3">
               <InfoIcon width={96} height={96} color="#4D826C" />
-              <Text className="text-b-03-m text-gray-500">
+              <Text className="text-b-02-sb text-green-600">
                 등록된 카테고리가 없어요
               </Text>
             </View>
           ) : (
-            <View className="overflow-hidden rounded-2xl border border-gray-100 bg-white">
+            <View className="overflow-hidden rounded-xl border border-gray-100 bg-white">
               <DraggableFlatList
                 data={categories}
                 keyExtractor={(item) => item.id}
@@ -105,15 +108,14 @@ export default function CategoryListScreen() {
           )}
         </View>
 
-        <View className="gap-3">
-          <Text className="text-center text-b-04-r text-gray-400">
+        <View className="mb-12 gap-3">
+          <Text className="text-center text-b-03-m text-gray-600">
             카테고리는 최대 {MAX_CATEGORY_COUNT}개까지 생성 가능합니다
           </Text>
           <Button
             label="카테고리 추가"
             onPress={() => router.push("/category/add")}
             disabled={isMaxReached}
-            className="mb-4"
           />
         </View>
       </View>
