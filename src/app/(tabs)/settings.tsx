@@ -20,7 +20,7 @@ export default function SettingsScreen() {
         <View className="items-center gap-2">
           {/* TODO: 내 정보 조회 API 연동 시 실제 유저로 교체 */}
           <View className="size-21 items-center justify-center rounded-lg bg-white">
-            <BambooLogo width={84} height={84} />
+            <BambooLogo width={84} height={84} color="#4D826C" />
           </View>
           <Text className="text-gray-900 text-b-02-m">USER NAME</Text>
         </View>
