@@ -210,74 +210,87 @@ export function DatePickerModal({
   };
 
   return (
-    <View className="h-fit w-full gap-4 rounded-xl bg-gray-0 px-4 py-5">
-      <View className="flex-col gap-3">
-        <DatePickerHeader
-          month={viewMonth}
-          onPrevMonth={goPrevMonth}
-          onNextMonth={goNextMonth}
-        />
+    <View className="h-fit w-full rounded-xl bg-gray-0">
+      <View className="gap-4 px-4 pb-6 pt-5">
+        <View className="flex-col gap-3">
+          <DatePickerHeader
+            month={viewMonth}
+            onPrevMonth={goPrevMonth}
+            onNextMonth={goNextMonth}
+          />
 
-        <DatePickerTabs activeTab={activeTab} onChangeTab={handleTabChange} />
+          <DatePickerTabs activeTab={activeTab} onChangeTab={handleTabChange} />
+        </View>
+
+        {activeTab === "basic" ? (
+          <DatePickerGrid
+            month={viewMonth}
+            onDayPress={handleBasicDayPress}
+            getDayState={(date) => ({ isSelected: date === selectedDate })}
+          />
+        ) : null}
+
+        {activeTab === "multi" ? (
+          <DatePickerGrid
+            month={viewMonth}
+            onDayPress={handleMultiDayPress}
+            getDayState={(date) => ({ isSelected: multiDates.includes(date) })}
+          />
+        ) : null}
+
+        {activeTab === "range" ? (
+          <DatePickerGrid
+            month={viewMonth}
+            onDayPress={handleRangeDayPress}
+            getDayState={(date) => ({
+              isRangeStart: date === rangeStart,
+              isRangeEnd: date === rangeEnd,
+              isInRange: !!(
+                rangeStart &&
+                rangeEnd &&
+                date > rangeStart &&
+                date < rangeEnd
+              ),
+            })}
+          />
+        ) : null}
+
+        {activeTab === "recurring" ? (
+          <DatePickerRecurringPanel
+            viewMonth={viewMonth}
+            repeatType={repeatType}
+            onChangeRepeatType={(type) => {
+              setRepeatType(type);
+              setIsRepeatTypeMenuOpen(false);
+            }}
+            isRepeatTypeMenuOpen={isRepeatTypeMenuOpen}
+            onToggleRepeatTypeMenu={() =>
+              setIsRepeatTypeMenuOpen((prev) => !prev)
+            }
+            weekdays={weekdays}
+            onToggleWeekday={toggleWeekday}
+            recurStart={recurStart}
+            recurEnd={recurEnd}
+            editingField={editingField}
+            onOpenEditingField={openEditingField}
+            onRecurDayPress={handleRecurDayPress}
+          />
+        ) : null}
       </View>
-
-      {activeTab === "basic" ? (
-        <DatePickerGrid
-          month={viewMonth}
-          onDayPress={handleBasicDayPress}
-          getDayState={(date) => ({ isSelected: date === selectedDate })}
+      <View className="flex-row">
+        <Button
+          label="취소"
+          variant="fill-gray"
+          onPress={closeModal}
+          className="w-0 flex-1 rounded-t-none rounded-bl-xl rounded-br-none"
         />
-      ) : null}
-
-      {activeTab === "multi" ? (
-        <DatePickerGrid
-          month={viewMonth}
-          onDayPress={handleMultiDayPress}
-          getDayState={(date) => ({ isSelected: multiDates.includes(date) })}
+        <Button
+          label="저장"
+          disabled={!result}
+          variant="fill-green"
+          onPress={handleApply}
+          className="w-0 flex-1 rounded-t-none rounded-bl-none rounded-br-xl"
         />
-      ) : null}
-
-      {activeTab === "range" ? (
-        <DatePickerGrid
-          month={viewMonth}
-          onDayPress={handleRangeDayPress}
-          getDayState={(date) => ({
-            isRangeStart: date === rangeStart,
-            isRangeEnd: date === rangeEnd,
-            isInRange: !!(
-              rangeStart &&
-              rangeEnd &&
-              date > rangeStart &&
-              date < rangeEnd
-            ),
-          })}
-        />
-      ) : null}
-
-      {activeTab === "recurring" ? (
-        <DatePickerRecurringPanel
-          viewMonth={viewMonth}
-          repeatType={repeatType}
-          onChangeRepeatType={(type) => {
-            setRepeatType(type);
-            setIsRepeatTypeMenuOpen(false);
-          }}
-          isRepeatTypeMenuOpen={isRepeatTypeMenuOpen}
-          onToggleRepeatTypeMenu={() =>
-            setIsRepeatTypeMenuOpen((prev) => !prev)
-          }
-          weekdays={weekdays}
-          onToggleWeekday={toggleWeekday}
-          recurStart={recurStart}
-          recurEnd={recurEnd}
-          editingField={editingField}
-          onOpenEditingField={openEditingField}
-          onRecurDayPress={handleRecurDayPress}
-        />
-      ) : null}
-
-      <View>
-        <Button label="적용" disabled={!result} onPress={handleApply} />
       </View>
     </View>
   );
