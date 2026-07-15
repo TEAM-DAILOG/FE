@@ -104,7 +104,7 @@ export default function DiaryDetailScreen() {
             </Pressable>
           </View>
 
-          <View className="flex-row items-center gap-2.5 rounded border border-green-700 bg-white px-2 py-1">
+          <View className="flex-row items-center gap-2.5 rounded border border-green-700 bg-white px-2 py-2">
             <Text className="text-[11px] font-medium leading-[150%] tracking-[-0.02em] text-green-700">
               질문일기
             </Text>
@@ -154,22 +154,17 @@ export default function DiaryDetailScreen() {
             <Text className="text-b-02-m text-gray-900">AI 추천일정</Text>
 
             <View className="gap-2 rounded-xl border border-gray-100 bg-white p-3">
-              {diary.recommendations.map((rec, index) => (
-                <View key={rec.id}>
-                  {index > 0 ? (
-                    <View className="mb-2 h-px bg-gray-100" />
-                  ) : null}
-
-                  <ScheduleRecommendItem
-                    size="sm"
-                    categoryLabel={rec.categoryName}
-                    categoryColor={CATEGORY_HEX_COLORS[rec.categoryColor]}
-                    description={rec.content}
-                    onPressAdd={() => {
-                      // TODO: API 연동 단계에서 일정 추가 로직 연결
-                    }}
-                  />
-                </View>
+              {diary.recommendations.map((rec) => (
+                <ScheduleRecommendItem
+                  key={rec.id}
+                  size="sm"
+                  categoryLabel={rec.categoryName}
+                  categoryColor={CATEGORY_HEX_COLORS[rec.categoryColor]}
+                  description={rec.content}
+                  onPressAdd={() => {
+                    // TODO: API 연동 단계에서 일정 추가 로직 연결
+                  }}
+                />
               ))}
             </View>
           </View>
