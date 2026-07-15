@@ -13,7 +13,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { ModalPage } from "@/src/components/modals/ModalPage";
-import "../global.css";
+import "../../global.css";
 
 export const unstable_settings = {
   anchor: "(tabs)",
