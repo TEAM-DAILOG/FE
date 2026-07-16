@@ -11,7 +11,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        notification: "#AC2823",
+        notification: {
+          1: "#AC2823",
+          2: "#2365AC",
+        },
         bg: "#F5F9F6",
         white: "#FFFFFF",
         green: {
