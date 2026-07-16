@@ -97,6 +97,7 @@ export default function CalendarScreen() {
             month={viewMonth}
             getDayInfo={getDayInfo}
             threadItems={threadItems}
+            isAiSummaryEnabled={isAiSummaryEnabled}
           />
         )}
       </TabScrollView>

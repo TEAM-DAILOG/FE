@@ -126,39 +126,35 @@ export function buildMockUpcomingSchedules(
   }));
 }
 
+const MOCK_DIARY_TITLE = "일기 제목";
+const MOCK_DIARY_CONTENT =
+  "Lorem ipsum dolor sit amet consectetur. Nulla non pellentesque eu mattis nunc. Egestas mattis nunc pharetra egestas.";
+
+function buildThreadItem(
+  date: string,
+  imageCount: number,
+  isUnread?: boolean
+): ThreadItem {
+  return {
+    date,
+    summary: "AI 일기 요약 한 줄",
+    title: MOCK_DIARY_TITLE,
+    content: MOCK_DIARY_CONTENT,
+    imageCount,
+    isUnread,
+  };
+}
+
 export function buildMockThreadItems(month: string): ThreadItem[] {
   const base = dayjs(month).startOf("month");
   return [
-    {
-      date: base.date(28).format("YYYY-MM-DD"),
-      summary: "AI 일기 요약 한 줄",
-      isUnread: true,
-    },
-    {
-      date: base.date(21).format("YYYY-MM-DD"),
-      summary: "AI 일기 요약 한 줄",
-      isUnread: true,
-    },
-    {
-      date: base.date(17).format("YYYY-MM-DD"),
-      summary: "AI 일기 요약 한 줄",
-    },
-    {
-      date: base.date(13).format("YYYY-MM-DD"),
-      summary: "AI 일기 요약 한 줄",
-    },
-    {
-      date: base.date(9).format("YYYY-MM-DD"),
-      summary: "AI 일기 요약 한 줄",
-    },
-    {
-      date: base.date(5).format("YYYY-MM-DD"),
-      summary: "AI 일기 요약 한 줄",
-    },
-    {
-      date: base.date(2).format("YYYY-MM-DD"),
-      summary: "AI 일기 요약 한 줄",
-    },
+    buildThreadItem(base.date(28).format("YYYY-MM-DD"), 3, true),
+    buildThreadItem(base.date(21).format("YYYY-MM-DD"), 0, true),
+    buildThreadItem(base.date(17).format("YYYY-MM-DD"), 1),
+    buildThreadItem(base.date(13).format("YYYY-MM-DD"), 2),
+    buildThreadItem(base.date(9).format("YYYY-MM-DD"), 0),
+    buildThreadItem(base.date(5).format("YYYY-MM-DD"), 3),
+    buildThreadItem(base.date(2).format("YYYY-MM-DD"), 1),
   ];
 }
 
@@ -168,18 +164,9 @@ export function buildMockPastThreadItems(month: string): ThreadItem[] {
   for (let monthsAgo = 1; monthsAgo <= 2; monthsAgo++) {
     const base = dayjs(month).subtract(monthsAgo, "month").startOf("month");
     items.push(
-      {
-        date: base.date(25).format("YYYY-MM-DD"),
-        summary: "AI 일기 요약 한 줄",
-      },
-      {
-        date: base.date(14).format("YYYY-MM-DD"),
-        summary: "AI 일기 요약 한 줄",
-      },
-      {
-        date: base.date(4).format("YYYY-MM-DD"),
-        summary: "AI 일기 요약 한 줄",
-      }
+      buildThreadItem(base.date(25).format("YYYY-MM-DD"), 2),
+      buildThreadItem(base.date(14).format("YYYY-MM-DD"), 0),
+      buildThreadItem(base.date(4).format("YYYY-MM-DD"), 1)
     );
   }
 

@@ -6,10 +6,56 @@ import { DiaryCard } from "@/src/components/common/DiaryCard";
 import { WEEKDAY_LABELS } from "@/src/constants";
 import type { ThreadItem } from "@/src/types/calendar/diaryPanel.types";
 
+const DIARY_PLACEHOLDER_IMAGE = require("@/assets/images/diaryPlaceholder.png");
+
 type ThreadTabProps = {
   month: string;
   items: ThreadItem[];
+  isAiSummaryEnabled: boolean;
 };
+
+function DiaryThreadCard({ item }: { item: ThreadItem }) {
+  const imageCount = Math.min(Math.max(item.imageCount, 0), 3);
+
+  if (imageCount === 0) {
+    return <DiaryCard variant="no-image" title={item.title} content={item.content} />;
+  }
+
+  if (imageCount === 1) {
+    return (
+      <DiaryCard
+        variant="one-image"
+        title={item.title}
+        content={item.content}
+        images={[DIARY_PLACEHOLDER_IMAGE]}
+      />
+    );
+  }
+
+  if (imageCount === 2) {
+    return (
+      <DiaryCard
+        variant="two-images"
+        title={item.title}
+        content={item.content}
+        images={[DIARY_PLACEHOLDER_IMAGE, DIARY_PLACEHOLDER_IMAGE]}
+      />
+    );
+  }
+
+  return (
+    <DiaryCard
+      variant="three-images"
+      title={item.title}
+      content={item.content}
+      images={[
+        DIARY_PLACEHOLDER_IMAGE,
+        DIARY_PLACEHOLDER_IMAGE,
+        DIARY_PLACEHOLDER_IMAGE,
+      ]}
+    />
+  );
+}
 
 type ThreadGroup = {
   month: string;
@@ -33,7 +79,7 @@ function groupByMonth(items: ThreadItem[]): ThreadGroup[] {
   return groups;
 }
 
-export function ThreadTab({ month, items }: ThreadTabProps) {
+export function ThreadTab({ month, items, isAiSummaryEnabled }: ThreadTabProps) {
   const groups = groupByMonth(items);
   const currentMonthLabel = dayjs(month).format("YYYY년 M월");
 
@@ -61,7 +107,11 @@ export function ThreadTab({ month, items }: ThreadTabProps) {
                 ) : null}
               </View>
 
-              <DiaryCard variant="summary" summary={item.summary} />
+              {isAiSummaryEnabled ? (
+                <DiaryCard variant="summary" summary={item.summary} />
+              ) : (
+                <DiaryThreadCard item={item} />
+              )}
             </View>
           ))}
         </View>
