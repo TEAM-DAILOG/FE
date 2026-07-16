@@ -19,7 +19,7 @@ const UPCOMING_RANGE_DAYS = 7;
 
 function formatDday(date: string) {
   const diff = dayjs(date).startOf("day").diff(dayjs().startOf("day"), "day");
-  const dday = diff <= 0 ? "D-DAY" : `D-${diff}`;
+  const dday = diff <= 0 ? "D-DAY " : `D-${diff} `;
 
   return `${dday} ${dayjs(date).format("M.D")} (${
     WEEKDAY_LABELS[dayjs(date).day()]
@@ -67,7 +67,7 @@ export function SchedulePanel({
         ) : (
           visibleSchedules.map((schedule) => (
             <View key={schedule.id} className="gap-2">
-              <Text className="text-gray-600 text-b-04-m">
+              <Text className="text-gray-800 text-b-04-m">
                 {formatDday(schedule.date)}
               </Text>
 
