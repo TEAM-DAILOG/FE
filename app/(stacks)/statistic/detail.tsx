@@ -36,6 +36,13 @@ const CATEGORY_STATS: CategoryBarChartItem[] = [
     ],
   },
   { id: "4", label: "기타", count: 0, color: "pink", schedules: [] },
+  {
+    id: "5",
+    label: "티키탁",
+    count: 1,
+    color: "purple",
+    schedules: [{ id: "5-1", name: "친구 생일 파티", date: "2026.05.09" }],
+  },
 ];
 
 export default function StatisticDetailScreen() {
