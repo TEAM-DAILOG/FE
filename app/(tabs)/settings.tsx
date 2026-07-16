@@ -26,7 +26,10 @@ export default function SettingsScreen() {
         </View>
 
         <View className="flex-row items-center gap-2">
-          <PillButton label="비밀번호 변경" />
+          <PillButton
+            label="비밀번호 변경"
+            onPress={() => router.push("/password")}
+          />
           <PillButton label="내 정보 수정" />
         </View>
       </View>
