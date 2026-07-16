@@ -21,15 +21,15 @@ const CATEGORY_HEX_COLORS: Record<CategoryColor, string> = {
   pink: "#BD7593",
 };
 
-// 일정 캘린더의 날짜별 점 표시와 "가까운 일정" 목록이 같은 원본에서 파생되도록 하나의 리스트로 관리
-export function buildMockSchedules(month: string): MockScheduleItem[] {
-  const base = dayjs(month).startOf("month");
-  const tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD");
+export function buildMockSchedules(): MockScheduleItem[] {
+  const today = dayjs();
+  const at = (offsetDays: number) =>
+    today.add(offsetDays, "day").format("YYYY-MM-DD");
 
   return [
     {
       id: "1",
-      date: base.date(3).format("YYYY-MM-DD"),
+      date: at(-10),
       categoryColor: "blue",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
@@ -37,7 +37,7 @@ export function buildMockSchedules(month: string): MockScheduleItem[] {
     },
     {
       id: "2",
-      date: base.date(3).format("YYYY-MM-DD"),
+      date: at(-10),
       categoryColor: "green",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
@@ -45,7 +45,7 @@ export function buildMockSchedules(month: string): MockScheduleItem[] {
     },
     {
       id: "3",
-      date: base.date(10).format("YYYY-MM-DD"),
+      date: at(-3),
       categoryColor: "brown",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
@@ -53,7 +53,7 @@ export function buildMockSchedules(month: string): MockScheduleItem[] {
     },
     {
       id: "4",
-      date: base.date(10).format("YYYY-MM-DD"),
+      date: at(-3),
       categoryColor: "purple",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
@@ -61,7 +61,7 @@ export function buildMockSchedules(month: string): MockScheduleItem[] {
     },
     {
       id: "5",
-      date: base.date(18).format("YYYY-MM-DD"),
+      date: at(5),
       categoryColor: "pink",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
@@ -69,7 +69,7 @@ export function buildMockSchedules(month: string): MockScheduleItem[] {
     },
     {
       id: "6",
-      date: tomorrow,
+      date: at(1),
       categoryColor: "blue",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
@@ -77,7 +77,7 @@ export function buildMockSchedules(month: string): MockScheduleItem[] {
     },
     {
       id: "7",
-      date: tomorrow,
+      date: at(1),
       categoryColor: "green",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
@@ -85,7 +85,7 @@ export function buildMockSchedules(month: string): MockScheduleItem[] {
     },
     {
       id: "8",
-      date: tomorrow,
+      date: at(1),
       categoryColor: "purple",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
@@ -94,7 +94,6 @@ export function buildMockSchedules(month: string): MockScheduleItem[] {
   ];
 }
 
-// 일정 리스트 중 해당 달에 속하는 항목만 날짜별 카테고리 색상 목록으로 변환 (캘린더 그리드 점 표시용)
 export function buildMockScheduleDays(
   schedules: MockScheduleItem[],
   month: string
@@ -114,7 +113,6 @@ export function buildMockScheduleDays(
   return days;
 }
 
-// 일정 리스트를 "가까운 일정" 패널이 쓰는 형태(hex 색상)로 변환
 export function buildMockUpcomingSchedules(
   schedules: MockScheduleItem[]
 ): UpcomingSchedule[] {
@@ -164,7 +162,6 @@ export function buildMockThreadItems(month: string): ThreadItem[] {
   ];
 }
 
-// 과거 달 스레드는 API 페이지네이션 연동 전까지 최근 2개월치 mock으로 대체
 export function buildMockPastThreadItems(month: string): ThreadItem[] {
   const items: ThreadItem[] = [];
 
@@ -189,7 +186,6 @@ export function buildMockPastThreadItems(month: string): ThreadItem[] {
   return items;
 }
 
-// 스레드(작성된 일기) 목록에 있는 날짜만큼 일기 캘린더에 초록 아이콘으로 표시되도록 같은 리스트에서 파생
 export function buildMockDiaryDays(
   threadItems: ThreadItem[],
   month: string
