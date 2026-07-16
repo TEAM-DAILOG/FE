@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { View } from "react-native";
 
 import {
@@ -8,32 +9,35 @@ import {
 } from "@/src/components/common";
 import {
   MonthAchieveCard,
+  type ScheduleRecommendItemData,
   ScheduleRecommendSection,
   ScheduleStatSection,
 } from "@/src/components/statistics";
 
-const RECOMMEND_ITEMS = [
+const RECOMMEND_ITEMS: ScheduleRecommendItemData[] = [
   {
     id: "1",
     categoryLabel: "CATEGORY",
-    categoryColor: "#6A92AF",
+    categoryColor: "blue",
     description: "Lorem ipsum dolor sit amet consectetur.",
   },
   {
     id: "2",
     categoryLabel: "CATEGORY",
-    categoryColor: "#C49C64",
+    categoryColor: "brown",
     description: "Lorem ipsum dolor sit amet consectetur.",
   },
   {
     id: "3",
     categoryLabel: "CATEGORY",
-    categoryColor: "#A381BB",
+    categoryColor: "purple",
     description: "Lorem ipsum dolor sit amet consectetur.",
   },
 ];
 
 export default function StatisticsScreen() {
+  const router = useRouter();
+
   return (
     <ScreenContainer>
       <LogoHeader />
@@ -43,7 +47,7 @@ export default function StatisticsScreen() {
           <MonthAchieveCard
             month={12}
             achievementRate={20}
-            onPressIncomplete={() => {}}
+            onPressIncomplete={() => router.push("/statistic/incomplete")}
           />
 
           <ScheduleStatSection />
