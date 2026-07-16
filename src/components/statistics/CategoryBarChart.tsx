@@ -90,7 +90,6 @@ function CategoryBar({
 
   return (
     <View className="flex-1 items-center gap-2">
-      \
       <View
         style={{ height: trackHeight }}
         className="w-full items-center justify-end gap-1"
