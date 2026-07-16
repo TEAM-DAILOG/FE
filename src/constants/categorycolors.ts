@@ -38,3 +38,12 @@ export const CATEGORY_TEXT_CLASS_NAMES: Record<CategoryColor, string> = {
   purple: "text-category-04-1",
   pink: "text-category-05-1",
 };
+
+// 일정 카드 등에서 카테고리색의 연한 톤으로 테두리를 입힐 때 쓰는 클래스
+export const CATEGORY_BORDER_CLASS_NAMES: Record<CategoryColor, string> = {
+  blue: "border-category-01-2",
+  brown: "border-category-02-2",
+  green: "border-category-03-2",
+  purple: "border-category-04-2",
+  pink: "border-category-05-2",
+};
