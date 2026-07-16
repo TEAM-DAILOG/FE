@@ -65,7 +65,11 @@ export default function StatisticIncompleteScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20 }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingTop: 20,
+          paddingBottom: 40,
+        }}
       >
         <View className="w-full gap-4 rounded-2xl border border-gray-100 bg-gray-0 px-3 py-4">
           <View className="w-full gap-3">

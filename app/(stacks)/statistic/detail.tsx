@@ -52,7 +52,11 @@ export default function StatisticDetailScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20 }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingTop: 20,
+          paddingBottom: 40,
+        }}
       >
         <MonthlyCategoryStatCard
           year={2026}
