@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import DownIcon from "@/assets/icons/downIcon.svg";
 import {
   BackHeader,
   ProgressBar,
@@ -10,7 +9,7 @@ import {
   type ScheduleItemProps,
   ScreenContainer,
 } from "@/src/components/common";
-import { DetailToggleButton } from "@/src/components/statistics";
+import { DetailToggleButton, MonthSelector } from "@/src/components/statistics";
 
 type ScheduleEntry = Pick<
   ScheduleItemProps,
@@ -54,6 +53,8 @@ const COMPLETED_SCHEDULES: ScheduleEntry[] = [
 ];
 
 const ACHIEVEMENT_RATE = 80;
+const YEAR = 2026;
+const MONTH = 5;
 
 export default function StatisticIncompleteScreen() {
   const [isCompletedOpen, setIsCompletedOpen] = useState(false);
@@ -69,10 +70,7 @@ export default function StatisticIncompleteScreen() {
         <View className="w-full gap-4 rounded-2xl border border-gray-100 bg-gray-0 px-3 py-4">
           <View className="w-full gap-3">
             <View className="flex-row items-center justify-between">
-              <Pressable className="flex-row items-center gap-1">
-                <Text className="text-gray-900 text-h-01">2026년 5월</Text>
-                <DownIcon width={24} height={24} color="#020303" />
-              </Pressable>
+              <MonthSelector year={YEAR} month={MONTH} />
 
               <Text className="text-gray-800 text-b-02-m">
                 일정 달성률{" "}

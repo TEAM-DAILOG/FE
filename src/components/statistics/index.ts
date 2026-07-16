@@ -16,6 +16,7 @@ export {
   MonthlyCategoryStatCard,
   type MonthlyCategoryStatCardProps,
 } from "./MonthlyCategoryStatCard";
+export { MonthSelector, type MonthSelectorProps } from "./MonthSelector";
 export {
   ScheduleRecommendSection,
   type ScheduleRecommendItemData,

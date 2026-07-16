@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import DownIcon from "@/assets/icons/downIcon.svg";
 import {
   CATEGORY_DOT_CLASS_NAMES,
   CATEGORY_TEXT_CLASS_NAMES,
@@ -16,6 +15,7 @@ import {
   type CategoryBarChartItem,
 } from "./CategoryBarChart";
 import { DetailToggleButton } from "./DetailToggleButton";
+import { MonthSelector } from "./MonthSelector";
 
 export type MonthlyCategoryStatCardProps = {
   year: number;
@@ -44,15 +44,7 @@ export function MonthlyCategoryStatCard({
       )}
     >
       <View className="w-full gap-2">
-        <Pressable
-          className="flex-row items-center gap-1"
-          onPress={onPressMonth}
-        >
-          <Text className="text-gray-900 text-h-01">
-            {year}년 {month}월
-          </Text>
-          <DownIcon width={24} height={24} color="#020303" />
-        </Pressable>
+        <MonthSelector year={year} month={month} onPress={onPressMonth} />
 
         <View className="flex-row flex-wrap items-center gap-1">
           <Text className="text-gray-900 text-b-04-m">
