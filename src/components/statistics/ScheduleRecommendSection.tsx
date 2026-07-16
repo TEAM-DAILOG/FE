@@ -3,13 +3,14 @@ import { Modal, Pressable, Text, View } from "react-native";
 
 import CloseIcon from "@/assets/icons/closeIcon.svg";
 import InfoIcon from "@/assets/icons/infoIcon.svg";
-import { Button, ScheduleRecommendItem } from "@/src/components/common";
+import { Button, ScheduleItem } from "@/src/components/common";
 import { cn } from "@/src/lib/cn";
+import type { CategoryColor } from "@/src/types/categories/category.types";
 
 export type ScheduleRecommendItemData = {
   id: string;
   categoryLabel: string;
-  categoryColor: string;
+  categoryColor: CategoryColor;
   description: string;
 };
 
@@ -52,12 +53,16 @@ export function ScheduleRecommendSection({
 
       <View className="gap-3">
         {items.map((item) => (
-          <ScheduleRecommendItem
+          <ScheduleItem
             key={item.id}
             categoryLabel={item.categoryLabel}
             categoryColor={item.categoryColor}
             description={item.description}
-            onPressAdd={() => onPressAdd?.(item.id)}
+            action={{
+              type: "button",
+              label: "일정추가",
+              onPress: () => onPressAdd?.(item.id),
+            }}
           />
         ))}
       </View>

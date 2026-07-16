@@ -1,14 +1,15 @@
+import { AddScheduleButton } from "@/src/components/common/AddScheduleButton";
+import { ScheduleItem } from "@/src/components/common/ScheduleItem";
+import type { CategoryColor } from "@/src/types/categories/category.types";
+import { router } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import { AddScheduleButton } from "@/src/components/common/AddScheduleButton";
-import { ScheduleCheckItem } from "@/src/components/common/ScheduleCheckItem";
 
 type Schedule = {
   id: string;
   categoryLabel: string;
-  categoryColor: string;
+  categoryColor: CategoryColor;
   description: string;
   checked: boolean;
 };
@@ -17,35 +18,35 @@ const MOCK_SCHEDULES: Schedule[] = [
   {
     id: "1",
     categoryLabel: "CATEGORY",
-    categoryColor: "#5B8FD9",
+    categoryColor: "blue",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
   {
     id: "2",
     categoryLabel: "CATEGORY",
-    categoryColor: "#D9A05B",
+    categoryColor: "brown",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
   {
     id: "3",
     categoryLabel: "CATEGORY",
-    categoryColor: "#5FAE72",
+    categoryColor: "green",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
   {
     id: "4",
     categoryLabel: "CATEGORY",
-    categoryColor: "#9B7ED9",
+    categoryColor: "purple",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
   {
     id: "5",
     categoryLabel: "CATEGORY",
-    categoryColor: "#D95B8F",
+    categoryColor: "pink",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
@@ -121,17 +122,23 @@ export default function HomeScreen() {
               : "오늘 계획된 일정이 없어요."}
           </Text>
 
-          {hasSchedules &&
-            schedules.map((s) => (
-              <ScheduleCheckItem
-                key={s.id}
-                categoryLabel={s.categoryLabel}
-                categoryColor={s.categoryColor}
-                description={s.description}
-                checked={s.checked}
-                onToggle={() => toggleSchedule(s.id)}
-              />
-            ))}
+          {hasSchedules && (
+            <View className="gap-2">
+              {schedules.map((s) => (
+                <ScheduleItem
+                  key={s.id}
+                  categoryLabel={s.categoryLabel}
+                  categoryColor={s.categoryColor}
+                  description={s.description}
+                  action={{
+                    type: "checkbox",
+                    checked: s.checked,
+                    onToggle: () => toggleSchedule(s.id),
+                  }}
+                />
+              ))}
+            </View>
+          )}
 
           <View className={hasSchedules ? "mt-2" : ""}>
             <AddScheduleButton onPress={() => router.push("/schedule")} />
