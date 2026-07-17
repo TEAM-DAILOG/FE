@@ -5,7 +5,7 @@ import DraggableFlatList, {
   type RenderItemParams,
 } from "react-native-draggable-flatlist";
 
-import InfoIcon from "@/assets/icons/infoIcon.svg";
+import ExclamationIcon from "@/assets/icons/exclamationIcon.svg";
 import EditIcon from "@/assets/icons/editIcon.svg";
 import DragIcon from "@/assets/icons/dragIcon.svg";
 import { BackHeader, ScreenContainer } from "@/src/components/common";
@@ -81,7 +81,7 @@ export default function CategoryListScreen() {
         <View className={isEmpty ? "flex-1 items-center justify-center" : ""}>
           {isEmpty ? (
             <View className="items-center justify-center gap-3">
-              <InfoIcon width={96} height={96} color="#4D826C" />
+              <ExclamationIcon width={96} height={96} color="#4D826C" />
               <Text className="text-green-600 text-b-02-sb">
                 등록된 카테고리가 없어요
               </Text>
