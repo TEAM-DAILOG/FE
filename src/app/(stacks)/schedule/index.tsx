@@ -14,6 +14,7 @@ import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { CategoryChip } from "@/src/components/common/CategoryChip";
 import { TextField } from "@/src/components/common/TextField";
+import { ScheduleRepeatSummary } from "@/src/components/schedule/ScheduleRepeatSummary";
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { CategoryColor } from "@/src/types/categories/category.types";
@@ -21,7 +22,7 @@ import type {
   DatePickerModalResult,
   ScheduleRepeatValue,
 } from "@/src/types/modals/datepickerModal.types";
-import { formatScheduleDate, formatScheduleRepeatSummary } from "@/src/utils";
+import { formatScheduleDate } from "@/src/utils";
 
 type CategoryOption = {
   id: string;
@@ -50,10 +51,6 @@ export default function ScheduleAddScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
 
   const dateLabel = useMemo(() => formatScheduleDate(date), [date]);
-  const repeatLabel = useMemo(
-    () => formatScheduleRepeatSummary(repeat),
-    [repeat]
-  );
   const canSave = title.trim().length > 0;
 
   const handleMemoFocus = () => {
@@ -143,14 +140,13 @@ export default function ScheduleAddScreen() {
               className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3"
             >
               <Text className="text-gray-900 text-b-02-m">반복</Text>
-              <Text
-                className={cn(
+              <ScheduleRepeatSummary
+                value={repeat}
+                textClassName={cn(
                   "text-b-03-m",
                   repeat.mode === "none" ? "text-gray-400" : "text-gray-800"
                 )}
-              >
-                {repeatLabel}
-              </Text>
+              />
             </Pressable>
           </View>
 
