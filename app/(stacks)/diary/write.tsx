@@ -1,4 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
@@ -27,6 +28,7 @@ const HAS_TODAY_QUESTION = true;
 const PHOTO_MAX_COUNT = 3;
 
 export default function DiaryWriteScreen() {
+  const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<DiaryTabType>("question");
   const [selectedDate] = useState(new Date());
   const [title, setTitle] = useState("");
@@ -61,6 +63,7 @@ export default function DiaryWriteScreen() {
   const handleSave = () => {
     if (!isFormValid) return;
     // TODO: API 연동 단계에서 실제 저장 로직 연결
+    router.push("/diary/recommendations");
   };
 
   const showEmptyState = selectedTab === "question" && !HAS_TODAY_QUESTION;
