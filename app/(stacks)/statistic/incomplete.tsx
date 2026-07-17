@@ -5,16 +5,16 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import {
   BackHeader,
   ProgressBar,
-  ScheduleItem,
-  type ScheduleItemProps,
   ScreenContainer,
 } from "@/src/components/common";
-import { DetailToggleButton, MonthSelector } from "@/src/components/statistics";
+import {
+  DetailToggleButton,
+  MonthSelector,
+  ScheduleListGroup,
+  type ScheduleListGroupEntry,
+} from "@/src/components/statistics";
 
-type ScheduleEntry = Pick<
-  ScheduleItemProps,
-  "date" | "categoryLabel" | "categoryColor" | "description"
->;
+type ScheduleEntry = ScheduleListGroupEntry;
 
 const INCOMPLETE_SCHEDULES: ScheduleEntry[] = [
   {
@@ -85,25 +85,19 @@ export default function StatisticIncompleteScreen() {
             <ProgressBar value={ACHIEVEMENT_RATE} />
           </View>
 
-          <View className="w-full gap-3">
-            <Text className="text-gray-900 text-b-02-m">
-              미완료된 일정이{" "}
-              <Text className="text-green-600 text-b-02-sb">
-                {INCOMPLETE_SCHEDULES.length}
+          <ScheduleListGroup
+            title={
+              <Text className="text-gray-900 text-b-02-m">
+                미완료된 일정이{" "}
+                <Text className="text-green-600 text-b-02-sb">
+                  {INCOMPLETE_SCHEDULES.length}
+                </Text>
+                개 있어요.
               </Text>
-              개 있어요.
-            </Text>
-
-            <View className="w-full gap-2">
-              {INCOMPLETE_SCHEDULES.map((schedule) => (
-                <ScheduleItem
-                  key={`${schedule.date}-${schedule.categoryLabel}`}
-                  {...schedule}
-                  action={{ type: "button", label: "일정재등록" }}
-                />
-              ))}
-            </View>
-          </View>
+            }
+            schedules={INCOMPLETE_SCHEDULES}
+            action={{ type: "button", label: "일정재등록" }}
+          />
 
           <DetailToggleButton
             label="완료 일정 펼치기"
@@ -115,24 +109,20 @@ export default function StatisticIncompleteScreen() {
             <Animated.View
               entering={FadeIn.duration(100)}
               exiting={FadeOut.duration(100)}
-              className="w-full gap-3"
+              className="w-full"
             >
-              <Text className="text-gray-900 text-b-03-m">
-                <Text className="text-green-600 text-b-03-sb">
-                  {COMPLETED_SCHEDULES.length}
-                </Text>
-                개의 완료된 일정
-              </Text>
-
-              <View className="w-full gap-2">
-                {COMPLETED_SCHEDULES.map((schedule) => (
-                  <ScheduleItem
-                    key={`${schedule.date}-${schedule.categoryLabel}`}
-                    {...schedule}
-                    action={{ type: "none" }}
-                  />
-                ))}
-              </View>
+              <ScheduleListGroup
+                title={
+                  <Text className="text-gray-900 text-b-03-m">
+                    <Text className="text-green-600 text-b-03-sb">
+                      {COMPLETED_SCHEDULES.length}
+                    </Text>
+                    개의 완료된 일정
+                  </Text>
+                }
+                schedules={COMPLETED_SCHEDULES}
+                action={{ type: "none" }}
+              />
             </Animated.View>
           )}
         </View>
