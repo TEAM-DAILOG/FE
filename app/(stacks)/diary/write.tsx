@@ -1,7 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Linking, ScrollView, Text, View } from "react-native";
 
 import {
   BackHeader,
@@ -41,9 +41,19 @@ export default function DiaryWriteScreen() {
   const handleAddPhoto = async () => {
     if (photos.length >= PHOTO_MAX_COUNT) return;
 
-    // 사진 선택 권한 요청
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") return;
+    const permission = await ImagePicker.getMediaLibraryPermissionsAsync();
+
+    if (permission.status !== "granted") {
+      // 한 번 거부되면 OS가 다시 다이얼로그를 띄우지 않으므로 설정 화면으로 유도
+      if (!permission.canAskAgain) {
+        Linking.openSettings();
+        return;
+      }
+
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") return;
+    }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
