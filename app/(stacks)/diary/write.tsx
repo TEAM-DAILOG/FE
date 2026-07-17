@@ -11,6 +11,7 @@ import {
 } from "@/src/components/common";
 import {
   DiaryDateCard,
+  DiaryEmptyState,
   DiaryPhotoCard,
   DiaryQuestionCard,
   DiaryTabBar,
@@ -19,6 +20,9 @@ import {
 
 // TODO: API 연동 전까지 오늘의 질문 더미 사용
 const DUMMY_QUESTION = "Lorem ipsum dolor sit amet consectetur.";
+
+// TODO: API 연동 전까지 오늘 질문 생성 가능 여부 더미 사용 (false로 바꾸면 빈 상태 확인 가능)
+const HAS_TODAY_QUESTION = true;
 
 const PHOTO_MAX_COUNT = 3;
 
@@ -59,63 +63,81 @@ export default function DiaryWriteScreen() {
     // TODO: API 연동 단계에서 실제 저장 로직 연결
   };
 
+  const showEmptyState = selectedTab === "question" && !HAS_TODAY_QUESTION;
+
   return (
     <ScreenContainer variant="stack">
       <BackHeader label="일기작성" />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="gap-4 px-4 pt-5">
-          <DiaryTabBar selectedTab={selectedTab} onSelectTab={setSelectedTab} />
-          <DiaryDateCard date={selectedDate} onPress={handlePressDate} />
-
-          <View className="gap-3">
-            <Text className="text-gray-900 text-b-02-m">제목</Text>
-            <TextField
-              placeholder="제목을 입력하세요"
-              value={title}
-              onChangeText={setTitle}
+      {showEmptyState ? (
+        <>
+          <View className="px-4 pt-5">
+            <DiaryTabBar
+              selectedTab={selectedTab}
+              onSelectTab={setSelectedTab}
             />
           </View>
-        </View>
+          <DiaryEmptyState onPressWriteFree={() => setSelectedTab("free")} />
+        </>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View className="gap-4 px-4 pt-5">
+            <DiaryTabBar
+              selectedTab={selectedTab}
+              onSelectTab={setSelectedTab}
+            />
+            <DiaryDateCard date={selectedDate} onPress={handlePressDate} />
 
-        <Divider className="mt-6 border-green-100" />
+            <View className="gap-3">
+              <Text className="text-gray-900 text-b-02-m">제목</Text>
+              <TextField
+                placeholder="제목을 입력하세요"
+                value={title}
+                onChangeText={setTitle}
+              />
+            </View>
+          </View>
 
-        <View className="gap-4 px-4 pt-6">
-          {selectedTab === "question" && (
-            <DiaryQuestionCard question={DUMMY_QUESTION} />
-          )}
+          <Divider className="mt-6 border-green-100" />
 
-          <View className="gap-3">
-            <Text className="text-gray-900 text-b-02-m">
-              <Text className="text-green-600">* </Text>
-              오늘의 일기
-            </Text>
-            <TextField
-              type="textarea"
-              placeholder="질문에 답변하며 일기를 작성해 보세요!"
-              value={content}
-              onChangeText={setContent}
+          <View className="gap-4 px-4 pt-6">
+            {selectedTab === "question" && (
+              <DiaryQuestionCard question={DUMMY_QUESTION} />
+            )}
+
+            <View className="gap-3">
+              <Text className="text-gray-900 text-b-02-m">
+                <Text className="text-green-600">* </Text>
+                오늘의 일기
+              </Text>
+              <TextField
+                type="textarea"
+                placeholder="질문에 답변하며 일기를 작성해 보세요!"
+                value={content}
+                onChangeText={setContent}
+              />
+            </View>
+
+            <DiaryPhotoCard
+              photos={photos}
+              onAddPhoto={handleAddPhoto}
+              onRemovePhoto={handleRemovePhoto}
+              maxCount={PHOTO_MAX_COUNT}
             />
           </View>
 
-          <DiaryPhotoCard
-            photos={photos}
-            onAddPhoto={handleAddPhoto}
-            onRemovePhoto={handleRemovePhoto}
-            maxCount={PHOTO_MAX_COUNT}
-          />
-        </View>
-        <View className="gap-3 px-4 pb-12 pt-7">
-          <View className="flex-row items-center">
-            <Text className="text-green-600 text-h-01">*</Text>
-            <Text className="text-gray-700 text-b-04-m">
-              항목은 필수입니다.
-            </Text>
-          </View>
+          <View className="gap-3 px-4 pb-12 pt-7">
+            <View className="flex-row items-center">
+              <Text className="text-green-600 text-h-01">*</Text>
+              <Text className="text-gray-700 text-b-04-m">
+                항목은 필수입니다.
+              </Text>
+            </View>
 
-          <Button label="저장" onPress={handleSave} disabled={!isFormValid} />
-        </View>
-      </ScrollView>
+            <Button label="저장" onPress={handleSave} disabled={!isFormValid} />
+          </View>
+        </ScrollView>
+      )}
     </ScreenContainer>
   );
 }
