@@ -42,7 +42,7 @@ export function DiaryPhotoCard({
       <View className="w-full items-center gap-2 rounded-lg border border-gray-100 bg-white px-3 py-4">
         <View className="flex-row gap-4">
           {photos.map((uri, index) => (
-            <View key={uri} className="relative size-[100px]">
+            <View key={`${uri}-${index}`} className="relative size-[100px]">
               <Image source={{ uri }} className="size-[100px]" />
               <Pressable
                 className="absolute right-1 top-1 size-5 items-center justify-center rounded-full bg-white/40"
