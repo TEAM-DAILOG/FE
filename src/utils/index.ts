@@ -47,6 +47,16 @@ export function formatScheduleDate(dateStr: string) {
   return dayjs(dateStr).format("YYYY.MM.DD");
 }
 
+// 일정 날짜(date)를 D-n / 월.일 / 요일 조각으로 분리하는 함수
+export function getScheduleDday(date: string) {
+  const diff = dayjs(date).startOf("day").diff(dayjs().startOf("day"), "day");
+  const ddayLabel = diff <= 0 ? "D-DAY" : `D-${diff}`;
+  const dateLabel = dayjs(date).format("M.D");
+  const weekdayLabel = `(${WEEKDAY_LABELS[dayjs(date).day()]})`;
+
+  return { ddayLabel, dateLabel, weekdayLabel };
+}
+
 // 요일 배열(weekdays)을 "월, 수요일"과 같은 문자열로 포맷하는 함수
 export function formatWeekdays(weekdays: number[]) {
   const sorted = [...weekdays].sort((a, b) => a - b);

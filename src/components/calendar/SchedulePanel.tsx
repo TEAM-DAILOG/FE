@@ -4,9 +4,9 @@ import { Text, View } from "react-native";
 
 import { CalendarGrid } from "@/src/components/calendar/CalendarGrid";
 import { ScheduleCheckItem } from "@/src/components/common/ScheduleCheckItem";
-import { WEEKDAY_LABELS } from "@/src/constants";
 import type { CalendarDayInfo } from "@/src/types/calendar/calendarGrid.types";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
+import { getScheduleDday } from "@/src/utils";
 
 type SchedulePanelProps = {
   month: string;
@@ -16,15 +16,6 @@ type SchedulePanelProps = {
 };
 
 const UPCOMING_RANGE_DAYS = 7;
-
-function formatDday(date: string) {
-  const diff = dayjs(date).startOf("day").diff(dayjs().startOf("day"), "day");
-  const dday = diff <= 0 ? "D-DAY " : `D-${diff} `;
-
-  return `${dday} ${dayjs(date).format("M.D")} (${
-    WEEKDAY_LABELS[dayjs(date).day()]
-  })`;
-}
 
 export function SchedulePanel({
   month,
@@ -65,21 +56,37 @@ export function SchedulePanel({
             다음 일주일 이내에 등록된 일정이 없습니다.
           </Text>
         ) : (
-          visibleSchedules.map((schedule) => (
-            <View key={schedule.id} className="gap-2">
-              <Text className="text-gray-800 text-b-04-m">
-                {formatDday(schedule.date)}
-              </Text>
+          visibleSchedules.map((schedule) => {
+            const { ddayLabel, dateLabel, weekdayLabel } = getScheduleDday(
+              schedule.date
+            );
 
-              <ScheduleCheckItem
-                categoryLabel={schedule.categoryLabel}
-                categoryColor={schedule.categoryColor}
-                description={schedule.description}
-                checked={schedule.checked}
-                onToggle={() => toggleSchedule(schedule.id)}
-              />
-            </View>
-          ))
+            return (
+              <View key={schedule.id} className="gap-2">
+                <View className="flex-row items-center gap-1">
+                  <Text className="text-gray-800 text-b-04-m">
+                    {ddayLabel}
+                  </Text>
+                  <View className="flex-row items-center gap-0.5">
+                    <Text className="text-gray-800 text-b-04-m">
+                      {dateLabel}
+                    </Text>
+                    <Text className="text-gray-800 text-b-04-m">
+                      {weekdayLabel}
+                    </Text>
+                  </View>
+                </View>
+
+                <ScheduleCheckItem
+                  categoryLabel={schedule.categoryLabel}
+                  categoryColor={schedule.categoryColor}
+                  description={schedule.description}
+                  checked={schedule.checked}
+                  onToggle={() => toggleSchedule(schedule.id)}
+                />
+              </View>
+            );
+          })
         )}
       </View>
     </View>
