@@ -2,20 +2,21 @@ import { Pressable, Text } from "react-native";
 
 import DownIcon from "@/assets/icons/downIcon.svg";
 import { cn } from "@/src/lib/cn";
+import { formatYearMonth } from "@/src/utils/formatDate";
 
 export type MonthSelectorProps = {
-  year: number;
-  month: number;
+  date: Date;
   onPress?: () => void;
   className?: string;
 };
 
 export function MonthSelector({
-  year,
-  month,
+  date,
   onPress,
   className,
 }: MonthSelectorProps) {
+  const { year, month } = formatYearMonth(date);
+
   return (
     <Pressable
       className={cn("flex-row items-center gap-1", className)}

@@ -18,8 +18,7 @@ import { DetailToggleButton } from "./DetailToggleButton";
 import { MonthSelector } from "./MonthSelector";
 
 export type MonthlyCategoryStatCardProps = {
-  year: number;
-  month: number;
+  date: Date;
   topCategory: { label: string; color: CategoryColor };
   data: CategoryBarChartItem[];
   onPressMonth?: () => void;
@@ -27,8 +26,7 @@ export type MonthlyCategoryStatCardProps = {
 };
 
 export function MonthlyCategoryStatCard({
-  year,
-  month,
+  date,
   topCategory,
   data,
   onPressMonth,
@@ -44,7 +42,7 @@ export function MonthlyCategoryStatCard({
       )}
     >
       <View className="w-full gap-2">
-        <MonthSelector year={year} month={month} onPress={onPressMonth} />
+        <MonthSelector date={date} onPress={onPressMonth} />
 
         <View className="flex-row flex-wrap items-center gap-1">
           <Text className="text-gray-900 text-b-04-m">

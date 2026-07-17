@@ -59,8 +59,7 @@ export default function StatisticDetailScreen() {
         }}
       >
         <MonthlyCategoryStatCard
-          year={2026}
-          month={5}
+          date={new Date(2026, 4)}
           topCategory={{ label: "업무업무업", color: "blue" }}
           data={CATEGORY_STATS}
         />

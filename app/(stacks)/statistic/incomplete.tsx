@@ -53,8 +53,6 @@ const COMPLETED_SCHEDULES: ScheduleEntry[] = [
 ];
 
 const ACHIEVEMENT_RATE = 80;
-const YEAR = 2026;
-const MONTH = 5;
 
 export default function StatisticIncompleteScreen() {
   const [isCompletedOpen, setIsCompletedOpen] = useState(false);
@@ -74,7 +72,7 @@ export default function StatisticIncompleteScreen() {
         <View className="w-full gap-4 rounded-2xl border border-gray-100 bg-gray-0 px-3 py-4">
           <View className="w-full gap-3">
             <View className="flex-row items-center justify-between">
-              <MonthSelector year={YEAR} month={MONTH} />
+              <MonthSelector date={new Date()} />
 
               <Text className="text-gray-800 text-b-02-m">
                 일정 달성률{" "}
