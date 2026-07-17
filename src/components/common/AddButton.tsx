@@ -1,6 +1,6 @@
 import { Pressable, Text, type PressableProps } from "react-native";
 
-import PlusIcon from "@/assets/icons/plus.svg";
+import PlusIcon from "@/assets/icons/plusIcon.svg";
 import { cn } from "@/src/lib/cn";
 
 export type AddButtonProps = Omit<PressableProps, "children"> & {
@@ -12,7 +12,7 @@ export function AddButton({ label, className, ...rest }: AddButtonProps) {
   return (
     <Pressable
       className={cn(
-        "flex-row items-center justify-center gap-1 self-start rounded-[100px] border border-green-400 bg-white px-2 py-1.5",
+        "flex-row items-center justify-center gap-1 rounded-[100px] border border-green-400 bg-white px-2 py-1.5",
         className
       )}
       {...rest}

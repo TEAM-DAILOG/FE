@@ -8,17 +8,6 @@ import type {
   DiaryCardVariant,
 } from "@/src/types/diaries/diaryCard.types";
 
-const CARD_SHADOW_STYLE = {
-  shadowColor: "#3B6352",
-  shadowOffset: {
-    width: 0,
-    height: 1,
-  },
-  shadowOpacity: 0.08,
-  shadowRadius: 4,
-  elevation: 1,
-} as const;
-
 const IMAGE_GAP_PX = 8;
 
 const CONTENT_LINE_COUNTS: Record<
@@ -47,9 +36,8 @@ export function DiaryCard(props: DiaryCardProps) {
   if (props.variant === "summary") {
     return (
       <View
-        style={CARD_SHADOW_STYLE}
         className={cn(
-          "h-12 w-full justify-center rounded-xl bg-gray-0 px-4",
+          "h-12 w-full justify-center rounded-xl bg-gray-0 px-4 shadow-card-1",
           props.containerClassName
         )}
       >
@@ -76,9 +64,8 @@ export function DiaryCard(props: DiaryCardProps) {
 
   return (
     <View
-      style={CARD_SHADOW_STYLE}
       className={cn(
-        "w-full gap-2 rounded-xl bg-gray-0 px-4 py-3",
+        "w-full gap-2 rounded-xl bg-gray-0 px-4 py-3 shadow-card-1",
         props.containerClassName
       )}
     >

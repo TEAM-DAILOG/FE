@@ -1,9 +1,8 @@
 import { Pressable } from "react-native";
 
-import CheckIcon from "@/assets/icons/check.svg";
+import CheckIcon from "@/assets/icons/checkIcon.svg";
 import { cn } from "@/src/lib/cn";
-
-export type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
+import type { CategoryColor } from "@/src/types/categories/category.types";
 
 export type CategoryCircleState = "default" | "selected" | "disabled";
 
@@ -65,7 +64,7 @@ export function CategoryCircle({
         <CheckIcon
           width={24}
           height={24}
-          color={isDisabled ? "#AEB2B0" : "bg-gray-0"}
+          color={isDisabled ? "#AEB2B0" : "#FCFDFD"}
         />
       ) : null}
     </Pressable>
