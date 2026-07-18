@@ -34,7 +34,7 @@ export function TextField({
     <View
       className={cn(
         "w-full flex-row rounded-xl border bg-white",
-        isTextarea ? "h-[108px] items-start p-3" : "h-12 items-center px-3",
+        isTextarea ? "h-[108px] items-start p-3" : "items-center p-3",
         isFocused ? "border-gray-400" : "border-gray-200",
         disabled && "opacity-50",
         containerClassName
@@ -47,7 +47,7 @@ export function TextField({
         placeholderTextColor="#949997"
         textAlignVertical={isTextarea ? "top" : "center"}
         className={cn(
-          "flex-1 text-gray-800 text-b-03-r",
+          "flex-1 text-gray-800 text-b-03-m",
           isTextarea ? "self-stretch p-0 text-left" : "h-full p-0",
           inputClassName
         )}
@@ -62,7 +62,7 @@ export function TextField({
       />
 
       {rightText ? (
-        <Text className="ml-3 self-center text-green-600 text-b-03-r">
+        <Text className="ml-3 self-center text-green-600 text-b-03-sb">
           {rightText}
         </Text>
       ) : null}

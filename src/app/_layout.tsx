@@ -13,7 +13,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import "../global.css";
+import { ModalPage } from "@/src/components/modals/ModalPage";
+import "../../global.css";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -51,6 +52,7 @@ export default function RootLayout() {
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
           </Stack>
+          <ModalPage />
           <StatusBar style="auto" />
         </ThemeProvider>
       </SafeAreaProvider>
