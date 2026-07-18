@@ -6,11 +6,10 @@ import LeftIcon from "@/assets/icons/leftIcon.svg";
 import RightIcon from "@/assets/icons/rightIcon.svg";
 import {
   BackHeader,
-  ScheduleRecommendItem,
+  ScheduleItem,
   ScreenContainer,
 } from "@/src/components/common";
 import { DiaryDetailCard } from "@/src/components/diaries/DiaryDetailCard";
-import { CATEGORY_HEX_COLORS } from "@/src/constants/categoryColors";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 type DiaryRecommendation = {
@@ -159,14 +158,17 @@ export default function DiaryDetailScreen() {
 
             <View className="gap-2 rounded-xl border border-gray-100 bg-white p-3">
               {diary.recommendations.map((rec) => (
-                <ScheduleRecommendItem
+                <ScheduleItem
                   key={rec.id}
-                  size="sm"
                   categoryLabel={rec.categoryName}
-                  categoryColor={CATEGORY_HEX_COLORS[rec.categoryColor]}
+                  categoryColor={rec.categoryColor}
                   description={rec.content}
-                  onPressAdd={() => {
-                    // TODO: API 연동 단계에서 일정 추가 로직 연결
+                  action={{
+                    type: "button",
+                    label: "일정추가",
+                    onPress: () => {
+                      // TODO: API 연동 단계에서 일정 추가 로직 연결
+                    },
                   }}
                 />
               ))}

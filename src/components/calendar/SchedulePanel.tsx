@@ -3,10 +3,10 @@ import { useState } from "react";
 import { Text, View } from "react-native";
 
 import { CalendarGrid } from "@/src/components/calendar/CalendarGrid";
-import { ScheduleCheckItem } from "@/src/components/common/ScheduleCheckItem";
 import type { CalendarDayInfo } from "@/src/types/calendar/calendarGrid.types";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
 import { getScheduleDday } from "@/src/utils";
+import { ScheduleItem } from "../common";
 
 type SchedulePanelProps = {
   month: string;
@@ -78,12 +78,15 @@ export function SchedulePanel({
                     </View>
                   </View>
 
-                  <ScheduleCheckItem
+                  <ScheduleItem
                     categoryLabel={schedule.categoryLabel}
                     categoryColor={schedule.categoryColor}
                     description={schedule.description}
-                    checked={schedule.checked}
-                    onToggle={() => toggleSchedule(schedule.id)}
+                    action={{
+                      type: "checkbox",
+                      checked: schedule.checked,
+                      onToggle: () => toggleSchedule(schedule.id),
+                    }}
                   />
                 </View>
               );
