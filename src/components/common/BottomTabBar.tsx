@@ -6,6 +6,7 @@ import TabHomeIcon from "@/assets/icons/tabHomeIcon.svg";
 import TabPlusIcon from "@/assets/icons/tabPlusIcon.svg";
 import TabSettingIcon from "@/assets/icons/tabSettingIcon.svg";
 import TabStatisticIcon from "@/assets/icons/tabStatisticIcon.svg";
+import { useBottomTabBarOffset } from "@/src/hooks/useBottomTabBarHeight";
 import { cn } from "@/src/lib/cn";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { router } from "expo-router";
@@ -17,7 +18,6 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TAB_ICONS = {
   index: TabHomeIcon,
@@ -35,7 +35,7 @@ const TAB_BAR_SHADOW_STYLE = {
 } as const;
 
 export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
-  const insets = useSafeAreaInsets();
+  const bottomOffset = useBottomTabBarOffset();
   const [isOpen, setIsOpen] = useState(false);
 
   // 애니메이션 값 설정 (0: 닫힘/플러스, 1: 열림/엑스)
@@ -67,7 +67,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
     <View // BottomTabBar 전체 컨테이너
       className="absolute left-4 right-4 h-[60px] flex-row items-center gap-2"
       style={{
-        bottom: insets.bottom > 0 ? insets.bottom + 10 : 30,
+        bottom: bottomOffset,
       }}
     >
       {/* ----------------- 왼쪽 박스 영역 ----------------- */}
