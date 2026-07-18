@@ -1,9 +1,9 @@
 import { Pressable, Text, View } from "react-native";
 
+import { WEEKDAY_LABELS } from "@/src/constants";
 import { cn } from "@/src/lib/cn";
 import type { DatePickerDayState } from "@/src/types/modals/datepickerModal.types";
 import { buildCalendarGrid, chunkIntoWeeks } from "@/src/utils";
-import { WEEKDAY_LABELS } from "@/src/constants";
 
 type DatePickerGridProps = {
   month: string;
@@ -43,13 +43,13 @@ export function DatePickerGrid({
   const weeks = chunkIntoWeeks(buildCalendarGrid(month));
 
   return (
-    <View className="overflow-hidden rounded-xl border border-gray-100 bg-white">
+    <View className="flex-col gap-1 overflow-hidden rounded-xl border border-gray-100 bg-white">
       {/* 요일 */}
-      <View className="flex-row border-b border-gray-100">
+      <View className="flex-row border-b border-gray-100 py-1">
         {WEEKDAY_LABELS.map((label) => (
           <View
             key={label}
-            className="size-12 flex-1 items-center justify-center py-1"
+            className="size-12 flex-1 items-center justify-center"
           >
             <Text className="text-center text-gray-900 text-b-03-r">
               {label}
@@ -59,7 +59,7 @@ export function DatePickerGrid({
       </View>
 
       {/* 날짜 */}
-      <View className="gap-0.5 py-1">
+      <View className="gap-0.5 pb-1">
         {weeks.map((week) => {
           const states = week.map(
             (cell) => getDayState?.(cell.date, cell.isCurrentMonth) ?? {}
