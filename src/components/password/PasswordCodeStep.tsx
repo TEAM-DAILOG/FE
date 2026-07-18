@@ -42,7 +42,7 @@ export function PasswordCodeStep({
         {codeCheckStatus !== "idle" && (
           <Text
             className={cn(
-              "text-b-04-m",
+              "text-b-03-m",
               codeCheckStatus === "valid"
                 ? "text-notification-2"
                 : "text-notification-1"
