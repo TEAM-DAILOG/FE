@@ -1,16 +1,16 @@
 import dayjs from "dayjs";
-import { Pressable, ScrollView, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
+import LeftIcon from "@/assets/icons/leftIcon.svg";
+import RightIcon from "@/assets/icons/rightIcon.svg";
 import {
   BackHeader,
   ScheduleRecommendItem,
   ScreenContainer,
 } from "@/src/components/common";
 import { DiaryDetailCard } from "@/src/components/diaries/DiaryDetailCard";
-import LeftIcon from "@/assets/icons/leftIcon.svg";
-import RightIcon from "@/assets/icons/rightIcon.svg";
-import { CATEGORY_HEX_COLORS } from "@/src/constants/categorycolors";
+import { CATEGORY_HEX_COLORS } from "@/src/constants/categoryColors";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 type DiaryRecommendation = {
@@ -90,10 +90,10 @@ export default function DiaryDetailScreen() {
 
             {/* h-01 타이포 적용 + 'M월'/'D일' 사이 4px 간격 위해 분리 */}
             <View className="flex-row items-center gap-1">
-              <Text className="text-h-01 text-gray-900">
+              <Text className="text-gray-900 text-h-01">
                 {dayjs(diary.date).format("M월")}
               </Text>
-              <Text className="text-h-01 text-gray-900">
+              <Text className="text-gray-900 text-h-01">
                 {dayjs(diary.date).format("D일")}
               </Text>
             </View>
@@ -119,9 +119,9 @@ export default function DiaryDetailScreen() {
         {/* 오늘의 질문 */}
         {diary.hasQuestion && diary.question ? (
           <View className="gap-3">
-            <Text className="text-b-02-m text-gray-900">오늘의 질문</Text>
+            <Text className="text-gray-900 text-b-02-m">오늘의 질문</Text>
             <View className="flex items-center justify-center rounded-xl border border-green-200 bg-green-100 p-3">
-              <Text className="text-b-03-sb text-green-800">
+              <Text className="text-green-800 text-b-03-sb">
                 {diary.question}
               </Text>
             </View>
@@ -136,16 +136,16 @@ export default function DiaryDetailScreen() {
 
         {/* AI의 답장 */}
         <View className="gap-3">
-          <Text className="text-b-02-m text-gray-900">AI의 답장</Text>
+          <Text className="text-gray-900 text-b-02-m">AI의 답장</Text>
           {diary.aiReply ? (
             <View className="rounded-xl bg-green-200 p-3">
-              <Text className="text-b-02-m text-green-800">
+              <Text className="text-green-800 text-b-02-m">
                 {diary.aiReply}
               </Text>
             </View>
           ) : (
             <View className="rounded-xl border border-green-100 bg-gray-100 p-3">
-              <Text className="text-b-02-m text-green-600">
+              <Text className="text-green-600 text-b-02-m">
                 아직 답장이 도착하지 않았어요.
               </Text>
             </View>
@@ -155,7 +155,7 @@ export default function DiaryDetailScreen() {
         {/* AI 추천일정 */}
         {diary.aiReply && diary.recommendations.length > 0 ? (
           <View className="gap-3">
-            <Text className="text-b-02-m text-gray-900">AI 추천일정</Text>
+            <Text className="text-gray-900 text-b-02-m">AI 추천일정</Text>
 
             <View className="gap-2 rounded-xl border border-gray-100 bg-white p-3">
               {diary.recommendations.map((rec) => (

@@ -20,12 +20,12 @@ export function DiaryDetailCard({
     <View
       className={cn(
         "gap-2 rounded-xl border border-gray-100 bg-white p-3",
-        containerClassName,
+        containerClassName
       )}
     >
-      <Text className="text-b-01 text-green-800">{title}</Text>
-      <Divider />
-      <Text className="text-b-02-m text-gray-800">{content}</Text>
+      <Text className="text-green-800 text-b-01">{title}</Text>
+      <Divider className="border-gray-100" />
+      <Text className="text-gray-800 text-b-02-m">{content}</Text>
 
       {images.length > 0 ? (
         <View key={images.length} className="flex-row gap-2">
@@ -35,7 +35,7 @@ export function DiaryDetailCard({
               source={{ uri }}
               className={cn(
                 "aspect-square rounded-s bg-green-100",
-                images.length === 1 ? "w-1/2" : "flex-1",
+                images.length === 1 ? "w-1/2" : "flex-1"
               )}
             />
           ))}
