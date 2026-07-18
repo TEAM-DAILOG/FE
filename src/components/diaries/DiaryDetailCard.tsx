@@ -1,5 +1,6 @@
 import { Image, Text, View } from "react-native";
 
+import { Divider } from "@/src/components/common";
 import { cn } from "@/src/lib/cn";
 
 export type DiaryDetailCardProps = {
@@ -22,24 +23,27 @@ export function DiaryDetailCard({
         containerClassName,
       )}
     >
-      <Text className="text-b-02-sb text-gray-900">{title}</Text>
-      <View className="h-px bg-gray-100" />
-      <Text className="text-b-03-m text-gray-800">{content}</Text>
+      <Text className="text-b-01 text-green-800">{title}</Text>
+      <Divider />
+      <Text className="text-b-02-m text-gray-800">{content}</Text>
 
       {images.length > 0 ? (
-        <View className="flex-row gap-2">
+        <View key={images.length} className="flex-row gap-2">
           {images.map((uri, index) => (
             <Image
               key={index}
               source={{ uri }}
-              className="aspect-square flex-1 rounded-lg bg-green-100"
+              className={cn(
+                "aspect-square rounded-s bg-green-100",
+                images.length === 1 ? "w-1/2" : "flex-1",
+              )}
             />
           ))}
         </View>
       ) : (
         // TODO: 이미지 업로드 기능 붙기 전까지 임시 placeholder
         // (실제 이미지 생기면 위 images.length > 0 분기만 타게 됨)
-        <View className="aspect-square w-full rounded-lg bg-green-100" />
+        <View className="aspect-square w-1/2 rounded-s bg-green-100" />
       )}
     </View>
   );
