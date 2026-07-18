@@ -51,43 +51,45 @@ export function SchedulePanel({
       <View className="gap-4">
         <Text className="text-gray-900 text-h-02">가까운 일정</Text>
 
-        {visibleSchedules.length === 0 ? (
-          <Text className="text-gray-800 text-b-03-r">
-            다음 일주일 이내에 등록된 일정이 없습니다.
-          </Text>
-        ) : (
-          visibleSchedules.map((schedule) => {
-            const { ddayLabel, dateLabel, weekdayLabel } = getScheduleDday(
-              schedule.date
-            );
+        <View className="flex-col gap-3">
+          {visibleSchedules.length === 0 ? (
+            <Text className="text-gray-800 text-b-03-r">
+              다음 일주일 이내에 등록된 일정이 없습니다.
+            </Text>
+          ) : (
+            visibleSchedules.map((schedule) => {
+              const { ddayLabel, dateLabel, weekdayLabel } = getScheduleDday(
+                schedule.date
+              );
 
-            return (
-              <View key={schedule.id} className="gap-2">
-                <View className="flex-row items-center gap-1">
-                  <Text className="text-gray-800 text-b-04-m">
-                    {ddayLabel}
-                  </Text>
-                  <View className="flex-row items-center gap-0.5">
+              return (
+                <View key={schedule.id} className="gap-2">
+                  <View className="flex-row items-center gap-1">
                     <Text className="text-gray-800 text-b-04-m">
-                      {dateLabel}
+                      {ddayLabel}
                     </Text>
-                    <Text className="text-gray-800 text-b-04-m">
-                      {weekdayLabel}
-                    </Text>
+                    <View className="flex-row items-center gap-0.5">
+                      <Text className="text-gray-800 text-b-04-m">
+                        {dateLabel}
+                      </Text>
+                      <Text className="text-gray-800 text-b-04-m">
+                        {weekdayLabel}
+                      </Text>
+                    </View>
                   </View>
-                </View>
 
-                <ScheduleCheckItem
-                  categoryLabel={schedule.categoryLabel}
-                  categoryColor={schedule.categoryColor}
-                  description={schedule.description}
-                  checked={schedule.checked}
-                  onToggle={() => toggleSchedule(schedule.id)}
-                />
-              </View>
-            );
-          })
-        )}
+                  <ScheduleCheckItem
+                    categoryLabel={schedule.categoryLabel}
+                    categoryColor={schedule.categoryColor}
+                    description={schedule.description}
+                    checked={schedule.checked}
+                    onToggle={() => toggleSchedule(schedule.id)}
+                  />
+                </View>
+              );
+            })
+          )}
+        </View>
       </View>
     </View>
   );

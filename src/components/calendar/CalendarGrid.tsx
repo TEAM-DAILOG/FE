@@ -80,7 +80,7 @@ export function CalendarGrid({
                   </Text>
 
                   {mode === "schedule" ? (
-                    <View className="w-full flex-row flex-wrap items-center justify-start gap-0.5">
+                    <View className="w-10 flex-row flex-wrap items-center justify-start gap-0.5">
                       {categoryColors.map((color, index) => (
                         <View
                           key={`${cell.date}-${index}`}
