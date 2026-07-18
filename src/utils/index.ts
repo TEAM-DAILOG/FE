@@ -91,6 +91,34 @@ export function formatWeekdays(weekdays: number[]) {
     .join(", ");
 }
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// 이메일 형식이 유효한지 검사하는 함수
+export function isValidEmail(email: string) {
+  return EMAIL_REGEX.test(email);
+}
+
+// 비밀번호에 영문, 숫자, 특수문자가 모두 포함되어 있는지 검사하는 함수
+export function hasRequiredCharacters(password: string) {
+  return (
+    /[A-Za-z]/.test(password) &&
+    /[0-9]/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
+  );
+}
+
+// 비밀번호 길이가 8자 이상 16자 이하인지 검사하는 함수
+export function hasValidLength(password: string) {
+  return password.length >= 8 && password.length <= 16;
+}
+
+// 초 단위 시간을 mm:ss 형식 문자열로 변환하는 함수
+export function formatTimer(seconds: number) {
+  const minutes = Math.floor(seconds / 60);
+  const remaining = seconds % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(remaining).padStart(2, "0")}`;
+}
+
 // 반복 설정값(ScheduleRepeatValue)을 화면에 보여줄 모드/구분선/컨텐츠 조각으로 변환하는 함수
 export function getScheduleRepeatSummary(
   value: ScheduleRepeatValue
