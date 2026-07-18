@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 
-import { cn } from "@/src/lib/cn";
 import { DATE_PICKER_TABS } from "@/src/constants";
+import { cn } from "@/src/lib/cn";
 import type { DatePickerTabKey } from "@/src/types/modals/datepickerModal.types";
 
 type DatePickerTabsProps = {
