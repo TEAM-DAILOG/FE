@@ -21,6 +21,8 @@ const twMerge = extendTailwindMerge({
             "b-04-r",
             "b-05-b",
             "b-05-m",
+            "cap-sb",
+            "cap-r",
           ],
         },
       ],

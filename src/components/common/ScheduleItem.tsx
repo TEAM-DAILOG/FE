@@ -6,7 +6,7 @@ import {
   CATEGORY_BORDER_CLASS_NAMES,
   CATEGORY_DOT_CLASS_NAMES,
   CATEGORY_TEXT_CLASS_NAMES,
-} from "@/src/constants/categorycolors";
+} from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
@@ -46,7 +46,7 @@ export function ScheduleItem({
     >
       <View className="flex-1 gap-1">
         {date && !isDateInline && (
-          <Text className="text-cap-r text-gray-600">{date}</Text>
+          <Text className="text-gray-600 text-cap-r">{date}</Text>
         )}
 
         <View className="gap-0.5">
@@ -68,7 +68,7 @@ export function ScheduleItem({
               </Text>
             </View>
             {date && isDateInline && (
-              <Text className="text-cap-r text-gray-600">{date}</Text>
+              <Text className="text-gray-600 text-cap-r">{date}</Text>
             )}
           </View>
           <Text numberOfLines={1} className="text-gray-800 text-b-03-m">

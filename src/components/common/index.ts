@@ -1,7 +1,9 @@
+export { AnchoredDropdown } from "./AnchoredDropdown";
 export { Button } from "./Button";
 export { Checkbox } from "./Checkbox";
 export { Divider } from "./Divider";
 export { BackHeader, DateHeader, LogoHeader } from "./Header";
+export { MonthPickerBox } from "./MonthPickerBox";
 export { ProgressBar } from "./ProgressBar";
 export {
   ScheduleItem,

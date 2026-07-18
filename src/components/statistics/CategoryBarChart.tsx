@@ -6,7 +6,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categorycolors";
+import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 

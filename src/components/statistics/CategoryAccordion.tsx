@@ -8,7 +8,7 @@ import Animated, {
 
 import DownIcon from "@/assets/icons/downIcon.svg";
 import { Divider } from "@/src/components/common";
-import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categorycolors";
+import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
 
 import type { CategoryBarChartItem } from "./CategoryBarChart";
@@ -18,7 +18,10 @@ export type CategoryAccordionProps = {
   className?: string;
 };
 
-export function CategoryAccordion({ groups, className }: CategoryAccordionProps) {
+export function CategoryAccordion({
+  groups,
+  className,
+}: CategoryAccordionProps) {
   const [openIds, setOpenIds] = useState<string[]>([]);
 
   const toggle = (id: string) =>

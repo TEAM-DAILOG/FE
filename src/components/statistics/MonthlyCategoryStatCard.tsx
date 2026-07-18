@@ -5,7 +5,7 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import {
   CATEGORY_DOT_CLASS_NAMES,
   CATEGORY_TEXT_CLASS_NAMES,
-} from "@/src/constants/categorycolors";
+} from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
