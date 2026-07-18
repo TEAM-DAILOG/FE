@@ -33,7 +33,7 @@ export function CalendarGrid({
   const today = dayjs().format("YYYY-MM-DD");
 
   return (
-    <View className="gap-2 overflow-hidden rounded-xl bg-white px-3 pb-2 pt-1 shadow-card-1">
+    <View className="gap-2 overflow-hidden rounded-xl bg-gray-0 px-3 pb-2 pt-1 shadow-card-1">
       {/* 요일 */}
       <View className="flex-row border-b border-green-100">
         {WEEKDAY_LABELS.map((label) => (
