@@ -87,6 +87,7 @@ module.exports = {
 
       // [fontSize, lineHeight, letterSpacing, fontWeight]
       const TEXT_STYLES = {
+        "cap-r": ["10px", "14px", "-0.2px", 400],
         "h-01": ["20px", "30px", "-0.4px", 600],
         "h-02": ["18px", "27px", "-0.36px", 500],
         "b-01": ["18px", "27px", "-0.36px", 600],

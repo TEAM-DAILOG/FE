@@ -13,14 +13,6 @@ export type MockScheduleItem = {
   checked: boolean;
 };
 
-const CATEGORY_HEX_COLORS: Record<CategoryColor, string> = {
-  blue: "#6A92AF",
-  brown: "#C49C64",
-  green: "#79A659",
-  purple: "#A381BB",
-  pink: "#BD7593",
-};
-
 export function buildMockSchedules(): MockScheduleItem[] {
   const today = dayjs();
   const at = (offsetDays: number) =>
@@ -120,7 +112,7 @@ export function buildMockUpcomingSchedules(
     id: schedule.id,
     date: schedule.date,
     categoryLabel: schedule.categoryLabel,
-    categoryColor: CATEGORY_HEX_COLORS[schedule.categoryColor],
+    categoryColor: schedule.categoryColor,
     description: schedule.description,
     checked: schedule.checked,
   }));

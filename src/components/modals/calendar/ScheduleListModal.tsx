@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
-import { ScheduleCheckItem } from "@/src/components/common/ScheduleCheckItem";
+import { ScheduleItem } from "@/src/components/common";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
 import { AddScheduleButton } from "../../common/AddScheduleButton";
@@ -54,13 +54,16 @@ export function ScheduleListModal({
           <View className="flex-1 justify-between">
             <View className="flex-1 gap-2">
               {schedules.map((schedule) => (
-                <ScheduleCheckItem
+                <ScheduleItem
                   key={schedule.id}
                   categoryLabel={schedule.categoryLabel}
                   categoryColor={schedule.categoryColor}
                   description={schedule.description}
-                  checked={schedule.checked}
-                  onToggle={() => toggleSchedule(schedule.id)}
+                  action={{
+                    type: "checkbox",
+                    checked: schedule.checked,
+                    onToggle: () => toggleSchedule(schedule.id),
+                  }}
                 />
               ))}
             </View>

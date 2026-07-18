@@ -1,18 +1,19 @@
-import { useState } from "react";
-import { Text, View } from "react-native";
-import { router } from "expo-router";
 import { AddScheduleButton } from "@/src/components/common/AddScheduleButton";
-import { ScheduleCheckItem } from "@/src/components/common/ScheduleCheckItem";
-import { LogoHeader } from "@/src/components/common/Header";
 import { Button } from "@/src/components/common/Button";
+import { Divider } from "@/src/components/common/Divider";
+import { LogoHeader } from "@/src/components/common/Header";
+import { ScheduleItem } from "@/src/components/common/ScheduleItem";
 import { ScreenContainer } from "@/src/components/common/ScreenContainer";
 import { TabScrollView } from "@/src/components/common/TabScrollView";
-import { Divider } from "@/src/components/common/Divider";
+import type { CategoryColor } from "@/src/types/categories/category.types";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Text, View } from "react-native";
 
 type Schedule = {
   id: string;
   categoryLabel: string;
-  categoryColor: string;
+  categoryColor: CategoryColor;
   description: string;
   checked: boolean;
 };
@@ -21,35 +22,35 @@ const MOCK_SCHEDULES: Schedule[] = [
   {
     id: "1",
     categoryLabel: "CATEGORY",
-    categoryColor: "#5B8FD9",
+    categoryColor: "blue",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
   {
     id: "2",
     categoryLabel: "CATEGORY",
-    categoryColor: "#D9A05B",
+    categoryColor: "brown",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
   {
     id: "3",
     categoryLabel: "CATEGORY",
-    categoryColor: "#5FAE72",
+    categoryColor: "green",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
   {
     id: "4",
     categoryLabel: "CATEGORY",
-    categoryColor: "#9B7ED9",
+    categoryColor: "purple",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
   {
     id: "5",
     categoryLabel: "CATEGORY",
-    categoryColor: "#D95B8F",
+    categoryColor: "pink",
     description: "Lorem ipsum dolor sit amet consectetur.",
     checked: false,
   },
@@ -89,7 +90,7 @@ export default function HomeScreen() {
           <Text className="mb-4 text-green-900 text-h-01">{dateLabel}</Text>
 
           {/* 일정 카드 */}
-          <View className="shadow-card-1 w-full gap-3 rounded-2xl bg-gray-0 px-3 py-4">
+          <View className="w-full gap-3 rounded-2xl bg-gray-0 px-3 py-4 shadow-card-1">
             <Text className="text-gray-900 text-b-02-r">
               {hasSchedules
                 ? "오늘 계획한 일정은 모두 마치셨나요?"
@@ -98,13 +99,16 @@ export default function HomeScreen() {
             {hasSchedules && (
               <View className="gap-2">
                 {schedules.map((s) => (
-                  <ScheduleCheckItem
+                  <ScheduleItem
                     key={s.id}
                     categoryLabel={s.categoryLabel}
                     categoryColor={s.categoryColor}
                     description={s.description}
-                    checked={s.checked}
-                    onToggle={() => toggleSchedule(s.id)}
+                    action={{
+                      type: "checkbox",
+                      checked: s.checked,
+                      onToggle: () => toggleSchedule(s.id),
+                    }}
                   />
                 ))}
               </View>
@@ -118,7 +122,7 @@ export default function HomeScreen() {
             {isQuestionAnswered ? (
               <View className="gap-3">
                 {/* 질문 응답 카드 */}
-                <View className="shadow-card-1 w-full items-center justify-center gap-2 rounded-lg border border-green-100 bg-gray-0 px-8 py-6">
+                <View className="w-full items-center justify-center gap-2 rounded-lg border border-green-100 bg-gray-0 px-8 py-6 shadow-card-1">
                   {/* 날짜 */}
                   <View className="flex-row items-center gap-1">
                     <View className="flex-row items-center gap-0.5">
