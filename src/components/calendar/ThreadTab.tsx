@@ -1,10 +1,13 @@
-import dayjs from "dayjs";
 import { Text, View } from "react-native";
 
 import { Divider } from "@/src/components/common";
 import { DiaryCard } from "@/src/components/common/DiaryCard";
-import { WEEKDAY_LABELS } from "@/src/constants";
 import type { ThreadItem } from "@/src/types/calendar/diaryPanel.types";
+import {
+  getThreadDateParts,
+  getThreadMonthKey,
+  getThreadMonthLabelParts,
+} from "@/src/utils";
 
 const DIARY_PLACEHOLDER_IMAGE = require("@/assets/images/diaryPlaceholder.png");
 
@@ -14,11 +17,14 @@ type ThreadTabProps = {
   isAiSummaryEnabled: boolean;
 };
 
+// 임시 함수
 function DiaryThreadCard({ item }: { item: ThreadItem }) {
   const imageCount = Math.min(Math.max(item.imageCount, 0), 3);
 
   if (imageCount === 0) {
-    return <DiaryCard variant="no-image" title={item.title} content={item.content} />;
+    return (
+      <DiaryCard variant="no-image" title={item.title} content={item.content} />
+    );
   }
 
   if (imageCount === 1) {
@@ -58,7 +64,8 @@ function DiaryThreadCard({ item }: { item: ThreadItem }) {
 }
 
 type ThreadGroup = {
-  month: string;
+  monthKey: string;
+  date: string;
   items: ThreadItem[];
 };
 
@@ -66,56 +73,73 @@ function groupByMonth(items: ThreadItem[]): ThreadGroup[] {
   const groups: ThreadGroup[] = [];
 
   for (const item of items) {
-    const month = dayjs(item.date).format("YYYY년 M월");
+    const monthKey = getThreadMonthKey(item.date);
     const lastGroup = groups[groups.length - 1];
 
-    if (lastGroup?.month === month) {
+    if (lastGroup?.monthKey === monthKey) {
       lastGroup.items.push(item);
     } else {
-      groups.push({ month, items: [item] });
+      groups.push({ monthKey, date: item.date, items: [item] });
     }
   }
 
   return groups;
 }
 
-export function ThreadTab({ month, items, isAiSummaryEnabled }: ThreadTabProps) {
+export function ThreadTab({
+  month,
+  items,
+  isAiSummaryEnabled,
+}: ThreadTabProps) {
   const groups = groupByMonth(items);
-  const currentMonthLabel = dayjs(month).format("YYYY년 M월");
+  const currentMonthKey = getThreadMonthKey(month);
 
   return (
     <View className="gap-4">
-      {groups.map((group, index) => (
-        <View key={group.month} className="gap-4">
-          {index > 0 && <Divider className="mb-2 mt-3 border-green-100" />}
+      {groups.map((group, index) => {
+        const { yearLabel, monthLabel } = getThreadMonthLabelParts(group.date);
 
-          {group.month !== currentMonthLabel && (
-            <View className="self-start rounded-s bg-gray-100 px-2 py-1">
-              <Text className="text-gray-800 text-b-02-sb">{group.month}</Text>
-            </View>
-          )}
+        return (
+          <View key={group.monthKey} className="gap-4">
+            {index > 0 && <Divider className="mb-2 mt-3 border-green-100" />}
 
-          {group.items.map((item) => (
-            <View key={item.date} className="gap-2">
-              <View className="flex-row items-start">
-                <Text className="text-gray-900 text-b-03-m">
-                  {dayjs(item.date).format("D")} (
-                  {WEEKDAY_LABELS[dayjs(item.date).day()]})
-                </Text>
-                {item.isUnread ? (
-                  <View className="size-1.5 rounded-full bg-notification" />
-                ) : null}
+            {group.monthKey !== currentMonthKey && (
+              <View className="flex-row items-center gap-1 self-start rounded-s bg-gray-100 px-2 py-1">
+                <Text className="text-gray-800 text-b-02-sb">{yearLabel}</Text>
+                <Text className="text-gray-800 text-b-02-sb">{monthLabel}</Text>
               </View>
+            )}
 
-              {isAiSummaryEnabled ? (
-                <DiaryCard variant="summary" summary={item.summary} />
-              ) : (
-                <DiaryThreadCard item={item} />
-              )}
-            </View>
-          ))}
-        </View>
-      ))}
+            {group.items.map((item) => {
+              const { dayLabel, weekdayLabel } = getThreadDateParts(item.date);
+
+              return (
+                <View key={item.date} className="gap-2">
+                  <View className="flex-row items-start gap-1">
+                    <Text className="text-gray-900 text-b-03-m">
+                      {dayLabel}
+                    </Text>
+                    <View className="flex-row items-start">
+                      <Text className="text-gray-900 text-b-03-m">
+                        {weekdayLabel}
+                      </Text>
+                      {item.isUnread ? (
+                        <View className="size-1.5 rounded-full bg-notification" />
+                      ) : null}
+                    </View>
+                  </View>
+
+                  {isAiSummaryEnabled ? (
+                    <DiaryCard variant="summary" summary={item.summary} />
+                  ) : (
+                    <DiaryThreadCard item={item} />
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        );
+      })}
     </View>
   );
 }

@@ -30,7 +30,6 @@ const CATEGORY_CHIP_COLORS: Record<
   pink: { border: "border-category-05-1", hex: "#BD7593" },
 };
 
-const WHITE = "#FFFFFF";
 const GRAY_0 = "#FCFDFD";
 const TRANSITION_DURATION = 300;
 

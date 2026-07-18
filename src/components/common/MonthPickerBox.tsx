@@ -32,22 +32,22 @@ export function MonthPickerBox({ initialDate, onSelect }: MonthPickerBoxProps) {
   };
 
   return (
-    <View className="w-[180px] rounded-lg bg-gray-0 p-3 shadow-dropdown">
+    <View className="rounded-lg bg-gray-0 p-3 shadow-dropdown">
       <View className="flex-row items-center justify-between border-b border-gray-100 pb-2">
-        <Text className="text-gray-900 text-b-03-sb">{viewYear}년</Text>
+        <Text className="text-gray-800 text-b-03-sb">{viewYear}년</Text>
         <View className="flex-row items-center gap-1">
           <Pressable onPress={goPrevYear} hitSlop={8}>
-            <LeftIcon width={20} height={20} color="#020303" />
+            <LeftIcon width={20} height={20} color="#2F3131" />
           </Pressable>
           <Pressable onPress={goNextYear} hitSlop={8}>
-            <RightIcon width={20} height={20} color="#020303" />
+            <RightIcon width={20} height={20} color="#2F3131" />
           </Pressable>
         </View>
       </View>
 
-      <View className="gap-2">
+      <View className="gap-1">
         {MONTH_ROWS.map((row) => (
-          <View key={row[0]} className="flex-row justify-between">
+          <View key={row[0]} className="flex-row gap-1">
             {row.map((month) => {
               const isSelected =
                 viewYear === selectedYear && month === selectedMonth;
