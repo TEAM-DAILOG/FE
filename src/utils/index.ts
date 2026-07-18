@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { WEEKDAY_LABELS } from "@/src/constants";
 import type {
   DatePickerCell,
+  ScheduleRepeatSummary,
   ScheduleRepeatValue,
 } from "@/src/types/modals/datepickerModal.types";
 
@@ -90,39 +91,67 @@ export function formatWeekdays(weekdays: number[]) {
     .join(", ");
 }
 
-// 반복 설정값(ScheduleRepeatValue)을 화면에 보여줄 한 줄 요약 문자열로 변환하는 함수
-export function formatScheduleRepeatSummary(
+// 반복 설정값(ScheduleRepeatValue)을 화면에 보여줄 모드/구분선/컨텐츠 조각으로 변환하는 함수
+export function getScheduleRepeatSummary(
   value: ScheduleRepeatValue
-): string {
+): ScheduleRepeatSummary | null {
   switch (value.mode) {
     case "none":
-      return "없음";
+      return null;
 
     case "multi": {
       const [first, ...rest] = value.dates;
-      if (!first) return "없음";
-      return rest.length > 0
-        ? `다중 | ${formatScheduleDate(first)} 외 ${rest.length}`
-        : `다중 | ${formatScheduleDate(first)}`;
+      if (!first) return null;
+      return {
+        mode: "다중",
+        parts:
+          rest.length > 0
+            ? [
+                { type: "date", text: formatScheduleDate(first) },
+                { type: "etc", text: `외 ${rest.length}` },
+              ]
+            : [{ type: "date", text: formatScheduleDate(first) }],
+      };
     }
 
     case "range":
-      return `기간 | ${formatScheduleDate(value.startDate)} ~ ${formatScheduleDate(value.endDate)}`;
+      return {
+        mode: "기간",
+        parts: [
+          { type: "date", text: formatScheduleDate(value.startDate) },
+          { type: "etc", text: "~" },
+          { type: "date", text: formatScheduleDate(value.endDate) },
+        ],
+      };
 
     case "weekly":
       return value.weekdays.length > 0
-        ? `매주 | ${formatWeekdays(value.weekdays)}`
-        : "없음";
+        ? {
+            mode: "매주",
+            parts: [{ type: "etc", text: formatWeekdays(value.weekdays) }],
+          }
+        : null;
 
     case "monthly":
-      return `매월 | ${dayjs(value.startDate).date()}일`;
+      return {
+        mode: "매월",
+        parts: [{ type: "etc", text: `${dayjs(value.startDate).date()}일` }],
+      };
 
     case "yearly":
-      return `매년 | ${dayjs(value.startDate).month() + 1}월 ${dayjs(
-        value.startDate
-      ).date()}일`;
+      return {
+        mode: "매년",
+        parts: [
+          {
+            type: "etc",
+            text: `${dayjs(value.startDate).month() + 1}월 ${dayjs(
+              value.startDate
+            ).date()}일`,
+          },
+        ],
+      };
 
     default:
-      return "없음";
+      return null;
   }
 }

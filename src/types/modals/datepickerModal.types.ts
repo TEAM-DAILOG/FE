@@ -31,3 +31,14 @@ export type DatePickerModalProps = {
   initialRepeat: ScheduleRepeatValue;
   onApply: (result: DatePickerModalResult) => void;
 };
+
+// content1: "2025.06.03"과 같은 날짜 형식 / content2: "외 2", "월요일", "~" 등 그 외 기호
+export type ScheduleRepeatSummaryPart = {
+  type: "date" | "etc";
+  text: string;
+};
+
+export type ScheduleRepeatSummary = {
+  mode: string;
+  parts: ScheduleRepeatSummaryPart[];
+};

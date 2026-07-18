@@ -43,77 +43,79 @@ export function DatePickerRecurringPanel({
   return (
     <View className="flex-col gap-4">
       <View className="gap-3 rounded-xl border border-gray-100 bg-white p-3">
-        <View className="z-10">
-          <Pressable
-            onPress={onToggleRepeatTypeMenu}
-            className="flex-row items-center justify-between"
-          >
-            <Text className="text-gray-800 text-b-04-r">반복유형</Text>
-            <View className="flex-row items-center gap-1">
-              <Text className="text-gray-800 text-b-04-r">
-                {
-                  REPEAT_TYPE_OPTIONS.find(
-                    (option) => option.key === repeatType
-                  )?.label
-                }
-              </Text>
-              <DownIcon width={20} height={20} color="#020303" />
-            </View>
-          </Pressable>
-
-          {isRepeatTypeMenuOpen ? (
-            <Animated.View
-              entering={FadeIn.duration(300).easing(Easing.out(Easing.ease))}
-              exiting={FadeOut.duration(300).easing(Easing.out(Easing.ease))}
-              className="shadow-dropdown absolute right-0 top-full z-50 mt-1 w-[120px]"
+        <View className="gap-1">
+          <View className="z-10">
+            <Pressable
+              onPress={onToggleRepeatTypeMenu}
+              className="flex-row items-center justify-between"
             >
-              <View className="gap-1.5 overflow-hidden rounded-lg bg-white px-3 py-1.5">
-                {REPEAT_TYPE_OPTIONS.map((option) => (
-                  <Pressable
-                    key={option.key}
-                    onPress={() => onChangeRepeatType(option.key)}
-                    className="flex-row items-center justify-between"
-                  >
-                    <Text className="text-gray-800 text-b-04-r">
-                      {option.label}
-                    </Text>
-                    {repeatType === option.key ? (
-                      <CheckIcon width={20} height={20} color="#2F3131" />
-                    ) : null}
-                  </Pressable>
-                ))}
+              <Text className="text-gray-800 text-b-04-r">반복유형</Text>
+              <View className="flex-row items-center gap-1">
+                <Text className="text-gray-800 text-b-04-r">
+                  {
+                    REPEAT_TYPE_OPTIONS.find(
+                      (option) => option.key === repeatType
+                    )?.label
+                  }
+                </Text>
+                <DownIcon width={20} height={20} color="#020303" />
               </View>
-            </Animated.View>
-          ) : null}
-        </View>
+            </Pressable>
 
-        {repeatType === "weekly" ? (
-          <View className="flex-row justify-between px-2">
-            {WEEKDAY_LABELS.map((label, index) => {
-              const isSelected = weekdays.includes(index);
-              return (
-                <Pressable
-                  key={label}
-                  onPress={() => onToggleWeekday(index)}
-                  className={cn(
-                    "size-8 items-center justify-center rounded-full",
-                    isSelected && "bg-green-600"
-                  )}
-                >
-                  <Text
+            {isRepeatTypeMenuOpen ? (
+              <Animated.View
+                entering={FadeIn.duration(300).easing(Easing.out(Easing.ease))}
+                exiting={FadeOut.duration(300).easing(Easing.out(Easing.ease))}
+                className="absolute right-0 top-full z-50 mt-1 w-[120px] shadow-dropdown"
+              >
+                <View className="gap-1.5 overflow-hidden rounded-lg bg-white px-3 py-1.5">
+                  {REPEAT_TYPE_OPTIONS.map((option) => (
+                    <Pressable
+                      key={option.key}
+                      onPress={() => onChangeRepeatType(option.key)}
+                      className="flex-row items-center justify-between"
+                    >
+                      <Text className="text-gray-800 text-b-04-r">
+                        {option.label}
+                      </Text>
+                      {repeatType === option.key ? (
+                        <CheckIcon width={20} height={20} color="#2F3131" />
+                      ) : null}
+                    </Pressable>
+                  ))}
+                </View>
+              </Animated.View>
+            ) : null}
+          </View>
+
+          {repeatType === "weekly" ? (
+            <View className="flex-row justify-between px-2">
+              {WEEKDAY_LABELS.map((label, index) => {
+                const isSelected = weekdays.includes(index);
+                return (
+                  <Pressable
+                    key={label}
+                    onPress={() => onToggleWeekday(index)}
                     className={cn(
-                      isSelected
-                        ? "text-cap-sb text-gray-0"
-                        : "text-cap-r text-gray-900"
+                      "size-8 items-center justify-center rounded-full",
+                      isSelected && "bg-green-600"
                     )}
                   >
-                    {label}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        ) : null}
+                    <Text
+                      className={cn(
+                        isSelected
+                          ? "text-gray-0 text-cap-sb"
+                          : "text-gray-900 text-cap-r"
+                      )}
+                    >
+                      {label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          ) : null}
+        </View>
 
         <Pressable
           onPress={() => onOpenEditingField("start")}

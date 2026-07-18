@@ -11,7 +11,6 @@ import Animated, {
 import { cn } from "@/src/lib/cn";
 import { CategoryColor } from "@/src/types/categories/category.types";
 
-
 export type CategoryChipProps = {
   color?: CategoryColor;
   label: string;
@@ -20,7 +19,10 @@ export type CategoryChipProps = {
   className?: string;
 };
 
-const CATEGORY_CHIP_COLORS: Record<CategoryColor, { border: string; hex: string }> = {
+const CATEGORY_CHIP_COLORS: Record<
+  CategoryColor,
+  { border: string; hex: string }
+> = {
   blue: { border: "border-category-01-1", hex: "#6A92AF" },
   brown: { border: "border-category-02-1", hex: "#C49C64" },
   green: { border: "border-category-03-1", hex: "#79A659" },
@@ -53,7 +55,7 @@ export function CategoryChip({
     backgroundColor: interpolateColor(
       progress.value,
       [0, 1],
-      [WHITE, styles.hex]
+      [GRAY_0, styles.hex]
     ),
   }));
 
