@@ -21,12 +21,12 @@ type DiaryRecommendation = {
 };
 
 type DiaryDetail = {
-  date: string; // ISO 문자열, dayjs로 파싱해서 표시
+  date: string;
   hasQuestion: boolean;
   question?: string;
   title: string;
   content: string;
-  images: string[]; // 0~3장
+  images: string[];
   aiReply: string | null;
   recommendations: DiaryRecommendation[];
 };
@@ -39,7 +39,7 @@ const DUMMY_DIARY: DiaryDetail = {
   title: "제목을 입력하세요",
   content:
     "Lorem ipsum dolor sit amet consectetur. Dignissim felis facilisi sed in. Urna lorem ac eu ipsum. Et eleifend vitae mi non mattis sem purus. Nunc at amet suspendisse orci tempor fames.",
-  images: [], // TODO: 이미지 업로드 기능 붙으면 실제 URL로 교체
+  images: [],
   aiReply:
     "Lorem ipsum dolor sit amet consectetur. Dignissim felis facilisi sed in. Urna lorem ac eu ipsum. Et eleifend vitae mi non mattis sem purus. Nunc at amet suspendisse orci tempor fames.",
   recommendations: [
@@ -70,7 +70,6 @@ export default function DiaryDetailScreen() {
 
   return (
     <ScreenContainer variant="stack">
-      {/* TODO: label 없이 뒤로가기만 필요한 경우 BackHeader가 지원하는지 확인 필요 */}
       <BackHeader label="" />
 
       <ScrollView
@@ -79,51 +78,56 @@ export default function DiaryDetailScreen() {
       >
         {/* 날짜 네비게이션 + 질문일기 뱃지 */}
         <View className="flex-row items-center justify-between">
-          {/* TODO: DateHeader 공용 컴포넌트 있으면 이 View 통째로 교체 */}
           <View className="flex-row items-center gap-0.5">
             <Pressable
               hitSlop={8}
               onPress={() => {
                 // TODO: 이전 날짜 이동 로직 연결
-                // 예: dayjs(diary.date).subtract(1, "day").format("YYYY-MM-DD")
               }}
             >
               <LeftIcon width={24} height={24} />
             </Pressable>
-            <Text className="text-b-02-sb text-gray-900">
-              {dayjs(diary.date).format("M월 D일")}
-            </Text>
+
+            {/* h-01 타이포 적용 + 'M월'/'D일' 사이 4px 간격 위해 분리 */}
+            <View className="flex-row items-center gap-1">
+              <Text className="text-h-01 text-gray-900">
+                {dayjs(diary.date).format("M월")}
+              </Text>
+              <Text className="text-h-01 text-gray-900">
+                {dayjs(diary.date).format("D일")}
+              </Text>
+            </View>
+
             <Pressable
               hitSlop={8}
               onPress={() => {
                 // TODO: 다음 날짜 이동 로직 연결
-                // 예: dayjs(diary.date).add(1, "day").format("YYYY-MM-DD")
               }}
             >
               <RightIcon width={24} height={24} />
             </Pressable>
           </View>
 
-          <View className="flex-row items-center gap-2.5 rounded border border-green-700 bg-white px-2 py-2">
-            <Text className="text-[11px] font-medium leading-[150%] tracking-[-0.02em] text-green-700">
-              질문일기
-            </Text>
-          </View>
+          {/* 질문일기일 때만 뱃지 노출 */}
+          {diary.hasQuestion && (
+            <View className="flex-row items-center gap-2.5 rounded border border-green-700 bg-white px-2 py-1">
+              <Text className="text-05-m text-green-700">질문일기</Text>
+            </View>
+          )}
         </View>
 
         {/* 오늘의 질문 */}
         {diary.hasQuestion && diary.question ? (
           <View className="gap-3">
             <Text className="text-b-02-m text-gray-900">오늘의 질문</Text>
-            <View className="rounded-xl border border-green-200 bg-green-100 p-3">
-              <Text className="text-b-03-m text-gray-800">
+            <View className="flex items-center justify-center rounded-xl border border-green-200 bg-green-100 p-3">
+              <Text className="text-b-03-sb text-green-800">
                 {diary.question}
               </Text>
             </View>
           </View>
         ) : null}
 
-        {/* 일기 본문 카드 — 일기 상세 전용 공용 컴포넌트 (DiaryCard와는 별개, 회장님 확인 완료) */}
         <DiaryDetailCard
           title={diary.title}
           content={diary.content}
@@ -134,21 +138,21 @@ export default function DiaryDetailScreen() {
         <View className="gap-3">
           <Text className="text-b-02-m text-gray-900">AI의 답장</Text>
           {diary.aiReply ? (
-            <View className="rounded-xl bg-green-100 p-3">
-              <Text className="text-b-03-m text-gray-800">
+            <View className="rounded-xl bg-green-200 p-3">
+              <Text className="text-b-02-m text-green-800">
                 {diary.aiReply}
               </Text>
             </View>
           ) : (
-            <View className="rounded-xl bg-green-100 p-3">
-              <Text className="text-b-03-m text-gray-500">
+            <View className="rounded-xl border border-green-100 bg-gray-100 p-3">
+              <Text className="text-b-02-m text-green-600">
                 아직 답장이 도착하지 않았어요.
               </Text>
             </View>
           )}
         </View>
 
-        {/* AI 추천일정 — 개별 항목은 예원님의 ScheduleRecommendItem 사용 */}
+        {/* AI 추천일정 */}
         {diary.aiReply && diary.recommendations.length > 0 ? (
           <View className="gap-3">
             <Text className="text-b-02-m text-gray-900">AI 추천일정</Text>
