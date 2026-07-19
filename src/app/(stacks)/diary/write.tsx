@@ -57,10 +57,15 @@ export default function DiaryWriteScreen() {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
+      allowsMultipleSelection: true,
+      selectionLimit: PHOTO_MAX_COUNT - photos.length,
     });
 
     if (!result.canceled) {
-      setPhotos((prev) => [...prev, result.assets[0].uri]);
+      setPhotos((prev) => [
+        ...prev,
+        ...result.assets.map((asset) => asset.uri),
+      ]);
     }
   };
 
