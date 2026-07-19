@@ -23,7 +23,6 @@ Follow the team document as the source of truth:
 - `src/app/` is only for Expo Router page routing, page files, and layouts.
 - Reusable components, API code, hooks, stores, types, constants, and utilities belong under `src/`.
 - Use domain-based folders inside `src/components`.
-- Do not add files under a root-level `app/` — Expo Router prefers a root `app/` over `src/app/` when both exist, so any root `app/` folder would silently take over routing.
 
 Expected structure:
 

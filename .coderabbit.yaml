@@ -50,7 +50,7 @@ reviews:
         Expo Router 라우트 파일을 리뷰할 때 다음을 확인해주세요:
         - 파일명은 kebab-case로 작성 (ex. user-profile.tsx)
         - 동적 라우트는 대괄호 표기 사용 (ex. [userId].tsx)
-        - 화면 컴포넌트는 export function 형태로 작성
+        - 화면 컴포넌트는 export default function 형태로 작성 (Expo Router는 default export 필수)
 
     - path: "src/components/**"
       instructions: |
