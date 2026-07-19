@@ -56,6 +56,7 @@ const ACHIEVEMENT_RATE = 80;
 
 export default function StatisticIncompleteScreen() {
   const [isCompletedOpen, setIsCompletedOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   return (
     <ScreenContainer variant="stack">
@@ -72,7 +73,10 @@ export default function StatisticIncompleteScreen() {
         <View className="w-full gap-4 rounded-2xl border border-gray-100 bg-gray-0 px-3 py-4">
           <View className="w-full gap-3">
             <View className="flex-row items-center justify-between">
-              <MonthSelector date={new Date()} />
+              <MonthSelector
+                date={selectedDate}
+                onSelectDate={setSelectedDate}
+              />
 
               <Text className="text-gray-800 text-b-02-m">
                 일정 달성률{" "}
