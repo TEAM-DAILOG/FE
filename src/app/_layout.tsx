@@ -12,7 +12,7 @@ import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useColorScheme } from "@/src/hooks/useColorScheme";
 import { ModalPage } from "@/src/components/modals/ModalPage";
 import "../../global.css";
 
