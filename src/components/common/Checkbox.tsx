@@ -1,7 +1,7 @@
 import { Pressable, type PressableProps } from "react-native";
 
-import BoxIcon from "@/assets/icons/box.svg";
-import CheckboxIcon from "@/assets/icons/checkbox.svg";
+import BoxIcon from "@/assets/icons/boxIcon.svg";
+import CheckboxIcon from "@/assets/icons/checkboxIcon.svg";
 import { cn } from "@/src/lib/cn";
 
 export type CheckboxProps = Omit<PressableProps, "children" | "onPress"> & {
