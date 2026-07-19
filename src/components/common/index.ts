@@ -12,4 +12,5 @@ export {
 } from "./ScheduleItem";
 export { ScreenContainer } from "./ScreenContainer";
 export { TabScrollView } from "./TabScrollView";
+export { TextField } from "./TextField";
 export { Toggle } from "./Toggle";

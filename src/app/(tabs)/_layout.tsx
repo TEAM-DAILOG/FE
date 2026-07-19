@@ -2,8 +2,8 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 import { BottomTabBar } from "@/src/components/common/BottomTabBar";
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Colors } from "@/src/constants/theme";
+import { useColorScheme } from "@/src/hooks/useColorScheme";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();

@@ -20,18 +20,18 @@ Native config plugins, native fonts, push notifications, and other native-module
 
 Follow the team document as the source of truth:
 
-- `app/` is only for Expo Router page routing, page files, and layouts.
+- `src/app/` is only for Expo Router page routing, page files, and layouts.
 - Reusable components, API code, hooks, stores, types, constants, and utilities belong under `src/`.
 - Use domain-based folders inside `src/components`.
 
 Expected structure:
 
 ```text
-app/
-  (auth)/
-  (tabs)/
-  _layout.tsx
 src/
+  app/
+    (auth)/
+    (tabs)/
+    _layout.tsx
   components/
     common/
     home/
@@ -45,8 +45,6 @@ src/
   utils/
 assets/
 ```
-
-Existing Expo template folders may still exist at the root while the project is being migrated. New code should follow the `src/` structure above.
 
 ## Naming Rules
 

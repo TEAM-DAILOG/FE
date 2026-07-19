@@ -21,7 +21,7 @@ export type MonthlyCategoryStatCardProps = {
   date: Date;
   topCategory: { label: string; color: CategoryColor };
   data: CategoryBarChartItem[];
-  onPressMonth?: () => void;
+  onSelectMonth?: (date: Date) => void;
   className?: string;
 };
 
@@ -29,7 +29,7 @@ export function MonthlyCategoryStatCard({
   date,
   topCategory,
   data,
-  onPressMonth,
+  onSelectMonth,
   className,
 }: MonthlyCategoryStatCardProps) {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -42,7 +42,7 @@ export function MonthlyCategoryStatCard({
       )}
     >
       <View className="w-full gap-2">
-        <MonthSelector date={date} onPress={onPressMonth} />
+        <MonthSelector date={date} onSelectDate={onSelectMonth} />
 
         <View className="flex-row flex-wrap items-center gap-1">
           <Text className="text-gray-900 text-b-04-m">

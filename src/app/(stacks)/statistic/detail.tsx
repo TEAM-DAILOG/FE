@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ScrollView } from "react-native";
 
 import { BackHeader, ScreenContainer } from "@/src/components/common";
@@ -46,6 +47,8 @@ const CATEGORY_STATS: CategoryBarChartItem[] = [
 ];
 
 export default function StatisticDetailScreen() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   return (
     <ScreenContainer variant="stack">
       <BackHeader label="일정 통계" />
@@ -59,9 +62,10 @@ export default function StatisticDetailScreen() {
         }}
       >
         <MonthlyCategoryStatCard
-          date={new Date(2026, 4)}
+          date={selectedDate}
           topCategory={{ label: "업무업무업", color: "blue" }}
           data={CATEGORY_STATS}
+          onSelectMonth={setSelectedDate}
         />
       </ScrollView>
     </ScreenContainer>
