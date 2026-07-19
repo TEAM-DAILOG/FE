@@ -1,10 +1,11 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
 import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
   Pressable,
+  Platform,
   ScrollView,
   Text,
   View,
@@ -13,16 +14,40 @@ import {
 import typoLogo from "@/assets/images/typoLogo.png";
 import { Button, ScreenContainer } from "@/src/components/common";
 import { TextField } from "@/src/components/common/TextField";
+import { useLoginMutation } from "@/src/hooks/mutations/useLoginMutation";
+import { tokenStorage } from "@/src/lib/tokenStorage";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const loginMutation = useLoginMutation();
+
+  const handleLogin = () => {
+    Keyboard.dismiss();
+    setErrorMessage("");
+
+    loginMutation.mutate(
+      {
+        email,
+        password,
+        deviceType: Platform.OS === "ios" ? "IOS" : "ANDROID",
+      },
+      {
+        onSuccess: async ({ accessToken, refreshToken }) => {
+          await tokenStorage.setTokens(accessToken, refreshToken);
+          router.replace("/(tabs)");
+        },
+        onError: (error) => {
+          setErrorMessage(error.message);
+        },
+      }
+    );
+  };
 
   return (
     <ScreenContainer>
-      <KeyboardAvoidingView
-        className="flex-1"
-      >
+      <KeyboardAvoidingView className="flex-1">
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           keyboardDismissMode="on-drag"
@@ -85,10 +110,17 @@ export default function LoginScreen() {
               <Text className="text-gray-600 text-b-04-r">비밀번호 찾기</Text>
             </View>
 
+            {errorMessage ? (
+              <Text className="mt-4 text-red-500 text-b-04-r">
+                {errorMessage}
+              </Text>
+            ) : null}
+
             <Button
-              label="로그인"
-              className="mt-5"
-              onPress={Keyboard.dismiss}
+              label={loginMutation.isPending ? "로그인 중" : "로그인"}
+              className={errorMessage ? "mt-4" : "mt-5"}
+              disabled={loginMutation.isPending}
+              onPress={handleLogin}
             />
           </View>
         </ScrollView>
