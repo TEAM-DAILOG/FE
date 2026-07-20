@@ -79,6 +79,7 @@ export function ChangePasswordModal({ onSave }: ChangePasswordModalProps) {
           value={currentPassword}
           onChangeText={setCurrentPassword}
           secureTextEntry
+          textContentType="oneTimeCode"
           placeholder="기존 비밀번호를 입력하세요"
         />
       </View>
@@ -90,6 +91,7 @@ export function ChangePasswordModal({ onSave }: ChangePasswordModalProps) {
             value={newPassword}
             onChangeText={setNewPassword}
             secureTextEntry
+            textContentType="oneTimeCode"
             placeholder="새 비밀번호를 입력하세요."
           />
         </View>
@@ -112,6 +114,7 @@ export function ChangePasswordModal({ onSave }: ChangePasswordModalProps) {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
+            textContentType="oneTimeCode"
             placeholder="새 비밀번호를 한 번 더 입력하세요."
           />
         </View>
