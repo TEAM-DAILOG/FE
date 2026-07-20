@@ -11,6 +11,7 @@ import {
 } from "@/src/components/common";
 import { PillButton, PushAlarmCard } from "@/src/components/settings";
 import { useBaseModal } from "@/src/store/modals/baseModal";
+import { useToastStore } from "@/src/store/toast/toastStore";
 import type {
   ChangePasswordModalResult,
   EditProfileModalResult,
@@ -19,6 +20,7 @@ import type {
 export default function SettingsScreen() {
   const router = useRouter();
   const openModal = useBaseModal((state) => state.openModal);
+  const showToast = useToastStore((state) => state.showToast);
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(false);
   const [isDiaryReplyEnabled, setIsDiaryReplyEnabled] = useState(false);
@@ -33,6 +35,17 @@ export default function SettingsScreen() {
       props: {
         onSave: (_result: ChangePasswordModalResult) => {
           // TODO: 비밀번호 변경 API 연동
+        },
+      },
+    });
+  };
+
+  const openDeleteAccountModal = () => {
+    openModal("deleteAccountModal", {
+      props: {
+        onConfirm: () => {
+          // TODO: 회원탈퇴 API 연동 및 로그아웃 처리
+          showToast("회원탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
         },
       },
     });
@@ -105,7 +118,10 @@ export default function SettingsScreen() {
             <Pressable className="border-b border-gray-400 pb-0.5">
               <Text className="text-gray-400 text-b-04-m">로그아웃</Text>
             </Pressable>
-            <Pressable className="border-b border-gray-400 pb-0.5">
+            <Pressable
+              className="border-b border-gray-400 pb-0.5"
+              onPress={openDeleteAccountModal}
+            >
               <Text className="text-gray-400 text-b-04-m">회원탈퇴</Text>
             </Pressable>
           </View>
