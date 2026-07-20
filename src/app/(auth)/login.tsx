@@ -107,7 +107,13 @@ export default function LoginScreen() {
                   <Text className="text-gray-600 text-b-04-r">회원가입</Text>
                 </Pressable>
               </Link>
-              <Text className="text-gray-600 text-b-04-r">비밀번호 찾기</Text>
+              <Link href="/password" asChild>
+                <Pressable hitSlop={8}>
+                  <Text className="text-gray-600 text-b-04-r">
+                    비밀번호 찾기
+                  </Text>
+                </Pressable>
+              </Link>
             </View>
 
             {errorMessage ? (
