@@ -18,3 +18,7 @@ export type ChangePasswordModalResult = {
 export type ChangePasswordModalProps = {
   onSave: (result: ChangePasswordModalResult) => void;
 };
+
+export type DeleteAccountModalProps = {
+  onConfirm: () => void;
+};
