@@ -124,7 +124,7 @@ export default function LoginScreen() {
 
             <Button
               label={loginMutation.isPending ? "로그인 중" : "로그인"}
-              className={errorMessage ? "mt-4" : "mt-5"}
+              className="mt-5"
               disabled={loginMutation.isPending}
               onPress={handleLogin}
             />
