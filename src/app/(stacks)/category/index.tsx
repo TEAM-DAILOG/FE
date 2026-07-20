@@ -1,20 +1,18 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { useRouter } from "expo-router";
 import DraggableFlatList, {
   type RenderItemParams,
 } from "react-native-draggable-flatlist";
 
-import ExclamationIcon from "@/assets/icons/exclamationIcon.svg";
-import EditIcon from "@/assets/icons/editIcon.svg";
 import DragIcon from "@/assets/icons/dragIcon.svg";
+import EditIcon from "@/assets/icons/editIcon.svg";
+import ExclamationIcon from "@/assets/icons/exclamationIcon.svg";
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
+import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
-import type {
-  Category,
-  CategoryColor,
-} from "@/src/types/categories/category.types";
+import type { Category } from "@/src/types/categories/category.types";
 
 const MAX_CATEGORY_COUNT = 5;
 
@@ -25,14 +23,6 @@ const DUMMY_CATEGORIES: Category[] = [
   { id: "4", name: "CATEGORY", color: "purple" },
   { id: "5", name: "CATEGORY", color: "pink" },
 ];
-
-const CATEGORY_DOT_CLASS_NAMES: Record<CategoryColor, string> = {
-  blue: "bg-category-01-1",
-  brown: "bg-category-02-1",
-  green: "bg-category-03-1",
-  purple: "bg-category-04-1",
-  pink: "bg-category-05-1",
-};
 
 export default function CategoryListScreen() {
   const router = useRouter();
