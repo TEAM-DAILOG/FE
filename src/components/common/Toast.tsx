@@ -23,7 +23,10 @@ export function Toast() {
   if (!message) return null;
 
   return (
-    <View className="absolute inset-0 items-center justify-end bg-gray-900/60">
+    <View
+      pointerEvents="none"
+      className="absolute inset-0 items-center justify-end bg-gray-900/60"
+    >
       <View
         className="absolute inset-x-4 items-center"
         style={{ bottom: bottomTabBarHeight - 17 }}
