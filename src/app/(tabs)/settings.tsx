@@ -11,7 +11,10 @@ import {
 } from "@/src/components/common";
 import { PillButton, PushAlarmCard } from "@/src/components/settings";
 import { useBaseModal } from "@/src/store/modals/baseModal";
-import type { EditProfileModalResult } from "@/src/types/modals/settingModal.types";
+import type {
+  ChangePasswordModalResult,
+  EditProfileModalResult,
+} from "@/src/types/modals/settingModal.types";
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -24,6 +27,16 @@ export default function SettingsScreen() {
   const [email, setEmail] = useState("dailog@naver.com");
   const [nickname, setNickname] = useState("USER NAME");
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+
+  const openChangePasswordModal = () => {
+    openModal("changePasswordModal", {
+      props: {
+        onSave: (_result: ChangePasswordModalResult) => {
+          // TODO: 비밀번호 변경 API 연동
+        },
+      },
+    });
+  };
 
   const openEditProfileModal = () => {
     openModal("editProfileModal", {
@@ -64,7 +77,7 @@ export default function SettingsScreen() {
             <View className="flex-row items-center gap-2">
               <PillButton
                 label="비밀번호 변경"
-                onPress={() => router.push("/password")}
+                onPress={openChangePasswordModal}
               />
               <PillButton label="내 정보 수정" onPress={openEditProfileModal} />
             </View>
