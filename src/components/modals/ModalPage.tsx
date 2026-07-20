@@ -1,6 +1,9 @@
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { DatePickerModalProps } from "@/src/types/modals/datepickerModal.types";
-import type { EditProfileModalProps } from "@/src/types/modals/settingModal.types";
+import type {
+  ChangePasswordModalProps,
+  EditProfileModalProps,
+} from "@/src/types/modals/settingModal.types";
 
 import {
   ScheduleListModal,
@@ -8,6 +11,7 @@ import {
 } from "./calendar/ScheduleListModal";
 import { ModalBackground } from "./ModalBackground";
 import { DatePickerModal } from "./schedule/DatePickerModal";
+import { ChangePasswordModal } from "./settings/ChangePasswordModal";
 import { EditProfileModal } from "./settings/EditProfileModal";
 
 export function ModalPage() {
@@ -30,6 +34,11 @@ export function ModalPage() {
       {modalType === "editProfileModal" ? (
         <EditProfileModal
           {...(modalProps as unknown as EditProfileModalProps)}
+        />
+      ) : null}
+      {modalType === "changePasswordModal" ? (
+        <ChangePasswordModal
+          {...(modalProps as unknown as ChangePasswordModalProps)}
         />
       ) : null}
     </ModalBackground>

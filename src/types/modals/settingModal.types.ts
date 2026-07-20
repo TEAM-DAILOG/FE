@@ -9,3 +9,12 @@ export type EditProfileModalProps = {
   initialNickname: string;
   onSave: (result: EditProfileModalResult) => void;
 };
+
+export type ChangePasswordModalResult = {
+  currentPassword: string;
+  newPassword: string;
+};
+
+export type ChangePasswordModalProps = {
+  onSave: (result: ChangePasswordModalResult) => void;
+};
