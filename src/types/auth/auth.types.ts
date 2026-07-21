@@ -19,3 +19,7 @@ export type LoginResponse = {
   refreshToken: string;
   user: LoginUser;
 };
+
+export type ReissueAccessTokenResponse = {
+  accessToken: string;
+};

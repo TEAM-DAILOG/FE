@@ -11,6 +11,9 @@ export const tokenStorage = {
     ]);
   },
 
+  setAccessToken: (accessToken: string) =>
+    SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken),
+
   getAccessToken: () => SecureStore.getItemAsync(ACCESS_TOKEN_KEY),
 
   getRefreshToken: () => SecureStore.getItemAsync(REFRESH_TOKEN_KEY),
