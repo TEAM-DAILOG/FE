@@ -118,22 +118,20 @@ export function ChangePasswordModal({ onSave }: ChangePasswordModalProps) {
             placeholder="새 비밀번호를 한 번 더 입력하세요."
           />
         </View>
-        <Text
-          className={cn(
-            "text-b-04-r",
-            RULE_TEXT_COLOR[
-              confirmPassword.length === 0
-                ? "neutral"
-                : newPassword === confirmPassword
-                  ? "valid"
-                  : "invalid"
-            ]
-          )}
-        >
-          {confirmPassword.length === 0 || newPassword === confirmPassword
-            ? "비밀번호가 일치합니다."
-            : "비밀번호가 불일치합니다."}
-        </Text>
+        {confirmPassword.length > 0 && (
+          <Text
+            className={cn(
+              "text-b-04-r",
+              RULE_TEXT_COLOR[
+                newPassword === confirmPassword ? "valid" : "invalid"
+              ]
+            )}
+          >
+            {newPassword === confirmPassword
+              ? "비밀번호가 일치합니다."
+              : "비밀번호가 불일치합니다."}
+          </Text>
+        )}
       </View>
     </SettingsModalContainer>
   );
