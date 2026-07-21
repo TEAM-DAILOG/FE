@@ -18,6 +18,7 @@ import { ModalPage } from "@/src/components/modals/ModalPage";
 import { useAuthBootstrap } from "@/src/hooks/useAuthBootstrap";
 import { useColorScheme } from "@/src/hooks/useColorScheme";
 import { queryClient } from "@/src/lib/queryClient";
+import { useAuthStore } from "@/src/store/auth/authStore";
 import "../../global.css";
 
 export const unstable_settings = {
@@ -29,7 +30,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const segments = useSegments();
-  const { isBootstrapping, isAuthenticated } = useAuthBootstrap();
+  const { isBootstrapping } = useAuthBootstrap();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [fontsLoaded] = useFonts({
     "SUIT-Regular": require("@/assets/fonts/SUIT-Regular.otf"),
     "SUIT-Medium": require("@/assets/fonts/SUIT-Medium.otf"),
