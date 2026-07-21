@@ -85,12 +85,17 @@ export function EditProfileModal({
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          placeholder="dailog@naver.com"
         />
       </View>
 
       <View className="w-full items-start gap-3">
         <Text className="text-gray-900 text-b-03-r">닉네임</Text>
-        <TextField value={nickname} onChangeText={setNickname} />
+        <TextField
+          value={nickname}
+          onChangeText={setNickname}
+          placeholder="닉네임"
+        />
       </View>
     </SettingsModalContainer>
   );
