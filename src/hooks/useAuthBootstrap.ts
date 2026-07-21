@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
 import { tokenStorage } from "@/src/lib/tokenStorage";
+import { useAuthStore } from "@/src/store/auth/authStore";
 
 type AuthBootstrapState = {
   isBootstrapping: boolean;
-  isAuthenticated: boolean;
 };
 
 export function useAuthBootstrap(): AuthBootstrapState {
+  const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
   const [state, setState] = useState<AuthBootstrapState>({
     isBootstrapping: true,
-    isAuthenticated: false,
   });
 
   useEffect(() => {
@@ -23,9 +23,9 @@ export function useAuthBootstrap(): AuthBootstrapState {
         return;
       }
 
+      setAuthenticated(Boolean(accessToken));
       setState({
         isBootstrapping: false,
-        isAuthenticated: Boolean(accessToken),
       });
     }
 
@@ -34,7 +34,7 @@ export function useAuthBootstrap(): AuthBootstrapState {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [setAuthenticated]);
 
   return state;
 }

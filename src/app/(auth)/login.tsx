@@ -16,12 +16,14 @@ import { Button, ScreenContainer } from "@/src/components/common";
 import { TextField } from "@/src/components/common/TextField";
 import { useLoginMutation } from "@/src/hooks/mutations/useLoginMutation";
 import { tokenStorage } from "@/src/lib/tokenStorage";
+import { useAuthStore } from "@/src/store/auth/authStore";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const loginMutation = useLoginMutation();
+  const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
 
   const handleLogin = () => {
     Keyboard.dismiss();
@@ -36,6 +38,7 @@ export default function LoginScreen() {
       {
         onSuccess: async ({ accessToken, refreshToken }) => {
           await tokenStorage.setTokens(accessToken, refreshToken);
+          setAuthenticated(true);
           router.replace("/(tabs)");
         },
         onError: (error) => {
