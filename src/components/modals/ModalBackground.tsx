@@ -1,7 +1,9 @@
 import { PropsWithChildren } from "react";
-import { Modal, Pressable } from "react-native";
+import { KeyboardAvoidingView, Modal, Platform, Pressable } from "react-native";
 
 import { useBaseModal } from "@/src/store/modals/baseModal";
+
+function stopPropagation() {}
 
 export function ModalBackground({ children }: PropsWithChildren) {
   const isModalOpen = useBaseModal((state) => state.isModalOpen);
@@ -18,9 +20,14 @@ export function ModalBackground({ children }: PropsWithChildren) {
         onPress={closeModal}
         className="flex-1 items-center justify-center bg-gray-900/60 px-4"
       >
-        <Pressable onPress={() => {}} className="w-full">
-          {children}
-        </Pressable>
+        <KeyboardAvoidingView
+          className="w-full"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <Pressable onPress={stopPropagation} className="w-full">
+            {children}
+          </Pressable>
+        </KeyboardAvoidingView>
       </Pressable>
     </Modal>
   );

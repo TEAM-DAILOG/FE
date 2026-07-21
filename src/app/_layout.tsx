@@ -8,12 +8,13 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { useColorScheme } from "@/src/hooks/useColorScheme";
+import { Toast } from "@/src/components/common/Toast";
 import { ModalPage } from "@/src/components/modals/ModalPage";
+import { useColorScheme } from "@/src/hooks/useColorScheme";
 import "../../global.css";
 
 export const unstable_settings = {
@@ -53,6 +54,7 @@ export default function RootLayout() {
             <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
           </Stack>
           <ModalPage />
+          <Toast />
           <StatusBar style="auto" />
         </ThemeProvider>
       </SafeAreaProvider>

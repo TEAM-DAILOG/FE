@@ -34,7 +34,7 @@ export function TextField({
     <View
       className={cn(
         "w-full flex-row rounded-xl border bg-white",
-        isTextarea ? "h-[108px] items-start p-3" : "items-center p-3",
+        isTextarea ? "h-[108px] items-start p-3" : "h-12 items-center p-3",
         isFocused ? "border-gray-400" : "border-gray-200",
         disabled && "opacity-50",
         containerClassName

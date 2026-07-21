@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { View } from "react-native";
 
-import { Button } from "@/src/components/common/Button";
+import { ModalActionButtons } from "@/src/components/modals/ModalActionButtons";
 import { DatePickerGrid } from "@/src/components/modals/schedule/DatePickerGrid";
 import { DatePickerHeader } from "@/src/components/modals/schedule/DatePickerHeader";
 import { DatePickerRecurringPanel } from "@/src/components/modals/schedule/DatePickerRecurringPanel";
@@ -279,21 +279,12 @@ export function DatePickerModal({
           ) : null}
         </View>
       </View>
-      <View className="flex-row">
-        <Button
-          label="취소"
-          variant="fill-gray"
-          onPress={closeModal}
-          className="w-0 flex-1 rounded-t-none rounded-bl-xl rounded-br-none"
-        />
-        <Button
-          label="저장"
-          disabled={!result}
-          variant="fill-green"
-          onPress={handleApply}
-          className="w-0 flex-1 rounded-t-none rounded-bl-none rounded-br-xl"
-        />
-      </View>
+      <ModalActionButtons
+        confirmLabel="저장"
+        disabled={!result}
+        onCancel={closeModal}
+        onConfirm={handleApply}
+      />
     </View>
   );
 }
