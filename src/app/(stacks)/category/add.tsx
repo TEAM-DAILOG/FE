@@ -9,15 +9,8 @@ import {
   type CategoryCircleState,
 } from "@/src/components/common/CategoryCircle";
 import { TextField } from "@/src/components/common/TextField";
+import { CATEGORY_COLORS } from "@/src/constants/categoryColors";
 import type { CategoryColor } from "@/src/types/categories/category.types";
-
-const CATEGORY_COLORS: CategoryColor[] = [
-  "blue",
-  "brown",
-  "green",
-  "purple",
-  "pink",
-];
 
 // TODO: API 연동 단계에서 실제 카테고리 목록(store/service)으로 교체
 const USED_COLORS: CategoryColor[] = ["blue", "green", "pink"];

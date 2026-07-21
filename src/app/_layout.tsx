@@ -9,10 +9,11 @@ import { router, Stack, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { Toast } from "@/src/components/common/Toast";
 import { ModalPage } from "@/src/components/modals/ModalPage";
 import { useAuthBootstrap } from "@/src/hooks/useAuthBootstrap";
 import { useColorScheme } from "@/src/hooks/useColorScheme";
@@ -77,6 +78,7 @@ export default function RootLayout() {
               <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
             </Stack>
             <ModalPage />
+            <Toast />
             <StatusBar style="auto" />
           </ThemeProvider>
         </SafeAreaProvider>
