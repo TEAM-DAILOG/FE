@@ -35,8 +35,8 @@ export function SignupTermsStep({
   const canGoNext = termsOfServiceAgreed && privacyPolicyAgreed;
 
   return (
-    <View className="flex-1 pb-12 pt-5">
-      <View className="w-[358px] self-center">
+    <View className="flex-1 px-4 pb-12 pt-5">
+      <View className="w-full">
         <SignupProgressBar currentStep={1} />
 
         <Text className="mt-7 text-gray-900 text-h-01">
@@ -76,7 +76,7 @@ export function SignupTermsStep({
 
       <Button
         label="가입하기"
-        className="w-[358px] mt-auto self-center"
+        className="mt-auto"
         disabled={!canGoNext}
         onPress={onPressNext}
       />
