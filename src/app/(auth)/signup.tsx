@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 
 import { BackHeader, ScreenContainer } from "@/src/components/common";
-import { SignupTermsStep } from "@/src/components/signup";
+import { SignupEmailStep, SignupTermsStep } from "@/src/components/signup";
 
 type SignupStep = "terms" | "email" | "code" | "password" | "profile";
 
@@ -19,6 +19,7 @@ export default function SignUpScreen() {
   const [termsOfServiceAgreed, setTermsOfServiceAgreed] = useState(false);
   const [privacyPolicyAgreed, setPrivacyPolicyAgreed] = useState(false);
   const [pushNotificationAgreed, setPushNotificationAgreed] = useState(false);
+  const [email, setEmail] = useState("");
 
   function handleToggleAll() {
     const nextValue = !(
@@ -45,6 +46,7 @@ export default function SignUpScreen() {
 
   function handleNext() {
     if (step === "terms") {
+      setStep("email");
       return;
     }
   }
@@ -73,6 +75,13 @@ export default function SignUpScreen() {
           />
         );
       case "email":
+        return (
+          <SignupEmailStep
+            email={email}
+            onChangeEmail={setEmail}
+            onPressNext={handleNext}
+          />
+        );
       case "code":
       case "password":
       case "profile":
