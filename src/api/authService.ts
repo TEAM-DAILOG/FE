@@ -22,7 +22,7 @@ function createSignupFormData(params: SignupParams) {
   formData.append("termsOfServiceAgreed", String(params.termsOfServiceAgreed));
   formData.append("privacyPolicyAgreed", String(params.privacyPolicyAgreed));
 
-  if (params.pushNotificationAgreed !== undefined) {
+  if (typeof params.pushNotificationAgreed === "boolean") {
     formData.append(
       "pushNotificationAgreed",
       String(params.pushNotificationAgreed)
