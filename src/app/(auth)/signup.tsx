@@ -13,6 +13,7 @@ import {
 import { useSendSignupEmailVerification } from "@/src/hooks/mutations/useSendSignupEmailVerification";
 import { useSignup } from "@/src/hooks/mutations/useSignup";
 import { useVerifySignupEmailCode } from "@/src/hooks/mutations/useVerifySignupEmailCode";
+import { useToastStore } from "@/src/store/toast/toastStore";
 import { getErrorMessage } from "@/src/utils/getErrorMessage";
 
 type SignupStep = "terms" | "email" | "code" | "password" | "profile";
@@ -46,6 +47,7 @@ export default function SignUpScreen() {
   const sendSignupEmailVerification = useSendSignupEmailVerification();
   const verifySignupEmailCode = useVerifySignupEmailCode();
   const signup = useSignup();
+  const showToast = useToastStore((state) => state.showToast);
 
   useEffect(() => {
     if (step !== "code") return;
@@ -156,6 +158,7 @@ export default function SignUpScreen() {
       },
       {
         onSuccess: () => {
+          showToast("회원가입이 완료되었습니다.");
           router.replace("/login");
         },
       }
