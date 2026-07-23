@@ -14,7 +14,7 @@ import {
 import typoLogo from "@/assets/images/typoLogo.png";
 import { Button, ScreenContainer } from "@/src/components/common";
 import { TextField } from "@/src/components/common/TextField";
-import { useLoginMutation } from "@/src/hooks/mutations/useLoginMutation";
+import { useLogin } from "@/src/hooks/mutations/useLogin";
 import { tokenStorage } from "@/src/lib/tokenStorage";
 import { useAuthStore } from "@/src/store/auth/authStore";
 
@@ -22,7 +22,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const loginMutation = useLoginMutation();
+  const loginMutation = useLogin();
   const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
 
   const handleLogin = () => {
