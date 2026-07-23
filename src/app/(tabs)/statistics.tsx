@@ -18,19 +18,19 @@ const RECOMMEND_ITEMS: ScheduleRecommendItemData[] = [
   {
     id: "1",
     categoryLabel: "CATEGORY",
-    categoryColor: "blue",
+    categoryColor: "BLUE",
     description: "Lorem ipsum dolor sit amet consectetur.",
   },
   {
     id: "2",
     categoryLabel: "CATEGORY",
-    categoryColor: "brown",
+    categoryColor: "BROWN",
     description: "Lorem ipsum dolor sit amet consectetur.",
   },
   {
     id: "3",
     categoryLabel: "CATEGORY",
-    categoryColor: "purple",
+    categoryColor: "PURPLE",
     description: "Lorem ipsum dolor sit amet consectetur.",
   },
 ];

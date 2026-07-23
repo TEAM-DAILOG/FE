@@ -13,7 +13,7 @@ import { CATEGORY_COLORS } from "@/src/constants/categoryColors";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 // TODO: API 연동 단계에서 실제 카테고리 목록(store/service)으로 교체
-const USED_COLORS: CategoryColor[] = ["blue", "green", "pink"];
+const USED_COLORS: CategoryColor[] = ["BLUE", "GREEN", "PINK"];
 
 export default function CategoryAddScreen() {
   const router = useRouter();

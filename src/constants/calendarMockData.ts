@@ -22,7 +22,7 @@ export function buildMockSchedules(): MockScheduleItem[] {
     {
       id: "1",
       date: at(-10),
-      categoryColor: "blue",
+      categoryColor: "BLUE",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
       checked: false,
@@ -30,7 +30,7 @@ export function buildMockSchedules(): MockScheduleItem[] {
     {
       id: "2",
       date: at(-10),
-      categoryColor: "green",
+      categoryColor: "GREEN",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
       checked: false,
@@ -38,7 +38,7 @@ export function buildMockSchedules(): MockScheduleItem[] {
     {
       id: "3",
       date: at(-3),
-      categoryColor: "brown",
+      categoryColor: "BROWN",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
       checked: false,
@@ -46,7 +46,7 @@ export function buildMockSchedules(): MockScheduleItem[] {
     {
       id: "4",
       date: at(-3),
-      categoryColor: "purple",
+      categoryColor: "PURPLE",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
       checked: false,
@@ -54,7 +54,7 @@ export function buildMockSchedules(): MockScheduleItem[] {
     {
       id: "5",
       date: at(5),
-      categoryColor: "pink",
+      categoryColor: "PINK",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
       checked: false,
@@ -62,7 +62,7 @@ export function buildMockSchedules(): MockScheduleItem[] {
     {
       id: "6",
       date: at(1),
-      categoryColor: "blue",
+      categoryColor: "BLUE",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
       checked: false,
@@ -70,7 +70,7 @@ export function buildMockSchedules(): MockScheduleItem[] {
     {
       id: "7",
       date: at(1),
-      categoryColor: "green",
+      categoryColor: "GREEN",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
       checked: false,
@@ -78,7 +78,7 @@ export function buildMockSchedules(): MockScheduleItem[] {
     {
       id: "8",
       date: at(1),
-      categoryColor: "purple",
+      categoryColor: "PURPLE",
       categoryLabel: "CATEGORY",
       description: "Lorem ipsum dolor sit amet consectetur.",
       checked: false,

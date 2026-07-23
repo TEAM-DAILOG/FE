@@ -11,7 +11,7 @@ import type { CategoryColor } from "@/src/types/categories/category.types";
 
 // TODO: id로 실제 카테고리 데이터 조회 (API 연동 전까지는 더미)
 const DUMMY_NAME = "CATEGORY";
-const DUMMY_COLOR: CategoryColor = "blue";
+const DUMMY_COLOR: CategoryColor = "BLUE";
 
 export default function CategoryEditScreen() {
   const router = useRouter();

@@ -32,11 +32,11 @@ type CategoryOption = {
 
 // 카테고리 관리 화면과 데이터 연동 후 목록 API로 교체 예정
 const CATEGORY_OPTIONS: CategoryOption[] = [
-  { id: "1", color: "blue", label: "카테고리" },
-  { id: "2", color: "brown", label: "카테고리" },
-  { id: "3", color: "green", label: "카테고리" },
-  { id: "4", color: "purple", label: "카테고리" },
-  { id: "5", color: "pink", label: "카테고리" },
+  { id: "1", color: "BLUE", label: "카테고리" },
+  { id: "2", color: "BROWN", label: "카테고리" },
+  { id: "3", color: "GREEN", label: "카테고리" },
+  { id: "4", color: "PURPLE", label: "카테고리" },
+  { id: "5", color: "PINK", label: "카테고리" },
 ];
 
 export default function ScheduleAddScreen() {

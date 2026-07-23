@@ -14,7 +14,7 @@ export type CategoryCircleProps = {
 };
 
 export function CategoryCircle({
-  color = "blue",
+  color = "BLUE",
   state = "default",
   onPress,
 }: CategoryCircleProps) {

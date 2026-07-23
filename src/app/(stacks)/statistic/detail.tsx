@@ -12,7 +12,7 @@ const CATEGORY_STATS: CategoryBarChartItem[] = [
     id: "1",
     label: "업무업무업",
     count: 20,
-    color: "blue",
+    color: "BLUE",
     schedules: [
       { id: "1-1", name: "팀 회의", date: "2026.05.21" },
       { id: "1-2", name: "보고서 작성", date: "2026.05.18" },
@@ -23,25 +23,25 @@ const CATEGORY_STATS: CategoryBarChartItem[] = [
     id: "2",
     label: "약속",
     count: 3,
-    color: "brown",
+    color: "BROWN",
     schedules: [{ id: "2-1", name: "친구 생일 파티", date: "2026.05.09" }],
   },
   {
     id: "3",
     label: "운동",
     count: 6,
-    color: "green",
+    color: "GREEN",
     schedules: [
       { id: "3-1", name: "헬스장", date: "2026.05.20" },
       { id: "3-2", name: "요가 클래스", date: "2026.05.14" },
     ],
   },
-  { id: "4", label: "기타", count: 0, color: "pink", schedules: [] },
+  { id: "4", label: "기타", count: 0, color: "PINK", schedules: [] },
   {
     id: "5",
     label: "티키탁",
     count: 1,
-    color: "purple",
+    color: "PURPLE",
     schedules: [{ id: "5-1", name: "친구 생일 파티", date: "2026.05.09" }],
   },
 ];
@@ -63,7 +63,7 @@ export default function StatisticDetailScreen() {
       >
         <MonthlyCategoryStatCard
           date={selectedDate}
-          topCategory={{ label: "업무업무업", color: "blue" }}
+          topCategory={{ label: "업무업무업", color: "BLUE" }}
           data={CATEGORY_STATS}
           onSelectMonth={setSelectedDate}
         />

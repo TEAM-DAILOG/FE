@@ -17,11 +17,11 @@ import type { Category } from "@/src/types/categories/category.types";
 const MAX_CATEGORY_COUNT = 5;
 
 const DUMMY_CATEGORIES: Category[] = [
-  { id: "1", name: "CATEGORY", color: "blue" },
-  { id: "2", name: "CATEGORY", color: "brown" },
-  { id: "3", name: "CATEGORY", color: "green" },
-  { id: "4", name: "CATEGORY", color: "purple" },
-  { id: "5", name: "CATEGORY", color: "pink" },
+  { id: "1", name: "CATEGORY", color: "BLUE" },
+  { id: "2", name: "CATEGORY", color: "BROWN" },
+  { id: "3", name: "CATEGORY", color: "GREEN" },
+  { id: "4", name: "CATEGORY", color: "PURPLE" },
+  { id: "5", name: "CATEGORY", color: "PINK" },
 ];
 
 export default function CategoryListScreen() {
