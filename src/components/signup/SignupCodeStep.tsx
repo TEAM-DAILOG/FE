@@ -33,7 +33,7 @@ export function SignupCodeStep({
   onPressResend,
   onPressNext,
 }: SignupCodeStepProps) {
-  const canVerify = code.length === SIGNUP_CODE_LENGTH;
+  const canVerify = code.length === SIGNUP_CODE_LENGTH && remainingSeconds > 0;
 
   return (
     <View className="flex-1 px-4 pb-12 pt-5">
