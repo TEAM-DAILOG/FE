@@ -29,6 +29,8 @@ const PREVIOUS_STEP: Partial<Record<SignupStep, SignupStep>> = {
 };
 
 const CODE_TIMER_SECONDS = 180;
+const INVALID_EMAIL_VERIFICATION_MESSAGE =
+  "이메일 인증 정보가 유효하지 않습니다";
 
 export default function SignUpScreen() {
   const [step, setStep] = useState<SignupStep>("terms");
@@ -167,6 +169,14 @@ export default function SignUpScreen() {
         onSuccess: () => {
           showToast("회원가입이 완료되었습니다.");
           router.replace("/login");
+        },
+        onError: (error) => {
+          if (getErrorMessage(error) === INVALID_EMAIL_VERIFICATION_MESSAGE) {
+            setEmailVerificationToken("");
+            setCodeCheckStatus("idle");
+            setCodeErrorMessage(INVALID_EMAIL_VERIFICATION_MESSAGE);
+            setStep("code");
+          }
         },
       }
     );
