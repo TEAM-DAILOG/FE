@@ -7,6 +7,7 @@ export {
 } from "./SignupCodeStep";
 export { SignupEmailStep } from "./SignupEmailStep";
 export { SignupPasswordStep } from "./SignupPasswordStep";
+export { SignupProfileStep } from "./SignupProfileStep";
 export {
   PRIVACY_POLICY_DOCUMENT,
   TERMS_OF_SERVICE_DOCUMENT,

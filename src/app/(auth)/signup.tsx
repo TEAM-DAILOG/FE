@@ -7,6 +7,7 @@ import {
   SignupCodeStep,
   SignupEmailStep,
   SignupPasswordStep,
+  SignupProfileStep,
   SignupTermsStep,
 } from "@/src/components/signup";
 
@@ -35,6 +36,7 @@ export default function SignUpScreen() {
     useState<SignupCodeCheckStatus>("idle");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [nickname, setNickname] = useState("");
 
   useEffect(() => {
     if (step !== "code") return;
@@ -87,6 +89,9 @@ export default function SignUpScreen() {
       }
       setCodeCheckStatus(code === MOCK_VALID_CODE ? "valid" : "invalid");
       return;
+    }
+    if (step === "password") {
+      setStep("profile");
     }
   }
 
@@ -154,7 +159,14 @@ export default function SignUpScreen() {
           />
         );
       case "profile":
-        return null;
+        return (
+          <SignupProfileStep
+            nickname={nickname}
+            onChangeNickname={setNickname}
+            onPressImageUpload={() => {}}
+            onPressComplete={handleNext}
+          />
+        );
     }
   }
 
