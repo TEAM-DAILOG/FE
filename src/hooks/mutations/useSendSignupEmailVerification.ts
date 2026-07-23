@@ -13,5 +13,8 @@ export function useSendSignupEmailVerification() {
     SignupEmailParams
   >({
     mutationFn: authService.sendSignupEmailVerification,
+    meta: {
+      skipGlobalErrorToast: true,
+    },
   });
 }
