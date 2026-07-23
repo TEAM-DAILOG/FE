@@ -11,6 +11,7 @@ import {
   SignupTermsStep,
 } from "@/src/components/signup";
 import { useSendSignupEmailVerification } from "@/src/hooks/mutations/useSendSignupEmailVerification";
+import { useSignup } from "@/src/hooks/mutations/useSignup";
 import { useVerifySignupEmailCode } from "@/src/hooks/mutations/useVerifySignupEmailCode";
 import { getErrorMessage } from "@/src/utils/getErrorMessage";
 
@@ -44,6 +45,7 @@ export default function SignUpScreen() {
   const [nickname, setNickname] = useState("");
   const sendSignupEmailVerification = useSendSignupEmailVerification();
   const verifySignupEmailCode = useVerifySignupEmailCode();
+  const signup = useSignup();
 
   useEffect(() => {
     if (step !== "code") return;
@@ -134,6 +136,30 @@ export default function SignUpScreen() {
     if (step === "password") {
       setStep("profile");
     }
+  }
+
+  function handleCompleteSignup() {
+    if (!emailVerificationToken) {
+      setStep("code");
+      return;
+    }
+
+    signup.mutate(
+      {
+        email,
+        emailVerificationToken,
+        password,
+        name: nickname.trim(),
+        termsOfServiceAgreed,
+        privacyPolicyAgreed,
+        pushNotificationAgreed,
+      },
+      {
+        onSuccess: () => {
+          router.replace("/login");
+        },
+      }
+    );
   }
 
   function handleChangeCode(value: string) {
@@ -231,8 +257,9 @@ export default function SignUpScreen() {
           <SignupProfileStep
             nickname={nickname}
             onChangeNickname={setNickname}
+            isPending={signup.isPending}
             onPressImageUpload={() => {}}
-            onPressComplete={handleNext}
+            onPressComplete={handleCompleteSignup}
           />
         );
     }

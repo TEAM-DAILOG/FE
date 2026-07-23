@@ -5,10 +5,32 @@ import type {
   LoginParams,
   LoginResponse,
   SendSignupEmailVerificationResponse,
+  SignupParams,
+  SignupResponse,
   SignupEmailParams,
   VerifySignupEmailCodeParams,
   VerifySignupEmailCodeResponse,
 } from "@/src/types/auth/auth.types";
+
+function createSignupFormData(params: SignupParams) {
+  const formData = new FormData();
+
+  formData.append("email", params.email);
+  formData.append("emailVerificationToken", params.emailVerificationToken);
+  formData.append("password", params.password);
+  formData.append("name", params.name);
+  formData.append("termsOfServiceAgreed", String(params.termsOfServiceAgreed));
+  formData.append("privacyPolicyAgreed", String(params.privacyPolicyAgreed));
+
+  if (params.pushNotificationAgreed !== undefined) {
+    formData.append(
+      "pushNotificationAgreed",
+      String(params.pushNotificationAgreed)
+    );
+  }
+
+  return formData;
+}
 
 export const authService = {
   checkSignupEmail: (params: SignupEmailParams) =>
@@ -30,6 +52,19 @@ export const authService = {
       .post<
         ApiSuccessResponse<VerifySignupEmailCodeResponse>
       >("/api/v1/auth/signup/email/verification/verify", params)
+      .then((res) => res.data.data),
+
+  signup: (params: SignupParams) =>
+    baseApi
+      .post<ApiSuccessResponse<SignupResponse>>(
+        "/api/v1/auth/signup",
+        createSignupFormData(params),
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       .then((res) => res.data.data),
 
   login: (params: LoginParams) =>

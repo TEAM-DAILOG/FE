@@ -8,6 +8,7 @@ import { SignupProgressBar } from "./SignupProgressBar";
 type SignupProfileStepProps = {
   nickname: string;
   onChangeNickname: (value: string) => void;
+  isPending?: boolean;
   onPressImageUpload: () => void;
   onPressComplete: () => void;
 };
@@ -15,6 +16,7 @@ type SignupProfileStepProps = {
 export function SignupProfileStep({
   nickname,
   onChangeNickname,
+  isPending = false,
   onPressImageUpload,
   onPressComplete,
 }: SignupProfileStepProps) {
@@ -52,9 +54,9 @@ export function SignupProfileStep({
       </View>
 
       <Button
-        label="회원가입 완료"
+        label={isPending ? "가입 중" : "회원가입 완료"}
         className="mt-auto"
-        disabled={!canComplete}
+        disabled={!canComplete || isPending}
         onPress={onPressComplete}
       />
     </View>

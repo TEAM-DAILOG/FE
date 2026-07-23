@@ -46,3 +46,20 @@ export type VerifySignupEmailCodeResponse = {
   emailVerificationToken: string;
   expiresInSeconds: number;
 };
+
+export type SignupParams = {
+  email: string;
+  emailVerificationToken: string;
+  password: string;
+  name: string;
+  termsOfServiceAgreed: boolean;
+  privacyPolicyAgreed: boolean;
+  pushNotificationAgreed?: boolean | null;
+};
+
+export type SignupResponse = {
+  userId: number;
+  email: string | null;
+  name: string;
+  profileImageUrl: string | null;
+};
