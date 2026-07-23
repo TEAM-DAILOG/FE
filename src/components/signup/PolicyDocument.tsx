@@ -147,13 +147,16 @@ function PolicyTable({
             >
               <Text className="text-gray-800 text-cap-r">{header}</Text>
             </View>
-            <View
-              className={`${columnWidthClass} min-h-8 items-center justify-center border border-gray-200 px-2 py-0.5`}
-            >
-              <Text className="text-center text-gray-800 text-cap-r">
-                {block.rows[0]?.[index]}
-              </Text>
-            </View>
+            {block.rows.map((row, rowIndex) => (
+              <View
+                key={`${header}-${rowIndex}`}
+                className={`${columnWidthClass} min-h-8 items-center justify-center border border-gray-200 px-2 py-0.5`}
+              >
+                <Text className="text-center text-gray-800 text-cap-r">
+                  {row[index]}
+                </Text>
+              </View>
+            ))}
           </View>
         );
       })}
