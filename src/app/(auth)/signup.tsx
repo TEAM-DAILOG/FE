@@ -6,6 +6,7 @@ import {
   type SignupCodeCheckStatus,
   SignupCodeStep,
   SignupEmailStep,
+  SignupPasswordStep,
   SignupTermsStep,
 } from "@/src/components/signup";
 
@@ -32,6 +33,8 @@ export default function SignUpScreen() {
   const [remainingSeconds, setRemainingSeconds] = useState(CODE_TIMER_SECONDS);
   const [codeCheckStatus, setCodeCheckStatus] =
     useState<SignupCodeCheckStatus>("idle");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
     if (step !== "code") return;
@@ -78,7 +81,12 @@ export default function SignUpScreen() {
       return;
     }
     if (step === "code") {
+      if (codeCheckStatus === "valid") {
+        setStep("password");
+        return;
+      }
       setCodeCheckStatus(code === MOCK_VALID_CODE ? "valid" : "invalid");
+      return;
     }
   }
 
@@ -136,6 +144,15 @@ export default function SignUpScreen() {
           />
         );
       case "password":
+        return (
+          <SignupPasswordStep
+            password={password}
+            onChangePassword={setPassword}
+            confirmPassword={confirmPassword}
+            onChangeConfirmPassword={setConfirmPassword}
+            onPressNext={handleNext}
+          />
+        );
       case "profile":
         return null;
     }
