@@ -52,9 +52,16 @@ export type SignupParams = {
   emailVerificationToken: string;
   password: string;
   name: string;
+  profileImage?: SignupProfileImage | null;
   termsOfServiceAgreed: boolean;
   privacyPolicyAgreed: boolean;
   pushNotificationAgreed?: boolean | null;
+};
+
+export type SignupProfileImage = {
+  uri: string;
+  name: string;
+  type: string;
 };
 
 export type SignupResponse = {

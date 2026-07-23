@@ -1,5 +1,7 @@
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
+import { Linking } from "react-native";
 
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import {
@@ -14,6 +16,7 @@ import { useSendSignupEmailVerification } from "@/src/hooks/mutations/useSendSig
 import { useSignup } from "@/src/hooks/mutations/useSignup";
 import { useVerifySignupEmailCode } from "@/src/hooks/mutations/useVerifySignupEmailCode";
 import { useToastStore } from "@/src/store/toast/toastStore";
+import type { SignupProfileImage } from "@/src/types/auth/auth.types";
 import { getErrorMessage } from "@/src/utils/getErrorMessage";
 
 type SignupStep = "terms" | "email" | "code" | "password" | "profile";
@@ -44,6 +47,9 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
+  const [profileImage, setProfileImage] = useState<SignupProfileImage | null>(
+    null
+  );
   const sendSignupEmailVerification = useSendSignupEmailVerification();
   const verifySignupEmailCode = useVerifySignupEmailCode();
   const signup = useSignup();
@@ -152,6 +158,7 @@ export default function SignUpScreen() {
         emailVerificationToken,
         password,
         name: nickname.trim(),
+        profileImage,
         termsOfServiceAgreed,
         privacyPolicyAgreed,
         pushNotificationAgreed,
@@ -196,6 +203,38 @@ export default function SignUpScreen() {
         },
       }
     );
+  }
+
+  async function handlePickProfileImage() {
+    const permission = await ImagePicker.getMediaLibraryPermissionsAsync();
+
+    if (permission.status !== "granted") {
+      if (!permission.canAskAgain) {
+        Linking.openSettings();
+        return;
+      }
+
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (result.canceled) return;
+
+    const asset = result.assets[0];
+    const fileExtension = asset.mimeType?.split("/")[1] ?? "jpg";
+
+    setProfileImage({
+      uri: asset.uri,
+      name: asset.fileName ?? `profile.${fileExtension}`,
+      type: asset.mimeType ?? "image/jpeg",
+    });
   }
 
   function renderStep() {
@@ -260,8 +299,10 @@ export default function SignUpScreen() {
           <SignupProfileStep
             nickname={nickname}
             onChangeNickname={setNickname}
+            profileImageUri={profileImage?.uri}
             isPending={signup.isPending}
-            onPressImageUpload={() => {}}
+            onPressImageUpload={handlePickProfileImage}
+            onPressImageRemove={() => setProfileImage(null)}
             onPressComplete={handleCompleteSignup}
           />
         );

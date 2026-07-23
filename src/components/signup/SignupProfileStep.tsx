@@ -1,5 +1,6 @@
-import { Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 
+import CloseIcon from "@/assets/icons/closeIcon.svg";
 import ImageIcon from "@/assets/icons/imageIcon.svg";
 import { Button, TextField } from "@/src/components/common";
 
@@ -8,16 +9,20 @@ import { SignupProgressBar } from "./SignupProgressBar";
 type SignupProfileStepProps = {
   nickname: string;
   onChangeNickname: (value: string) => void;
+  profileImageUri?: string | null;
   isPending?: boolean;
   onPressImageUpload: () => void;
+  onPressImageRemove: () => void;
   onPressComplete: () => void;
 };
 
 export function SignupProfileStep({
   nickname,
   onChangeNickname,
+  profileImageUri,
   isPending = false,
   onPressImageUpload,
+  onPressImageRemove,
   onPressComplete,
 }: SignupProfileStepProps) {
   const canComplete = nickname.trim().length > 0;
@@ -44,11 +49,29 @@ export function SignupProfileStep({
         <View className="mt-7 gap-3">
           <Text className="text-gray-900 text-b-02-m">프로필 이미지(선택)</Text>
           <Pressable
-            className="w-full items-center rounded-lg border border-gray-200 bg-white px-3 py-4"
+            className="w-full items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-4"
             onPress={onPressImageUpload}
           >
-            <ImageIcon width={48} height={48} color="#AEB2B0" />
-            <Text className="mt-2 text-gray-400 text-b-03-sb">사진 업로드</Text>
+            {profileImageUri ? (
+              <View className="relative size-[100px]">
+                <Image
+                  source={{ uri: profileImageUri }}
+                  className="size-[100px] rounded-lg"
+                  resizeMode="cover"
+                />
+                <Pressable
+                  className="absolute right-1 top-1 size-5 items-center justify-center rounded-full bg-white/40"
+                  onPress={onPressImageRemove}
+                >
+                  <CloseIcon width={18} height={18} color="#020303" />
+                </Pressable>
+              </View>
+            ) : (
+              <ImageIcon width={48} height={48} color="#AEB2B0" />
+            )}
+            <Text className="text-gray-400 text-b-03-sb">
+              {profileImageUri ? "사진 변경" : "사진 업로드"}
+            </Text>
           </Pressable>
         </View>
       </View>

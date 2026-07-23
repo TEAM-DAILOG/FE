@@ -29,6 +29,10 @@ function createSignupFormData(params: SignupParams) {
     );
   }
 
+  if (params.profileImage) {
+    formData.append("profileImage", params.profileImage as unknown as Blob);
+  }
+
   return formData;
 }
 
