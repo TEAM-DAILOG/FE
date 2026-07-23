@@ -1,5 +1,10 @@
 export { AgreementRow } from "./AgreementRow";
 export { PolicyDocument } from "./PolicyDocument";
+export {
+  SIGNUP_CODE_LENGTH,
+  SignupCodeStep,
+  type SignupCodeCheckStatus,
+} from "./SignupCodeStep";
 export { SignupEmailStep } from "./SignupEmailStep";
 export {
   PRIVACY_POLICY_DOCUMENT,
