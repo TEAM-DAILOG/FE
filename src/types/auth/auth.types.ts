@@ -23,3 +23,26 @@ export type LoginResponse = {
 export type ReissueAccessTokenResponse = {
   accessToken: string;
 };
+
+export type SignupEmailParams = {
+  email: string;
+};
+
+export type CheckSignupEmailResponse = {
+  isAvailable: boolean;
+};
+
+export type SendSignupEmailVerificationResponse = {
+  expiresInSeconds: number;
+  resendAvailableInSeconds: number;
+};
+
+export type VerifySignupEmailCodeParams = {
+  email: string;
+  code: string;
+};
+
+export type VerifySignupEmailCodeResponse = {
+  emailVerificationToken: string;
+  expiresInSeconds: number;
+};

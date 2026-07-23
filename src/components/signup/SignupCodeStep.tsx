@@ -15,6 +15,9 @@ type SignupCodeStepProps = {
   onChangeCode: (value: string) => void;
   remainingSeconds: number;
   codeCheckStatus: SignupCodeCheckStatus;
+  errorMessage?: string;
+  isResending?: boolean;
+  isVerifying?: boolean;
   onPressResend: () => void;
   onPressNext: () => void;
 };
@@ -24,6 +27,9 @@ export function SignupCodeStep({
   onChangeCode,
   remainingSeconds,
   codeCheckStatus,
+  errorMessage,
+  isResending = false,
+  isVerifying = false,
   onPressResend,
   onPressNext,
 }: SignupCodeStepProps) {
@@ -57,18 +63,19 @@ export function SignupCodeStep({
             />
           </View>
 
-          {codeCheckStatus !== "idle" ? (
+          {errorMessage || codeCheckStatus !== "idle" ? (
             <Text
               className={cn(
                 "text-b-03-m",
-                codeCheckStatus === "valid"
+                !errorMessage && codeCheckStatus === "valid"
                   ? "text-notification-2"
                   : "text-notification-1"
               )}
             >
-              {codeCheckStatus === "valid"
-                ? "인증코드가 일치합니다."
-                : "인증코드가 불일치합니다."}
+              {errorMessage ??
+                (codeCheckStatus === "valid"
+                  ? "인증코드가 일치합니다."
+                  : "인증코드가 불일치합니다.")}
             </Text>
           ) : null}
         </View>
@@ -76,13 +83,14 @@ export function SignupCodeStep({
 
       <View className="mt-auto gap-3">
         <Button
-          label="인증코드 재전송하기"
+          label={isResending ? "재전송 중" : "인증코드 재전송하기"}
           variant="stroke-green"
+          disabled={isResending}
           onPress={onPressResend}
         />
         <Button
-          label="이메일 인증하기"
-          disabled={!canVerify}
+          label={isVerifying ? "인증 중" : "이메일 인증하기"}
+          disabled={!canVerify || isVerifying}
           onPress={onPressNext}
         />
       </View>

@@ -10,6 +10,9 @@ import {
   SignupProfileStep,
   SignupTermsStep,
 } from "@/src/components/signup";
+import { useSendSignupEmailVerification } from "@/src/hooks/mutations/useSendSignupEmailVerification";
+import { useVerifySignupEmailCode } from "@/src/hooks/mutations/useVerifySignupEmailCode";
+import { getErrorMessage } from "@/src/utils/getErrorMessage";
 
 type SignupStep = "terms" | "email" | "code" | "password" | "profile";
 
@@ -21,7 +24,6 @@ const PREVIOUS_STEP: Partial<Record<SignupStep, SignupStep>> = {
 };
 
 const CODE_TIMER_SECONDS = 180;
-const MOCK_VALID_CODE = "123456";
 
 export default function SignUpScreen() {
   const [step, setStep] = useState<SignupStep>("terms");
@@ -34,9 +36,14 @@ export default function SignUpScreen() {
   const [remainingSeconds, setRemainingSeconds] = useState(CODE_TIMER_SECONDS);
   const [codeCheckStatus, setCodeCheckStatus] =
     useState<SignupCodeCheckStatus>("idle");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [codeErrorMessage, setCodeErrorMessage] = useState("");
+  const [emailVerificationToken, setEmailVerificationToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
+  const sendSignupEmailVerification = useSendSignupEmailVerification();
+  const verifySignupEmailCode = useVerifySignupEmailCode();
 
   useEffect(() => {
     if (step !== "code") return;
@@ -77,17 +84,51 @@ export default function SignUpScreen() {
       return;
     }
     if (step === "email") {
-      setRemainingSeconds(CODE_TIMER_SECONDS);
-      setCodeCheckStatus("idle");
-      setStep("code");
-      return;
-    }
-    if (step === "code") {
-      if (codeCheckStatus === "valid") {
+      if (emailVerificationToken) {
         setStep("password");
         return;
       }
-      setCodeCheckStatus(code === MOCK_VALID_CODE ? "valid" : "invalid");
+
+      setEmailErrorMessage("");
+      sendSignupEmailVerification.mutate(
+        { email },
+        {
+          onSuccess: ({ expiresInSeconds }) => {
+            setCode("");
+            setRemainingSeconds(expiresInSeconds);
+            setCodeCheckStatus("idle");
+            setCodeErrorMessage("");
+            setEmailVerificationToken("");
+            setStep("code");
+          },
+          onError: (error) => {
+            setEmailErrorMessage(getErrorMessage(error));
+          },
+        }
+      );
+      return;
+    }
+    if (step === "code") {
+      if (codeCheckStatus === "valid" && emailVerificationToken) {
+        setStep("password");
+        return;
+      }
+      setCodeErrorMessage("");
+      verifySignupEmailCode.mutate(
+        { email, code },
+        {
+          onSuccess: ({ emailVerificationToken }) => {
+            setEmailVerificationToken(emailVerificationToken);
+            setCodeCheckStatus("valid");
+            setStep("password");
+          },
+          onError: (error) => {
+            setEmailVerificationToken("");
+            setCodeCheckStatus("invalid");
+            setCodeErrorMessage(getErrorMessage(error));
+          },
+        }
+      );
       return;
     }
     if (step === "password") {
@@ -98,12 +139,34 @@ export default function SignUpScreen() {
   function handleChangeCode(value: string) {
     setCode(value);
     setCodeCheckStatus("idle");
+    setCodeErrorMessage("");
+  }
+
+  function handleChangeEmail(value: string) {
+    setEmail(value);
+    setEmailErrorMessage("");
+    setCode("");
+    setCodeCheckStatus("idle");
+    setCodeErrorMessage("");
+    setEmailVerificationToken("");
   }
 
   function handleResendCode() {
-    setCode("");
-    setCodeCheckStatus("idle");
-    setRemainingSeconds(CODE_TIMER_SECONDS);
+    setCodeErrorMessage("");
+    sendSignupEmailVerification.mutate(
+      { email },
+      {
+        onSuccess: ({ expiresInSeconds }) => {
+          setCode("");
+          setCodeCheckStatus("idle");
+          setEmailVerificationToken("");
+          setRemainingSeconds(expiresInSeconds);
+        },
+        onError: (error) => {
+          setCodeErrorMessage(getErrorMessage(error));
+        },
+      }
+    );
   }
 
   function renderStep() {
@@ -133,7 +196,9 @@ export default function SignUpScreen() {
         return (
           <SignupEmailStep
             email={email}
-            onChangeEmail={setEmail}
+            onChangeEmail={handleChangeEmail}
+            errorMessage={emailErrorMessage}
+            isPending={sendSignupEmailVerification.isPending}
             onPressNext={handleNext}
           />
         );
@@ -144,6 +209,9 @@ export default function SignUpScreen() {
             onChangeCode={handleChangeCode}
             remainingSeconds={remainingSeconds}
             codeCheckStatus={codeCheckStatus}
+            errorMessage={codeErrorMessage}
+            isResending={sendSignupEmailVerification.isPending}
+            isVerifying={verifySignupEmailCode.isPending}
             onPressResend={handleResendCode}
             onPressNext={handleNext}
           />
