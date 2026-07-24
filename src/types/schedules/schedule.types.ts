@@ -81,3 +81,34 @@ export type CompleteScheduleResponse = {
   scheduleId: number;
   isCompleted: boolean;
 };
+
+// 일정 수정 유형
+export type UpdateScheduleScope = "SINGLE" | "ALL";
+
+// 일정 수정 요청 파라미터 타입
+export type UpdateScheduleParams = {
+  categoryId?: number;
+  title?: string;
+  content?: string | null;
+  date?: string;
+  repeatType?: ScheduleRepeatType;
+  repeatStartDate?: string | null;
+  repeatEndDate?: string | null;
+  repeatDays?: string | null;
+  repeatDates?: string[];
+};
+
+// 일정 수정 요청 응답값 타입
+export type UpdateScheduleResponse = {
+  scheduleId: number;
+  categoryId: number;
+  title: string;
+  content: string | null;
+  date: string;
+  groupId: number | null;
+  isCompleted: boolean;
+  repeatType: ScheduleRepeatType;
+  repeatStartDate: string | null;
+  repeatEndDate: string | null;
+  repeatDays: string | null;
+};

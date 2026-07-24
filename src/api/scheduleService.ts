@@ -6,6 +6,9 @@ import type {
   CreateScheduleResponse,
   GetSchedulesParams,
   GetSchedulesResponse,
+  UpdateScheduleParams,
+  UpdateScheduleResponse,
+  UpdateScheduleScope,
 } from "@/src/types/schedules/schedule.types";
 
 export const scheduleService = {
@@ -35,5 +38,16 @@ export const scheduleService = {
       .patch<
         ApiSuccessResponse<CompleteScheduleResponse>
       >(`/api/v1/schedules/${scheduleId}/complete`)
+      .then((res) => res.data.data),
+
+  updateSchedule: (
+    scheduleId: number,
+    scope: UpdateScheduleScope,
+    params: UpdateScheduleParams
+  ) =>
+    baseApi
+      .patch<
+        ApiSuccessResponse<UpdateScheduleResponse>
+      >(`/api/v1/schedules/${scheduleId}`, params, { params: { scope } })
       .then((res) => res.data.data),
 };
