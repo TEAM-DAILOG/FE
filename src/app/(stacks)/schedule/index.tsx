@@ -45,11 +45,28 @@ const CATEGORY_OPTIONS: CategoryOption[] = [
 
 export default function ScheduleAddScreen() {
   const router = useRouter();
-  const { date: initialDate } = useLocalSearchParams<{ date?: string }>();
+  const {
+    date: initialDate,
+    scheduleId,
+    title: initialTitle,
+    categoryColor: initialCategoryColor,
+    memo: initialMemo,
+  } = useLocalSearchParams<{
+    date?: string;
+    scheduleId?: string;
+    title?: string;
+    categoryColor?: CategoryColor;
+    memo?: string;
+  }>();
+  const isEdit = !!scheduleId;
 
-  const [title, setTitle] = useState("");
-  const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [memo, setMemo] = useState("");
+  const [title, setTitle] = useState(initialTitle ?? "");
+  const [categoryId, setCategoryId] = useState<string | null>(
+    () =>
+      CATEGORY_OPTIONS.find((option) => option.color === initialCategoryColor)
+        ?.id ?? null
+  );
+  const [memo, setMemo] = useState(initialMemo ?? "");
   const [date, setDate] = useState(() =>
     initialDate ? initialDate : dayjs().format("YYYY-MM-DD")
   );
@@ -90,6 +107,12 @@ export default function ScheduleAddScreen() {
   const handleSave = () => {
     if (!canSave || !categoryId) return;
 
+    if (isEdit) {
+      // TODO: 수정 API 연동 후 실제 수정 요청으로 교체
+      router.push("/(tabs)/calendar");
+      return;
+    }
+
     const params = formatCreateScheduleParams({
       categoryId: Number(categoryId),
       title,
@@ -105,7 +128,7 @@ export default function ScheduleAddScreen() {
 
   return (
     <ScreenContainer variant="stack">
-      <BackHeader label="일정등록" />
+      <BackHeader label={isEdit ? "일정수정" : "일정등록"} />
 
       <KeyboardAvoidingView
         className="flex-1"
@@ -194,7 +217,13 @@ export default function ScheduleAddScreen() {
 
       <View className="px-4 pb-12 pt-2">
         <Button
-          label={createScheduleMutation.isPending ? "저장 중" : "저장"}
+          label={
+            createScheduleMutation.isPending
+              ? "저장 중"
+              : isEdit
+                ? "수정"
+                : "저장"
+          }
           disabled={!canSave || createScheduleMutation.isPending}
           onPress={handleSave}
         />

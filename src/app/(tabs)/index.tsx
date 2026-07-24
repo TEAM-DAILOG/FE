@@ -6,21 +6,27 @@ import { ScheduleItem } from "@/src/components/common/ScheduleItem";
 import { ScreenContainer } from "@/src/components/common/ScreenContainer";
 import { TabScrollView } from "@/src/components/common/TabScrollView";
 import type { CategoryColor } from "@/src/types/categories/category.types";
+import dayjs from "dayjs";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
 type Schedule = {
   id: string;
+  date: string;
   categoryLabel: string;
   categoryColor: CategoryColor;
   description: string;
   checked: boolean;
 };
 
+// 오늘 화면이므로 목데이터도 전부 오늘 날짜로 고정
+const TODAY = dayjs().format("YYYY-MM-DD");
+
 const MOCK_SCHEDULES: Schedule[] = [
   {
     id: "1",
+    date: TODAY,
     categoryLabel: "CATEGORY",
     categoryColor: "BLUE",
     description: "Lorem ipsum dolor sit amet consectetur.",
@@ -28,6 +34,7 @@ const MOCK_SCHEDULES: Schedule[] = [
   },
   {
     id: "2",
+    date: TODAY,
     categoryLabel: "CATEGORY",
     categoryColor: "BROWN",
     description: "Lorem ipsum dolor sit amet consectetur.",
@@ -35,6 +42,7 @@ const MOCK_SCHEDULES: Schedule[] = [
   },
   {
     id: "3",
+    date: TODAY,
     categoryLabel: "CATEGORY",
     categoryColor: "GREEN",
     description: "Lorem ipsum dolor sit amet consectetur.",
@@ -42,6 +50,7 @@ const MOCK_SCHEDULES: Schedule[] = [
   },
   {
     id: "4",
+    date: TODAY,
     categoryLabel: "CATEGORY",
     categoryColor: "PURPLE",
     description: "Lorem ipsum dolor sit amet consectetur.",
@@ -49,6 +58,7 @@ const MOCK_SCHEDULES: Schedule[] = [
   },
   {
     id: "5",
+    date: TODAY,
     categoryLabel: "CATEGORY",
     categoryColor: "PINK",
     description: "Lorem ipsum dolor sit amet consectetur.",
@@ -106,6 +116,8 @@ export default function HomeScreen() {
                     description={s.description}
                     action={{
                       type: "checkbox",
+                      id: s.id,
+                      date: s.date,
                       checked: s.checked,
                       onToggle: () => toggleSchedule(s.id),
                     }}

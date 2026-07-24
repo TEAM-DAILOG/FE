@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -17,15 +18,17 @@ import {
   CATEGORY_TEXT_CLASS_NAMES,
 } from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
+import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 export type ScheduleItemAction =
   | {
       type: "checkbox";
+      id: string;
+      // 수정 이동/삭제 모달에 쓰는 실제 일정 날짜(YYYY-MM-DD). 화면에 보이는 date prop과는 별개.
+      date: string;
       checked: boolean;
       onToggle: () => void;
-      onEdit?: () => void;
-      onDelete?: () => void;
     }
   | { type: "button"; label: string; onPress?: () => void }
   | { type: "none" };
@@ -54,6 +57,9 @@ export function ScheduleItem({
   action,
   className,
 }: ScheduleItemProps) {
+  const router = useRouter();
+  const openModal = useBaseModal((state) => state.openModal);
+
   // 버튼/체크박스가 있으면 오른쪽 공간이 좁아 날짜를 위에 따로 쌓고,
   // 액션이 없는(완료) 항목은 카테고리 줄 오른쪽에 날짜를 나란히 붙인다.
   const isDateInline = action.type === "none";
@@ -141,7 +147,34 @@ export function ScheduleItem({
   // 체크박스 모드(할 일 목록)에서만 왼쪽 스와이프로 수정/삭제 버튼을 노출
   if (action.type !== "checkbox") return row;
 
+  const { id, date: scheduleDate } = action;
   const actionBgClassName = CATEGORY_COLOR_CLASS_NAMES[categoryColor].soft;
+
+  // 일정 등록 화면을 수정 모드로 열어 기존 값을 채워서 보여준다
+  const handleEdit = () => {
+    router.push({
+      pathname: "/schedule",
+      params: {
+        scheduleId: id,
+        title: description,
+        date: scheduleDate,
+        categoryColor,
+      },
+    });
+  };
+
+  // 삭제 확인 모달을 띄운다. 실제 삭제 요청은 삭제 API 연동 후 채운다
+  const handleDelete = () => {
+    openModal("deleteScheduleModal", {
+      props: {
+        date: scheduleDate,
+        description,
+        onConfirm: () => {
+          // TODO: 삭제 API 연동 후 실제 삭제 요청으로 교체
+        },
+      },
+    });
+  };
 
   return (
     <View className="relative">
@@ -151,7 +184,7 @@ export function ScheduleItem({
         style={{ gap: ACTION_GAP, width: ACTIONS_WIDTH }}
       >
         <Pressable
-          onPress={action.onEdit}
+          onPress={handleEdit}
           className={cn(
             "aspect-square items-center justify-center rounded-xl p-2.5",
             actionBgClassName
@@ -161,7 +194,7 @@ export function ScheduleItem({
           <EditIcon width={24} height={24} color="#020303" />
         </Pressable>
         <Pressable
-          onPress={action.onDelete}
+          onPress={handleDelete}
           className={cn(
             "aspect-square items-center justify-center rounded-xl p-2.5",
             actionBgClassName

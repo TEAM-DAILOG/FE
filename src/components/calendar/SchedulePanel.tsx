@@ -80,6 +80,8 @@ export function SchedulePanel({
                     description={schedule.description}
                     action={{
                       type: "checkbox",
+                      id: schedule.id,
+                      date: schedule.date,
                       checked: schedule.checked,
                       onToggle: () => toggleSchedule(schedule.id),
                     }}
