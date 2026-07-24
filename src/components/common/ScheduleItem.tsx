@@ -1,9 +1,18 @@
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 
+import CloseIcon from "@/assets/icons/closeIcon.svg";
+import EditIcon from "@/assets/icons/editIcon.svg";
 import { AddButton } from "@/src/components/common/AddButton";
 import { Checkbox } from "@/src/components/common/Checkbox";
 import {
   CATEGORY_BORDER_CLASS_NAMES,
+  CATEGORY_COLOR_CLASS_NAMES,
   CATEGORY_DOT_CLASS_NAMES,
   CATEGORY_TEXT_CLASS_NAMES,
 } from "@/src/constants/categoryColors";
@@ -11,7 +20,13 @@ import { cn } from "@/src/lib/cn";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 export type ScheduleItemAction =
-  | { type: "checkbox"; checked: boolean; onToggle: () => void }
+  | {
+      type: "checkbox";
+      checked: boolean;
+      onToggle: () => void;
+      onEdit?: () => void;
+      onDelete?: () => void;
+    }
   | { type: "button"; label: string; onPress?: () => void }
   | { type: "none" };
 
@@ -23,6 +38,13 @@ export type ScheduleItemProps = {
   action: ScheduleItemAction;
   className?: string;
 };
+
+const ACTION_SIZE = 55;
+const ACTION_GAP = 4;
+const ACTIONS_WIDTH = ACTION_SIZE * 2 + ACTION_GAP;
+// 열렸을 때 일정 박스와 버튼 패널 사이에 둘 간격
+const ROW_GAP = 8;
+const OPEN_OFFSET = -(ACTIONS_WIDTH + ROW_GAP);
 
 export function ScheduleItem({
   categoryLabel,
@@ -36,7 +58,29 @@ export function ScheduleItem({
   // 액션이 없는(완료) 항목은 카테고리 줄 오른쪽에 날짜를 나란히 붙인다.
   const isDateInline = action.type === "none";
 
-  return (
+  const translateX = useSharedValue(0);
+  const startX = useSharedValue(0);
+
+  const panGesture = Gesture.Pan()
+    .activeOffsetX([-10, 10])
+    .failOffsetY([-10, 10])
+    .onStart(() => {
+      startX.value = translateX.value;
+    })
+    .onUpdate((event) => {
+      const next = startX.value + event.translationX;
+      translateX.value = Math.min(0, Math.max(next, OPEN_OFFSET));
+    })
+    .onEnd(() => {
+      const shouldOpen = translateX.value < OPEN_OFFSET / 2;
+      translateX.value = withSpring(shouldOpen ? OPEN_OFFSET : 0, {});
+    });
+
+  const rowStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
+  const row = (
     <View
       className={cn(
         "w-full flex-row items-center justify-between rounded-xl border bg-gray-0 px-3 py-2",
@@ -91,6 +135,46 @@ export function ScheduleItem({
           className="ml-2"
         />
       )}
+    </View>
+  );
+
+  // 체크박스 모드(할 일 목록)에서만 왼쪽 스와이프로 수정/삭제 버튼을 노출
+  if (action.type !== "checkbox") return row;
+
+  const actionBgClassName = CATEGORY_COLOR_CLASS_NAMES[categoryColor].soft;
+
+  return (
+    <View className="relative">
+      <View
+        pointerEvents="box-none"
+        className="absolute inset-y-0 right-0 flex-row items-stretch"
+        style={{ gap: ACTION_GAP, width: ACTIONS_WIDTH }}
+      >
+        <Pressable
+          onPress={action.onEdit}
+          className={cn(
+            "aspect-square items-center justify-center rounded-xl p-2.5",
+            actionBgClassName
+          )}
+          style={{ width: ACTION_SIZE }}
+        >
+          <EditIcon width={24} height={24} color="#020303" />
+        </Pressable>
+        <Pressable
+          onPress={action.onDelete}
+          className={cn(
+            "aspect-square items-center justify-center rounded-xl p-2.5",
+            actionBgClassName
+          )}
+          style={{ width: ACTION_SIZE }}
+        >
+          <CloseIcon width={24} height={24} color="#020303" />
+        </Pressable>
+      </View>
+
+      <GestureDetector gesture={panGesture}>
+        <Animated.View style={rowStyle}>{row}</Animated.View>
+      </GestureDetector>
     </View>
   );
 }
