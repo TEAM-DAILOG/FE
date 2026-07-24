@@ -10,7 +10,7 @@ export function formatScheduleItem(schedule: Schedule): UpcomingSchedule {
     date: dayjs(schedule.date).format("YYYY-MM-DD"),
     categoryLabel: schedule.category.categoryName,
     categoryColor: schedule.category.categoryColor,
-    description: schedule.content,
+    description: schedule.title,
     checked: schedule.isCompleted,
   };
 }
