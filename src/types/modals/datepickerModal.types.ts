@@ -19,6 +19,7 @@ export type DatePickerDayState = {
   isRangeStart?: boolean;
   isRangeEnd?: boolean;
   isInRange?: boolean;
+  isDisabled?: boolean;
 };
 
 export type DatePickerModalResult = {

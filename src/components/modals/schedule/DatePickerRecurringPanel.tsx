@@ -151,6 +151,7 @@ export function DatePickerRecurringPanel({
           getDayState={(date) => ({
             isSelected:
               date === (editingField === "start" ? recurStart : recurEnd),
+            isDisabled: editingField === "end" && date < recurStart,
           })}
         />
       ) : null}

@@ -84,14 +84,17 @@ export function DatePickerGrid({
               ) : null}
 
               {week.map((cell, index) => {
-                const { isSelected, isRangeStart, isRangeEnd, isInRange } =
+                const { isSelected, isRangeStart, isRangeEnd, isInRange, isDisabled } =
                   states[index];
-                const isEndpoint = isSelected || isRangeStart || isRangeEnd;
+                const isEndpoint =
+                  !isDisabled && (isSelected || isRangeStart || isRangeEnd);
 
                 return (
                   <Pressable
                     key={cell.date}
-                    onPress={() => onDayPress(cell.date, cell.isCurrentMonth)}
+                    onPress={() =>
+                      !isDisabled && onDayPress(cell.date, cell.isCurrentMonth)
+                    }
                     className="aspect-square flex-1 items-center justify-center"
                   >
                     <View
@@ -102,13 +105,15 @@ export function DatePickerGrid({
                     >
                       <Text
                         className={cn(
-                          isEndpoint
-                            ? "text-green-100 text-b-03-sb"
-                            : isInRange
-                              ? "text-green-600 text-b-03-r"
-                              : cell.isCurrentMonth
-                                ? "text-gray-900 text-b-03-r"
-                                : "text-gray-600 text-b-03-sb"
+                          isDisabled
+                            ? "text-gray-600 text-b-03-sb"
+                            : isEndpoint
+                              ? "text-green-100 text-b-03-sb"
+                              : isInRange
+                                ? "text-green-600 text-b-03-r"
+                                : cell.isCurrentMonth
+                                  ? "text-gray-900 text-b-03-r"
+                                  : "text-gray-600 text-b-03-sb"
                         )}
                       >
                         {cell.day}

@@ -150,9 +150,15 @@ export function DatePickerModal({
 
   // 반복 일정 탭에서 편집 중인 필드(시작일/종료일)에 날짜 반영
   const handleRecurDayPress = (date: string, isCurrentMonth: boolean) => {
+    if (editingField === "end" && date < recurStart) return;
+
     jumpToMonthIfNeeded(date, isCurrentMonth);
-    if (editingField === "start") setRecurStart(date);
-    else setRecurEnd(date);
+    if (editingField === "start") {
+      setRecurStart(date);
+      if (recurEnd < date) setRecurEnd(date);
+    } else {
+      setRecurEnd(date);
+    }
     setEditingField(null);
   };
 
