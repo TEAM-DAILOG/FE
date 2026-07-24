@@ -1,5 +1,4 @@
-import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
 import { CalendarGrid } from "@/src/components/calendar/CalendarGrid";
@@ -15,15 +14,18 @@ type SchedulePanelProps = {
   upcomingSchedules: UpcomingSchedule[];
 };
 
-const UPCOMING_RANGE_DAYS = 7;
-
 export function SchedulePanel({
   month,
   onDayPress,
   getDayInfo,
   upcomingSchedules,
 }: SchedulePanelProps) {
+  // 체크박스 토글을 위한 로컬 상태, 쿼리 데이터가 갱신되면 동기화
   const [schedules, setSchedules] = useState(upcomingSchedules);
+
+  useEffect(() => {
+    setSchedules(upcomingSchedules);
+  }, [upcomingSchedules]);
 
   const toggleSchedule = (id: string) => {
     setSchedules((prev) =>
@@ -31,13 +33,7 @@ export function SchedulePanel({
     );
   };
 
-  const today = dayjs().startOf("day");
-  const visibleSchedules = schedules
-    .filter((s) => {
-      const diff = dayjs(s.date).startOf("day").diff(today, "day");
-      return diff >= 0 && diff <= UPCOMING_RANGE_DAYS;
-    })
-    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  const visibleSchedules = schedules;
 
   return (
     <View className="flex-col gap-7 px-4 pt-5">
@@ -54,7 +50,7 @@ export function SchedulePanel({
         <View className="flex-col gap-3">
           {visibleSchedules.length === 0 ? (
             <Text className="text-gray-800 text-b-03-r">
-              다음 일주일 이내에 등록된 일정이 없습니다.
+              등록된 가까운 일정이 없습니다.
             </Text>
           ) : (
             visibleSchedules.map((schedule) => {
