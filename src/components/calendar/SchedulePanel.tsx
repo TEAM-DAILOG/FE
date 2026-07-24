@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
 import { CalendarGrid } from "@/src/components/calendar/CalendarGrid";
+import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
 import type { CalendarDayInfo } from "@/src/types/calendar/calendarGrid.types";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
 import { getScheduleDday } from "@/src/utils";
@@ -20,20 +20,21 @@ export function SchedulePanel({
   getDayInfo,
   upcomingSchedules,
 }: SchedulePanelProps) {
-  // 체크박스 토글을 위한 로컬 상태, 쿼리 데이터가 갱신되면 동기화
-  const [schedules, setSchedules] = useState(upcomingSchedules);
+  const completeScheduleMutation = useCompleteSchedule();
 
-  useEffect(() => {
-    setSchedules(upcomingSchedules);
-  }, [upcomingSchedules]);
-
-  const toggleSchedule = (id: string) => {
-    setSchedules((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, checked: !s.checked } : s))
-    );
+  const toggleSchedule = (id: string, checked: boolean) => {
+    if (checked) return;
+    completeScheduleMutation.mutate(Number(id));
   };
 
-  const visibleSchedules = schedules;
+  const visibleSchedules = upcomingSchedules.map((schedule) => ({
+    ...schedule,
+    checked:
+      schedule.checked ||
+      ((completeScheduleMutation.isPending ||
+        completeScheduleMutation.isSuccess) &&
+        completeScheduleMutation.variables === Number(schedule.id)),
+  }));
 
   return (
     <View className="flex-col gap-7 px-4 pt-5">
@@ -83,7 +84,8 @@ export function SchedulePanel({
                       id: schedule.id,
                       date: schedule.date,
                       checked: schedule.checked,
-                      onToggle: () => toggleSchedule(schedule.id),
+                      onToggle: () =>
+                        toggleSchedule(schedule.id, schedule.checked),
                     }}
                   />
                 </View>

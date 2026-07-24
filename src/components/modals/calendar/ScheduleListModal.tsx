@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 import { ScheduleItem } from "@/src/components/common";
+import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
 import { AddScheduleButton } from "../../common/AddScheduleButton";
@@ -20,15 +21,24 @@ export function ScheduleListModal({
 }: ScheduleListModalProps) {
   const closeModal = useBaseModal((state) => state.closeModal);
   const [schedules, setSchedules] = useState(initialSchedules);
+  const completeScheduleMutation = useCompleteSchedule();
 
-  const toggleSchedule = (id: string) => {
+  const setChecked = (id: string, checked: boolean) => {
     setSchedules((prev) =>
       prev.map((schedule) =>
-        schedule.id === id
-          ? { ...schedule, checked: !schedule.checked }
-          : schedule
+        schedule.id === id ? { ...schedule, checked } : schedule
       )
     );
+  };
+
+  const toggleSchedule = (id: string) => {
+    const target = schedules.find((schedule) => schedule.id === id);
+    if (!target || target.checked) return;
+
+    setChecked(id, true);
+    completeScheduleMutation.mutate(Number(id), {
+      onError: () => setChecked(id, false),
+    });
   };
 
   const handlePressAddSchedule = () => {
