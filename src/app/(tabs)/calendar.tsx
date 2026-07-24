@@ -13,8 +13,8 @@ import {
   buildMockPastThreadItems,
   buildMockThreadItems,
 } from "@/src/constants/calendarMockData";
-import { useGetSchedules } from "@/src/hooks/queries/useGetSchedules";
-import { useUpcomingSchedules } from "@/src/hooks/queries/useUpcomingSchedules";
+import { useGetSchedules } from "@/src/hooks/queries/schedules/useGetSchedules";
+import { useUpcomingSchedules } from "@/src/hooks/queries/schedules/useUpcomingSchedules";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CalendarMode } from "@/src/types/calendar/calendarGrid.types";
 import type {
