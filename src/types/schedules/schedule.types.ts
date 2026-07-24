@@ -16,6 +16,16 @@ export type ScheduleRepeatType =
   | "MONTHLY"
   | "YEARLY";
 
+// 반복 요일 ENUM
+export type WeekdayCode =
+  | "SUN"
+  | "MON"
+  | "TUE"
+  | "WED"
+  | "THU"
+  | "FRI"
+  | "SAT";
+
 // 일정 아이템 타입
 export type Schedule = {
   scheduleId: number;

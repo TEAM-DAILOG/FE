@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import { WEEKDAY_LABELS } from "@/src/constants";
+import { WEEKDAYS } from "@/src/constants";
 import type {
   DatePickerCell,
   ScheduleRepeatSummary,
@@ -53,7 +53,7 @@ export function getScheduleDday(date: string) {
   const diff = dayjs(date).startOf("day").diff(dayjs().startOf("day"), "day");
   const ddayLabel = diff <= 0 ? "D-DAY" : `D-${diff}`;
   const dateLabel = dayjs(date).format("M.D");
-  const weekdayLabel = `(${WEEKDAY_LABELS[dayjs(date).day()]})`;
+  const weekdayLabel = `(${WEEKDAYS[dayjs(date).day()].label})`;
 
   return { ddayLabel, dateLabel, weekdayLabel };
 }
@@ -74,7 +74,7 @@ export function getThreadMonthLabelParts(date: string) {
 // 일기 스레드의 날짜(date)를 일(day) 숫자와 (요일) 레이블 조각으로 분리하는 함수
 export function getThreadDateParts(date: string) {
   const dayLabel = dayjs(date).format("D");
-  const weekdayLabel = `(${WEEKDAY_LABELS[dayjs(date).day()]})`;
+  const weekdayLabel = `(${WEEKDAYS[dayjs(date).day()].label})`;
 
   return { dayLabel, weekdayLabel };
 }
@@ -82,7 +82,7 @@ export function getThreadDateParts(date: string) {
 // 요일 배열(weekdays)을 "월, 수요일"과 같은 문자열로 포맷하는 함수
 export function formatWeekdays(weekdays: number[]) {
   const sorted = [...weekdays].sort((a, b) => a - b);
-  const labels = sorted.map((day) => WEEKDAY_LABELS[day]);
+  const labels = sorted.map((day) => WEEKDAYS[day].label);
 
   return labels
     .map((label, index) =>

@@ -6,7 +6,7 @@ import CalendarIcon from "@/assets/icons/calendarIcon.svg";
 import DownIcon from "@/assets/icons/downIcon.svg";
 import CheckIcon from "@/assets/icons/lightCheckIcon.svg";
 import { DatePickerGrid } from "@/src/components/modals/schedule/DatePickerGrid";
-import { REPEAT_TYPE_OPTIONS, WEEKDAY_LABELS } from "@/src/constants";
+import { REPEAT_TYPE_OPTIONS, WEEKDAYS } from "@/src/constants";
 import { cn } from "@/src/lib/cn";
 
 type RepeatType = "weekly" | "monthly" | "yearly";
@@ -90,11 +90,11 @@ export function DatePickerRecurringPanel({
 
           {repeatType === "weekly" ? (
             <View className="flex-row justify-between px-2">
-              {WEEKDAY_LABELS.map((label, index) => {
+              {WEEKDAYS.map(({ code, label }, index) => {
                 const isSelected = weekdays.includes(index);
                 return (
                   <Pressable
-                    key={label}
+                    key={code}
                     onPress={() => onToggleWeekday(index)}
                     className={cn(
                       "size-8 items-center justify-center rounded-full",
