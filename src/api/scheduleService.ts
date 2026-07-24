@@ -1,6 +1,7 @@
 import { baseApi } from "@/src/api/baseApi";
 import type { ApiSuccessResponse } from "@/src/types/api/api.types";
 import type {
+  CompleteScheduleResponse,
   CreateScheduleParams,
   CreateScheduleResponse,
   GetSchedulesParams,
@@ -27,5 +28,12 @@ export const scheduleService = {
       .post<
         ApiSuccessResponse<CreateScheduleResponse>
       >("/api/v1/schedules", params)
+      .then((res) => res.data.data),
+
+  completeSchedule: (scheduleId: number) =>
+    baseApi
+      .patch<
+        ApiSuccessResponse<CompleteScheduleResponse>
+      >(`/api/v1/schedules/${scheduleId}/complete`)
       .then((res) => res.data.data),
 };

@@ -75,3 +75,9 @@ export type CreateScheduleResponse = {
   groupId: number | null;
   createdCount: number;
 };
+
+// 일정 완료 처리 요청 응답값 타입
+export type CompleteScheduleResponse = {
+  scheduleId: number;
+  isCompleted: boolean;
+};
