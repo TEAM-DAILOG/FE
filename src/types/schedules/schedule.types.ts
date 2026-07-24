@@ -8,7 +8,13 @@ export type ScheduleCategory = {
 };
 
 // 일정 반복 유형 ENUM
-export type ScheduleRepeatType = "NONE" | "MULTIPLE" | "PERIOD" | "WEEKLY";
+export type ScheduleRepeatType =
+  | "NONE"
+  | "MULTIPLE"
+  | "PERIOD"
+  | "WEEKLY"
+  | "MONTHLY"
+  | "YEARLY";
 
 // 일정 아이템 타입
 export type Schedule = {
@@ -44,12 +50,13 @@ export type GetSchedulesResponse = {
 export type CreateScheduleParams = {
   categoryId: number;
   title: string;
-  content: string;
-  date: string;
+  content?: string;
+  date?: string;
   repeatType: ScheduleRepeatType;
   repeatStartDate?: string;
   repeatEndDate?: string;
   repeatDays?: string;
+  repeatDates?: string[];
 };
 
 // 일정 등록 요청 응답값 타입
