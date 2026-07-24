@@ -13,7 +13,12 @@ type DatePickerGridProps = {
 
 const COLUMN_COUNT = 7;
 
-function getRowRangeFill(states: DatePickerDayState[]) {
+function getRowRangeFill(
+  states: DatePickerDayState[],
+  hasConfirmedRange: boolean
+) {
+  if (!hasConfirmedRange) return null;
+
   const filledIndexes = states
     .map((state, index) =>
       state.isInRange || state.isRangeStart || state.isRangeEnd ? index : -1
@@ -22,10 +27,11 @@ function getRowRangeFill(states: DatePickerDayState[]) {
 
   if (filledIndexes.length === 0) return null;
 
-  const start = filledIndexes[0];
-  const end = filledIndexes[filledIndexes.length - 1];
   const hasStart = states.some((state) => state.isRangeStart);
   const hasEnd = states.some((state) => state.isRangeEnd);
+
+  const start = filledIndexes[0];
+  const end = filledIndexes[filledIndexes.length - 1];
 
   return {
     leftPercent: (start / COLUMN_COUNT) * 100,
@@ -41,6 +47,14 @@ export function DatePickerGrid({
   getDayState,
 }: DatePickerGridProps) {
   const weeks = chunkIntoWeeks(buildCalendarGrid(month));
+
+  // 달 전체 기준으로 종료일(또는 범위 내부 날짜)이 실제로 존재하는지 확인
+  const hasConfirmedRange = weeks.some((week) =>
+    week.some((cell) => {
+      const state = getDayState?.(cell.date, cell.isCurrentMonth) ?? {};
+      return state.isRangeEnd || state.isInRange;
+    })
+  );
 
   return (
     <View className="flex-col gap-1 overflow-hidden rounded-xl border border-gray-100 bg-white">
@@ -64,7 +78,7 @@ export function DatePickerGrid({
           const states = week.map(
             (cell) => getDayState?.(cell.date, cell.isCurrentMonth) ?? {}
           );
-          const rowRangeFill = getRowRangeFill(states);
+          const rowRangeFill = getRowRangeFill(states, hasConfirmedRange);
 
           return (
             <View key={week[0].date} className="flex-row">
@@ -84,8 +98,13 @@ export function DatePickerGrid({
               ) : null}
 
               {week.map((cell, index) => {
-                const { isSelected, isRangeStart, isRangeEnd, isInRange, isDisabled } =
-                  states[index];
+                const {
+                  isSelected,
+                  isRangeStart,
+                  isRangeEnd,
+                  isInRange,
+                  isDisabled,
+                } = states[index];
                 const isEndpoint =
                   !isDisabled && (isSelected || isRangeStart || isRangeEnd);
 
@@ -99,7 +118,7 @@ export function DatePickerGrid({
                   >
                     <View
                       className={cn(
-                        "aspect-square flex-1 items-center justify-center self-stretch rounded-full",
+                        "aspect-square h-full w-full items-center justify-center overflow-hidden rounded-full",
                         isEndpoint && "bg-green-600"
                       )}
                     >
