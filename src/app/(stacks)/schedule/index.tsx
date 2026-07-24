@@ -96,7 +96,7 @@ export default function ScheduleAddScreen() {
     });
 
     createScheduleMutation.mutate(params, {
-      onSuccess: () => router.back(),
+      onSuccess: () => router.push("/(tabs)/calendar"),
     });
   };
 
