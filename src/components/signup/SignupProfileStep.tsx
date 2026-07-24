@@ -40,7 +40,7 @@ export function SignupProfileStep({
           <Text className="text-gray-900 text-b-02-m">닉네임</Text>
           <TextField
             type="input"
-            placeholder="닉네임"
+            placeholder="닉네임을 입력하세요."
             value={nickname}
             onChangeText={onChangeNickname}
           />
