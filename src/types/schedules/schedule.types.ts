@@ -17,14 +17,7 @@ export type ScheduleRepeatType =
   | "YEARLY";
 
 // 반복 요일 ENUM
-export type WeekdayCode =
-  | "SUN"
-  | "MON"
-  | "TUE"
-  | "WED"
-  | "THU"
-  | "FRI"
-  | "SAT";
+export type WeekdayCode = "SUN" | "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT";
 
 // 일정 아이템 타입
 export type Schedule = {
@@ -82,8 +75,8 @@ export type CompleteScheduleResponse = {
   isCompleted: boolean;
 };
 
-// 일정 수정 유형
-export type UpdateScheduleScope = "SINGLE" | "ALL";
+// 일정 수정 및 삭제 유형 타입
+export type ScheduleScope = "SINGLE" | "ALL";
 
 // 일정 수정 요청 파라미터 타입
 export type UpdateScheduleParams = {
@@ -111,4 +104,9 @@ export type UpdateScheduleResponse = {
   repeatStartDate: string | null;
   repeatEndDate: string | null;
   repeatDays: string | null;
+};
+
+// 일정 삭제 요청 응답값 타입
+export type DeleteScheduleResponse = {
+  scheduleId: number;
 };

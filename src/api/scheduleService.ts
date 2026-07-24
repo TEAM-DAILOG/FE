@@ -4,11 +4,12 @@ import type {
   CompleteScheduleResponse,
   CreateScheduleParams,
   CreateScheduleResponse,
+  DeleteScheduleResponse,
   GetSchedulesParams,
   GetSchedulesResponse,
+  ScheduleScope,
   UpdateScheduleParams,
   UpdateScheduleResponse,
-  UpdateScheduleScope,
 } from "@/src/types/schedules/schedule.types";
 
 export const scheduleService = {
@@ -42,12 +43,19 @@ export const scheduleService = {
 
   updateSchedule: (
     scheduleId: number,
-    scope: UpdateScheduleScope,
+    scope: ScheduleScope,
     params: UpdateScheduleParams
   ) =>
     baseApi
       .patch<
         ApiSuccessResponse<UpdateScheduleResponse>
       >(`/api/v1/schedules/${scheduleId}`, params, { params: { scope } })
+      .then((res) => res.data.data),
+
+  deleteSchedule: (scheduleId: number, scope: ScheduleScope) =>
+    baseApi
+      .delete<
+        ApiSuccessResponse<DeleteScheduleResponse>
+      >(`/api/v1/schedules/${scheduleId}`, { params: { scope } })
       .then((res) => res.data.data),
 };
