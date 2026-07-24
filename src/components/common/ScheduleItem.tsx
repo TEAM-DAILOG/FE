@@ -17,6 +17,7 @@ import {
   CATEGORY_DOT_CLASS_NAMES,
   CATEGORY_TEXT_CLASS_NAMES,
 } from "@/src/constants/categoryColors";
+import { useDeleteSchedule } from "@/src/hooks/mutations/schedules/useDeleteSchedule";
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CategoryColor } from "@/src/types/categories/category.types";
@@ -59,6 +60,7 @@ export function ScheduleItem({
 }: ScheduleItemProps) {
   const router = useRouter();
   const openModal = useBaseModal((state) => state.openModal);
+  const deleteScheduleMutation = useDeleteSchedule();
 
   // 버튼/체크박스가 있으면 오른쪽 공간이 좁아 날짜를 위에 따로 쌓고,
   // 액션이 없는(완료) 항목은 카테고리 줄 오른쪽에 날짜를 나란히 붙인다.
@@ -163,14 +165,17 @@ export function ScheduleItem({
     });
   };
 
-  // 삭제 확인 모달을 띄운다. 실제 삭제 요청은 삭제 API 연동 후 채운다
+  // 삭제 확인 모달을 띄우고, 확인하면 실제 삭제 요청을 보낸다
   const handleDelete = () => {
     openModal("deleteScheduleModal", {
       props: {
         date: scheduleDate,
         description,
         onConfirm: () => {
-          // TODO: 삭제 API 연동 후 실제 삭제 요청으로 교체
+          deleteScheduleMutation.mutate({
+            scheduleId: Number(id),
+            scope: "SINGLE",
+          });
         },
       },
     });
