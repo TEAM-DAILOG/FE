@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { useRouter } from "expo-router";
 import { useMemo, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -15,6 +16,7 @@ import { Button } from "@/src/components/common/Button";
 import { CategoryChip } from "@/src/components/common/CategoryChip";
 import { TextField } from "@/src/components/common/TextField";
 import { ScheduleRepeatSummary } from "@/src/components/schedule/ScheduleRepeatSummary";
+import { useCreateSchedule } from "@/src/hooks/mutations/schedules/useCreateSchedule";
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { CategoryColor } from "@/src/types/categories/category.types";
@@ -23,7 +25,9 @@ import type {
   ScheduleRepeatValue,
 } from "@/src/types/modals/datepickerModal.types";
 import { formatScheduleDate } from "@/src/utils";
+import { formatCreateScheduleParams } from "@/src/utils/formatCreateScheduleParams";
 
+// 카테고리 관리 화면과 데이터 연동 후 목록 API로 교체 예정
 type CategoryOption = {
   id: string;
   color: CategoryColor;
@@ -40,6 +44,8 @@ const CATEGORY_OPTIONS: CategoryOption[] = [
 ];
 
 export default function ScheduleAddScreen() {
+  const router = useRouter();
+
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [memo, setMemo] = useState("");
@@ -47,11 +53,12 @@ export default function ScheduleAddScreen() {
   const [repeat, setRepeat] = useState<ScheduleRepeatValue>({ mode: "none" });
 
   const openModal = useBaseModal((state) => state.openModal);
+  const createScheduleMutation = useCreateSchedule();
 
   const scrollViewRef = useRef<ScrollView>(null);
 
   const dateLabel = useMemo(() => formatScheduleDate(date), [date]);
-  const canSave = title.trim().length > 0;
+  const canSave = title.trim().length > 0 && categoryId !== null;
 
   const handleMemoFocus = () => {
     // 키보드가 메모란을 가리지 않도록 포커스 시 맨 아래로 스크롤
@@ -73,6 +80,23 @@ export default function ScheduleAddScreen() {
           setRepeat(nextRepeat);
         },
       },
+    });
+  };
+
+  // 저장 버튼 핸들러
+  const handleSave = () => {
+    if (!canSave || !categoryId) return;
+
+    const params = formatCreateScheduleParams({
+      categoryId: Number(categoryId),
+      title,
+      content: memo,
+      date,
+      repeat,
+    });
+
+    createScheduleMutation.mutate(params, {
+      onSuccess: () => router.back(),
     });
   };
 
@@ -166,7 +190,11 @@ export default function ScheduleAddScreen() {
       </KeyboardAvoidingView>
 
       <View className="px-4 pb-12 pt-2">
-        <Button label="저장" disabled={!canSave} />
+        <Button
+          label={createScheduleMutation.isPending ? "저장 중" : "저장"}
+          disabled={!canSave || createScheduleMutation.isPending}
+          onPress={handleSave}
+        />
       </View>
     </ScreenContainer>
   );
