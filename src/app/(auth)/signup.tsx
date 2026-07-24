@@ -12,9 +12,9 @@ import {
   SignupProfileStep,
   SignupTermsStep,
 } from "@/src/components/signup";
-import { useSendSignupEmailVerification } from "@/src/hooks/mutations/useSendSignupEmailVerification";
-import { useSignup } from "@/src/hooks/mutations/useSignup";
-import { useVerifySignupEmailCode } from "@/src/hooks/mutations/useVerifySignupEmailCode";
+import { useSendSignupEmailVerification } from "@/src/hooks/mutations/auth/useSendSignupEmailVerification";
+import { useSignup } from "@/src/hooks/mutations/auth/useSignup";
+import { useVerifySignupEmailCode } from "@/src/hooks/mutations/auth/useVerifySignupEmailCode";
 import { useToastStore } from "@/src/store/toast/toastStore";
 import type { SignupProfileImage } from "@/src/types/auth/auth.types";
 import { getErrorMessage } from "@/src/utils/getErrorMessage";

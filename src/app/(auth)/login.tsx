@@ -14,7 +14,7 @@ import {
 import typoLogo from "@/assets/images/typoLogo.png";
 import { Button, ScreenContainer } from "@/src/components/common";
 import { TextField } from "@/src/components/common/TextField";
-import { useLogin } from "@/src/hooks/mutations/useLogin";
+import { useLogin } from "@/src/hooks/mutations/auth/useLogin";
 import { tokenStorage } from "@/src/lib/tokenStorage";
 import { useAuthStore } from "@/src/store/auth/authStore";
 
