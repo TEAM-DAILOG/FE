@@ -94,7 +94,11 @@ export default function CalendarScreen() {
         schedules: monthScheduleItems.filter(
           (schedule) => schedule.date === date
         ),
-        onPressAddSchedule: () => router.push("/schedule"),
+        onPressAddSchedule: () =>
+          router.push({
+            pathname: "/schedule",
+            params: { date },
+          }),
       },
     });
   };

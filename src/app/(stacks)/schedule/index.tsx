@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -45,11 +45,14 @@ const CATEGORY_OPTIONS: CategoryOption[] = [
 
 export default function ScheduleAddScreen() {
   const router = useRouter();
+  const { date: initialDate } = useLocalSearchParams<{ date?: string }>();
 
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [memo, setMemo] = useState("");
-  const [date, setDate] = useState(() => dayjs().format("YYYY-MM-DD"));
+  const [date, setDate] = useState(() =>
+    initialDate ? initialDate : dayjs().format("YYYY-MM-DD")
+  );
   const [repeat, setRepeat] = useState<ScheduleRepeatValue>({ mode: "none" });
 
   const openModal = useBaseModal((state) => state.openModal);
