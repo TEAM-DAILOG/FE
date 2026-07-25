@@ -10,30 +10,39 @@ import {
 } from "@/src/components/common/CategoryCircle";
 import { TextField } from "@/src/components/common/TextField";
 import { CATEGORY_COLORS } from "@/src/constants/categoryColors";
+import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
+import { useAddCategory } from "@/src/hooks/mutations/category/useAddCategory";
 import type { CategoryColor } from "@/src/types/categories/category.types";
-
-// TODO: API 연동 단계에서 실제 카테고리 목록(store/service)으로 교체
-const USED_COLORS: CategoryColor[] = ["blue", "green", "pink"];
 
 export default function CategoryAddScreen() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [selectedColor, setSelectedColor] = useState<CategoryColor | null>(
-    null
+    null,
   );
 
-  const canSave = name.trim().length > 0 && selectedColor !== null;
+  const { data: categories } = useGetCategories();
+  const addCategory = useAddCategory();
+
+  // 이미 사용 중인 색상은 서버가 400(BAD_REQUEST)으로 막으므로, UI에서도 선택 못 하게 처리
+  const usedColors = categories?.map((c) => c.color) ?? [];
+
+  const canSave =
+    name.trim().length > 0 && selectedColor !== null && !addCategory.isPending;
 
   const getColorState = (color: CategoryColor): CategoryCircleState => {
-    if (USED_COLORS.includes(color)) return "disabled";
+    if (usedColors.includes(color)) return "disabled";
     if (selectedColor === color) return "selected";
     return "default";
   };
 
   const handleSave = () => {
-    if (!canSave) return;
-    // TODO: API 연동 단계에서 실제 저장 로직 연결
-    router.back();
+    if (!canSave || !selectedColor) return;
+
+    addCategory.mutate(
+      { name: name.trim(), color: selectedColor },
+      { onSuccess: () => router.back() },
+    );
   };
 
   return (
@@ -63,6 +72,13 @@ export default function CategoryAddScreen() {
             ))}
           </View>
         </View>
+
+        {/* 400 에러(이미 사용 중인 색상, 최대 5개 초과 등) 발생 시 서버 메시지 그대로 노출 */}
+        {addCategory.isError ? (
+          <Text className="text-red-500 text-b-03-m">
+            {addCategory.error.message}
+          </Text>
+        ) : null}
       </View>
 
       <View className="px-4 pb-12">
