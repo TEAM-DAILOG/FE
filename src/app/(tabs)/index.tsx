@@ -9,6 +9,7 @@ import type { CategoryColor } from "@/src/types/categories/category.types";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
+import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
 
 type Schedule = {
   id: string;
@@ -71,6 +72,8 @@ export default function HomeScreen() {
   const dateLabel = `${month}월 ${day}일 ${weekday}요일`;
   const [schedules, setSchedules] = useState<Schedule[]>(MOCK_SCHEDULES);
   const [isQuestionAnswered, setIsQuestionAnswered] = useState(false);
+  const { data: todayQuestion, isLoading: isQuestionLoading } =
+    useGetTodayQuestion();
   const hasSchedules = schedules.length > 0;
 
   const toggleSchedule = (id: string) => {
@@ -143,7 +146,8 @@ export default function HomeScreen() {
 
                   {/* 질문 내용 */}
                   <Text className="text-center text-green-800 text-b-02-m">
-                    Lorem ipsum dolor sit amet consectetur. | 294
+                    {todayQuestion?.content ||
+                      "Lorem ipsum dolor sit amet consectetur. | 294"}
                   </Text>
                 </View>
                 <Button
