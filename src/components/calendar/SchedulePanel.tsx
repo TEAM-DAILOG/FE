@@ -23,17 +23,22 @@ export function SchedulePanel({
   const completeScheduleMutation = useCompleteSchedule();
 
   const toggleSchedule = (id: string, checked: boolean) => {
-    if (checked) return;
-    completeScheduleMutation.mutate(Number(id));
+    completeScheduleMutation.mutate({
+      scheduleId: Number(id),
+      isCompleted: !checked,
+    });
   };
+
+  const pendingVariables = completeScheduleMutation.variables;
+  const isMutationSettled =
+    completeScheduleMutation.isPending || completeScheduleMutation.isSuccess;
 
   const visibleSchedules = upcomingSchedules.map((schedule) => ({
     ...schedule,
     checked:
-      schedule.checked ||
-      ((completeScheduleMutation.isPending ||
-        completeScheduleMutation.isSuccess) &&
-        completeScheduleMutation.variables === Number(schedule.id)),
+      isMutationSettled && pendingVariables?.scheduleId === Number(schedule.id)
+        ? pendingVariables.isCompleted
+        : schedule.checked,
   }));
 
   return (

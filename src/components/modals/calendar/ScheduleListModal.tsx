@@ -33,12 +33,15 @@ export function ScheduleListModal({
 
   const toggleSchedule = (id: string) => {
     const target = schedules.find((schedule) => schedule.id === id);
-    if (!target || target.checked) return;
+    if (!target) return;
 
-    setChecked(id, true);
-    completeScheduleMutation.mutate(Number(id), {
-      onError: () => setChecked(id, false),
-    });
+    const nextChecked = !target.checked;
+
+    setChecked(id, nextChecked);
+    completeScheduleMutation.mutate(
+      { scheduleId: Number(id), isCompleted: nextChecked },
+      { onError: () => setChecked(id, target.checked) }
+    );
   };
 
   const handlePressAddSchedule = () => {
