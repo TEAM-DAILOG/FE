@@ -4,15 +4,17 @@ import { tokenStorage } from "@/src/lib/tokenStorage";
 import { useAuthStore } from "@/src/store/auth/authStore";
 
 export async function clearLocalSession() {
-  await tokenStorage.clearTokens();
-  queryClient.clear();
-  useAuthStore.getState().clearAuthenticated();
+  await Promise.allSettled([
+    tokenStorage.clearTokens(),
+    Promise.resolve().then(() => queryClient.clear()),
+    Promise.resolve().then(() => useAuthStore.getState().clearAuthenticated()),
+  ]);
 }
 
 export async function logout() {
-  const refreshToken = await tokenStorage.getRefreshToken();
-
   try {
+    const refreshToken = await tokenStorage.getRefreshToken();
+
     if (refreshToken) {
       await authService.logout({ refreshToken });
     }
