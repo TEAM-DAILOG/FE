@@ -14,6 +14,7 @@ import type {
   DatePickerTabKey,
   ScheduleRepeatValue,
 } from "@/src/types/modals/datepickerModal.types";
+import { getMinRecurEndDate } from "@/src/utils";
 
 // 반복 모드 값을 기준으로 초기 활성 탭 결정
 function tabFromRepeatMode(
@@ -93,8 +94,11 @@ export function DatePickerModal({
     null
   );
   const [isRepeatTypeMenuOpen, setIsRepeatTypeMenuOpen] = useState(false);
+  const [isLastDayOfMonth, setIsLastDayOfMonth] = useState(
+    initialRepeat.mode === "monthly" ? initialRepeat.isLastDayOfMonth : false
+  );
 
-  // 탭 전  환 시 모든 선택 상태를 초기값으로 리셋한다
+  // 탭 전환 시 모든 선택 상태를 초기값으로 리셋
   const handleTabChange = (tab: DatePickerTabKey) => {
     setActiveTab(tab);
     setSelectedDate(initialDate);
@@ -107,6 +111,7 @@ export function DatePickerModal({
     setRecurEnd(initialDate);
     setEditingField(null);
     setIsRepeatTypeMenuOpen(false);
+    setIsLastDayOfMonth(false);
   };
 
   // 반복 요일 선택/해제를 토글하고 정렬된 상태로 유지
@@ -150,12 +155,18 @@ export function DatePickerModal({
 
   // 반복 일정 탭에서 편집 중인 필드(시작일/종료일)에 날짜 반영
   const handleRecurDayPress = (date: string, isCurrentMonth: boolean) => {
-    if (editingField === "end" && date < recurStart) return;
+    if (
+      editingField === "end" &&
+      date < getMinRecurEndDate(repeatType, recurStart)
+    ) {
+      return;
+    }
 
     jumpToMonthIfNeeded(date, isCurrentMonth);
     if (editingField === "start") {
       setRecurStart(date);
-      if (recurEnd < date) setRecurEnd(date);
+      const minEnd = getMinRecurEndDate(repeatType, date);
+      if (recurEnd < minEnd) setRecurEnd(minEnd);
     } else {
       setRecurEnd(date);
     }
@@ -201,7 +212,14 @@ export function DatePickerModal({
             startDate: recurStart,
             endDate: recurEnd,
           }
-        : { mode: repeatType, startDate: recurStart, endDate: recurEnd };
+        : repeatType === "monthly"
+          ? {
+              mode: "monthly",
+              startDate: recurStart,
+              endDate: recurEnd,
+              isLastDayOfMonth,
+            }
+          : { mode: "yearly", startDate: recurStart, endDate: recurEnd };
 
     return { date: recurStart, repeat: repeatValue };
   };
@@ -268,6 +286,7 @@ export function DatePickerModal({
               repeatType={repeatType}
               onChangeRepeatType={(type) => {
                 setRepeatType(type);
+                setRecurEnd(getMinRecurEndDate(type, recurStart));
                 setIsRepeatTypeMenuOpen(false);
               }}
               isRepeatTypeMenuOpen={isRepeatTypeMenuOpen}
@@ -276,6 +295,10 @@ export function DatePickerModal({
               }
               weekdays={weekdays}
               onToggleWeekday={toggleWeekday}
+              isLastDayOfMonth={isLastDayOfMonth}
+              onToggleLastDayOfMonth={() =>
+                setIsLastDayOfMonth((prev) => !prev)
+              }
               recurStart={recurStart}
               recurEnd={recurEnd}
               editingField={editingField}

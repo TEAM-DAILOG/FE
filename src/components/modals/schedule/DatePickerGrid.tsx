@@ -125,7 +125,7 @@ export function DatePickerGrid({
                       <Text
                         className={cn(
                           isDisabled
-                            ? "text-gray-600 text-b-03-sb"
+                            ? "text-gray-400 text-b-03-sb"
                             : isEndpoint
                               ? "text-green-100 text-b-03-sb"
                               : isInRange
@@ -137,6 +137,14 @@ export function DatePickerGrid({
                       >
                         {cell.day}
                       </Text>
+                      {isDisabled && (
+                        <View
+                          pointerEvents="none"
+                          className="absolute inset-0 items-center justify-center"
+                        >
+                          <View className="h-[1px] w-[40%] bg-gray-400" />
+                        </View>
+                      )}
                     </View>
                   </Pressable>
                 );

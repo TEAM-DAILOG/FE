@@ -163,7 +163,14 @@ export function getScheduleRepeatSummary(
     case "monthly":
       return {
         mode: "매월",
-        parts: [{ type: "etc", text: `${dayjs(value.startDate).date()}일` }],
+        parts: [
+          {
+            type: "etc",
+            text: value.isLastDayOfMonth
+              ? "말일"
+              : `${dayjs(value.startDate).date()}일`,
+          },
+        ],
       };
 
     case "yearly":
@@ -182,4 +189,18 @@ export function getScheduleRepeatSummary(
     default:
       return null;
   }
+}
+
+// 매월/매년 반복은 최소 한 번은 반복돼야 하므로, 종료일로 고를 수 있는 가장 이른 날짜를 계산하는 함수
+export function getMinRecurEndDate(
+  repeatType: "weekly" | "monthly" | "yearly",
+  startDate: string
+) {
+  if (repeatType === "yearly") {
+    return dayjs(startDate).add(1, "year").format("YYYY-MM-DD");
+  }
+  if (repeatType === "monthly") {
+    return dayjs(startDate).add(1, "month").format("YYYY-MM-DD");
+  }
+  return startDate;
 }

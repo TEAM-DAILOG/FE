@@ -1,13 +1,13 @@
 import dayjs from "dayjs";
 import { Pressable, Text, View } from "react-native";
-import Animated, { Easing, FadeIn, FadeOut } from "react-native-reanimated";
 
 import CalendarIcon from "@/assets/icons/calendarIcon.svg";
-import DownIcon from "@/assets/icons/downIcon.svg";
-import CheckIcon from "@/assets/icons/lightCheckIcon.svg";
+import { Toggle } from "@/src/components/common/Toggle";
 import { DatePickerGrid } from "@/src/components/modals/schedule/DatePickerGrid";
-import { REPEAT_TYPE_OPTIONS, WEEKDAYS } from "@/src/constants";
+import { RepeatTypeBox } from "@/src/components/schedule/RepeatTypeBox";
+import { WEEKDAYS } from "@/src/constants";
 import { cn } from "@/src/lib/cn";
+import { getMinRecurEndDate } from "@/src/utils";
 
 type RepeatType = "weekly" | "monthly" | "yearly";
 
@@ -19,6 +19,8 @@ type DatePickerRecurringPanelProps = {
   onToggleRepeatTypeMenu: () => void;
   weekdays: number[];
   onToggleWeekday: (day: number) => void;
+  isLastDayOfMonth: boolean;
+  onToggleLastDayOfMonth: () => void;
   recurStart: string;
   recurEnd: string;
   editingField: "start" | "end" | null;
@@ -34,6 +36,8 @@ export function DatePickerRecurringPanel({
   onToggleRepeatTypeMenu,
   weekdays,
   onToggleWeekday,
+  isLastDayOfMonth,
+  onToggleLastDayOfMonth,
   recurStart,
   recurEnd,
   editingField,
@@ -44,49 +48,12 @@ export function DatePickerRecurringPanel({
     <View className="flex-col gap-4">
       <View className="gap-3 rounded-xl border border-gray-100 bg-white p-3">
         <View className="gap-1">
-          <View className="z-10">
-            <Pressable
-              onPress={onToggleRepeatTypeMenu}
-              className="flex-row items-center justify-between"
-            >
-              <Text className="text-gray-800 text-b-04-r">반복유형</Text>
-              <View className="flex-row items-center gap-1">
-                <Text className="text-gray-800 text-b-04-r">
-                  {
-                    REPEAT_TYPE_OPTIONS.find(
-                      (option) => option.key === repeatType
-                    )?.label
-                  }
-                </Text>
-                <DownIcon width={20} height={20} color="#020303" />
-              </View>
-            </Pressable>
-
-            {isRepeatTypeMenuOpen ? (
-              <Animated.View
-                entering={FadeIn.duration(300).easing(Easing.out(Easing.ease))}
-                exiting={FadeOut.duration(300).easing(Easing.out(Easing.ease))}
-                className="absolute right-0 top-full z-50 mt-1 w-[120px] shadow-dropdown"
-              >
-                <View className="gap-1.5 overflow-hidden rounded-lg bg-white px-3 py-1.5">
-                  {REPEAT_TYPE_OPTIONS.map((option) => (
-                    <Pressable
-                      key={option.key}
-                      onPress={() => onChangeRepeatType(option.key)}
-                      className="flex-row items-center justify-between"
-                    >
-                      <Text className="text-gray-800 text-b-04-r">
-                        {option.label}
-                      </Text>
-                      {repeatType === option.key ? (
-                        <CheckIcon width={20} height={20} color="#2F3131" />
-                      ) : null}
-                    </Pressable>
-                  ))}
-                </View>
-              </Animated.View>
-            ) : null}
-          </View>
+          <RepeatTypeBox
+            repeatType={repeatType}
+            onChangeRepeatType={onChangeRepeatType}
+            isRepeatTypeMenuOpen={isRepeatTypeMenuOpen}
+            onToggleRepeatTypeMenu={onToggleRepeatTypeMenu}
+          />
 
           {repeatType === "weekly" ? (
             <View className="flex-row justify-between px-2">
@@ -116,6 +83,17 @@ export function DatePickerRecurringPanel({
             </View>
           ) : null}
         </View>
+
+        {repeatType === "monthly" ? (
+          <View className="flex-row items-center justify-end gap-3">
+            <Text className="text-gray-800 text-b-04-r">매월 말일 반복</Text>
+            <Toggle
+              size="md"
+              value={isLastDayOfMonth}
+              onValueChange={onToggleLastDayOfMonth}
+            />
+          </View>
+        ) : null}
 
         <Pressable
           onPress={() => onOpenEditingField("start")}
@@ -151,7 +129,9 @@ export function DatePickerRecurringPanel({
           getDayState={(date) => ({
             isSelected:
               date === (editingField === "start" ? recurStart : recurEnd),
-            isDisabled: editingField === "end" && date < recurStart,
+            isDisabled:
+              editingField === "end" &&
+              date < getMinRecurEndDate(repeatType, recurStart),
           })}
         />
       ) : null}
