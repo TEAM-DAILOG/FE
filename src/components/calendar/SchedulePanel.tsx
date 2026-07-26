@@ -88,6 +88,7 @@ export function SchedulePanel({
                       type: "checkbox",
                       id: schedule.id,
                       date: schedule.date,
+                      groupId: schedule.groupId,
                       checked: schedule.checked,
                       onToggle: () =>
                         toggleSchedule(schedule.id, schedule.checked),

@@ -21,6 +21,7 @@ import { useDeleteSchedule } from "@/src/hooks/mutations/schedules/useDeleteSche
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CategoryColor } from "@/src/types/categories/category.types";
+import type { ScheduleScope } from "@/src/types/schedules/schedule.types";
 
 export type ScheduleItemAction =
   | {
@@ -28,6 +29,7 @@ export type ScheduleItemAction =
       id: string;
       // 수정 이동/삭제 모달에 쓰는 실제 일정 날짜(YYYY-MM-DD). 화면에 보이는 date prop과는 별개.
       date: string;
+      groupId: number | null;
       checked: boolean;
       onToggle: () => void;
     }
@@ -149,7 +151,7 @@ export function ScheduleItem({
   // 체크박스 모드(할 일 목록)에서만 왼쪽 스와이프로 수정/삭제 버튼을 노출
   if (action.type !== "checkbox") return row;
 
-  const { id, date: scheduleDate } = action;
+  const { id, date: scheduleDate, groupId } = action;
   const actionBgClassName = CATEGORY_COLOR_CLASS_NAMES[categoryColor].soft;
 
   // 일정 등록 화면을 수정 모드로 열어 기존 값을 채워서 보여준다
@@ -165,17 +167,14 @@ export function ScheduleItem({
     });
   };
 
-  // 삭제 확인 모달을 띄우고, 확인하면 실제 삭제 요청을 보낸다
   const handleDelete = () => {
     openModal("deleteScheduleModal", {
       props: {
         date: scheduleDate,
         description,
-        onConfirm: () => {
-          deleteScheduleMutation.mutate({
-            scheduleId: Number(id),
-            scope: "SINGLE",
-          });
+        isRepeating: groupId !== null,
+        onConfirm: (scope: ScheduleScope) => {
+          deleteScheduleMutation.mutate({ scheduleId: Number(id), scope });
         },
       },
     });

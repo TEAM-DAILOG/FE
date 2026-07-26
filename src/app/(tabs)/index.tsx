@@ -118,6 +118,7 @@ export default function HomeScreen() {
                       type: "checkbox",
                       id: s.id,
                       date: s.date,
+                      groupId: null,
                       checked: s.checked,
                       onToggle: () => toggleSchedule(s.id),
                     }}

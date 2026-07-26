@@ -115,6 +115,7 @@ export function buildMockUpcomingSchedules(
     categoryColor: schedule.categoryColor,
     description: schedule.description,
     checked: schedule.checked,
+    groupId: null,
   }));
 }
 
