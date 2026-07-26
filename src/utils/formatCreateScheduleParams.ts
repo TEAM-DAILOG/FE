@@ -54,6 +54,7 @@ export function formatCreateScheduleParams({
         repeatType: "MONTHLY",
         repeatStartDate: repeat.startDate,
         repeatEndDate: repeat.endDate,
+        isLastDayOfMonth: repeat.isLastDayOfMonth,
       };
 
     case "yearly":

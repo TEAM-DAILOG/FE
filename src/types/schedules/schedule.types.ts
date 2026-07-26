@@ -60,6 +60,7 @@ export type CreateScheduleParams = {
   repeatEndDate?: string;
   repeatDays?: string;
   repeatDates?: string[];
+  isLastDayOfMonth?: boolean;
 };
 
 // 일정 등록 요청 응답값 타입
@@ -95,6 +96,7 @@ export type UpdateScheduleParams = {
   repeatEndDate?: string | null;
   repeatDays?: string | null;
   repeatDates?: string[];
+  isLastDayOfMonth?: boolean;
 };
 
 // 일정 수정 요청 응답값 타입
