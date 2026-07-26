@@ -2,16 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { scheduleService } from "@/src/api/scheduleService";
 import type {
-  ScheduleScope,
-  UpdateScheduleParams,
   UpdateScheduleResponse,
+  UpdateScheduleVariables,
 } from "@/src/types/schedules/schedule.types";
-
-type UpdateScheduleVariables = {
-  scheduleId: number;
-  scope: ScheduleScope;
-  params: UpdateScheduleParams;
-};
 
 export function useUpdateSchedule() {
   const queryClient = useQueryClient();

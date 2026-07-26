@@ -75,6 +75,12 @@ export type CompleteScheduleResponse = {
   isCompleted: boolean;
 };
 
+// 일정 완료 처리 요청 변수 타입
+export type CompleteScheduleVariables = {
+  scheduleId: number;
+  isCompleted: boolean;
+};
+
 // 일정 수정 및 삭제 유형 타입
 export type ScheduleScope = "SINGLE" | "ALL";
 
@@ -106,7 +112,20 @@ export type UpdateScheduleResponse = {
   repeatDays: string | null;
 };
 
+// 일정 수정 요청 변수 타입
+export type UpdateScheduleVariables = {
+  scheduleId: number;
+  scope: ScheduleScope;
+  params: UpdateScheduleParams;
+};
+
 // 일정 삭제 요청 응답값 타입
 export type DeleteScheduleResponse = {
   scheduleId: number;
+};
+
+// 일정 삭제 요청 변수 타입
+export type DeleteScheduleVariables = {
+  scheduleId: number;
+  scope: ScheduleScope;
 };

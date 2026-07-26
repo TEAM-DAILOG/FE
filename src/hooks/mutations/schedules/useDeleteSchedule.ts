@@ -3,13 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { scheduleService } from "@/src/api/scheduleService";
 import type {
   DeleteScheduleResponse,
-  ScheduleScope,
+  DeleteScheduleVariables,
 } from "@/src/types/schedules/schedule.types";
-
-type DeleteScheduleVariables = {
-  scheduleId: number;
-  scope: ScheduleScope;
-};
 
 export function useDeleteSchedule() {
   const queryClient = useQueryClient();

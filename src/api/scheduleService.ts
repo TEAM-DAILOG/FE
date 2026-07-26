@@ -34,11 +34,11 @@ export const scheduleService = {
       >("/api/v1/schedules", params)
       .then((res) => res.data.data),
 
-  completeSchedule: (scheduleId: number) =>
+  completeSchedule: (scheduleId: number, isCompleted: boolean) =>
     baseApi
       .patch<
         ApiSuccessResponse<CompleteScheduleResponse>
-      >(`/api/v1/schedules/${scheduleId}/complete`)
+      >(`/api/v1/schedules/${scheduleId}/complete`, { isCompleted })
       .then((res) => res.data.data),
 
   updateSchedule: (
