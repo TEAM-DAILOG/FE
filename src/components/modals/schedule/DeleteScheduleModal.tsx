@@ -59,6 +59,7 @@ export function DeleteScheduleModal({
               checked={isDeletingAll}
               onToggle={() => setIsDeletingAll((prev) => !prev)}
               color="#3B6352"
+              size={20}
             />
             <Text className="text-green-700 text-b-03-m">
               반복 일정을 전부 삭제합니다.
