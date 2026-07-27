@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import CalendarIcon from "@/assets/icons/calendarIcon.svg";
-import { BackHeader, ScreenContainer } from "@/src/components/common";
+import { BackHeader, Divider, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { CategoryChip } from "@/src/components/common/CategoryChip";
 import { TextField } from "@/src/components/common/TextField";
@@ -89,7 +89,7 @@ export default function ScheduleAddScreen() {
             </View>
 
             {/* 구분선 */}
-            <View className="-mx-4 border-t-2 border-gray-100" />
+            <Divider className="-mx-4 border-gray-100" thickness={2} />
 
             {/* 날짜 + 반복 */}
             <View className="gap-4">
@@ -122,7 +122,7 @@ export default function ScheduleAddScreen() {
             </View>
 
             {/* 구분선 */}
-            <View className="-mx-4 border-t-2 border-gray-100" />
+            <Divider className="-mx-4 border-gray-100" thickness={2} />
 
             {/* 메모 */}
             <View className="gap-3" onLayout={handleMemoLayout}>
