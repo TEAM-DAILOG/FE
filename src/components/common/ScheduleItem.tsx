@@ -22,27 +22,21 @@ import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 import type {
-  ScheduleRepeatType,
+  ScheduleRepeatFields,
   ScheduleScope,
 } from "@/src/types/schedules/schedule.types";
 
 export type ScheduleItemAction =
-  | {
+  | ({
       type: "checkbox";
       id: string;
       // 수정 이동/삭제 모달에 쓰는 실제 일정 날짜(YYYY-MM-DD). 화면에 보이는 date prop과는 별개.
       date: string;
       groupId: number | null;
       memo: string | null;
-      repeatType: ScheduleRepeatType;
-      repeatStartDate: string | null;
-      repeatEndDate: string | null;
-      repeatDays: string | null;
-      repeatDates: string[] | null;
-      isLastDayOfMonth: boolean;
       checked: boolean;
       onToggle: () => void;
-    }
+    } & ScheduleRepeatFields)
   | { type: "button"; label: string; onPress?: () => void }
   | { type: "none" };
 
@@ -58,7 +52,6 @@ export type ScheduleItemProps = {
 const ACTION_SIZE = 55;
 const ACTION_GAP = 4;
 const ACTIONS_WIDTH = ACTION_SIZE * 2 + ACTION_GAP;
-// 열렸을 때 일정 박스와 버튼 패널 사이에 둘 간격
 const ROW_GAP = 8;
 const OPEN_OFFSET = -(ACTIONS_WIDTH + ROW_GAP);
 

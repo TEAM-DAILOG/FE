@@ -6,6 +6,7 @@ import { ScheduleItem } from "@/src/components/common";
 import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
+import { buildScheduleCheckboxAction } from "@/src/utils/buildScheduleCheckboxAction";
 import { AddScheduleButton } from "../../common/AddScheduleButton";
 
 export type ScheduleListModalProps = {
@@ -58,21 +59,10 @@ export function ScheduleListModal({
       categoryLabel={schedule.categoryLabel}
       categoryColor={schedule.categoryColor}
       description={schedule.description}
-      action={{
-        type: "checkbox",
-        id: schedule.id,
-        date: schedule.date,
-        groupId: schedule.groupId,
-        memo: schedule.memo,
-        repeatType: schedule.repeatType,
-        repeatStartDate: schedule.repeatStartDate,
-        repeatEndDate: schedule.repeatEndDate,
-        repeatDays: schedule.repeatDays,
-        repeatDates: schedule.repeatDates,
-        isLastDayOfMonth: schedule.isLastDayOfMonth,
+      action={buildScheduleCheckboxAction(schedule, {
         checked: schedule.checked,
         onToggle: () => toggleSchedule(schedule.id),
-      }}
+      })}
     />
   ));
 

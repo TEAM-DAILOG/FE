@@ -2,7 +2,7 @@ import { WEEKDAYS } from "@/src/constants";
 import type { ScheduleRepeatValue } from "@/src/types/modals/datepickerModal.types";
 import type { CreateScheduleParams } from "@/src/types/schedules/schedule.types";
 
-type FormatCreateScheduleParamsInput = {
+type FormatScheduleParamsInput = {
   categoryId: number;
   title: string;
   content: string;
@@ -10,14 +10,14 @@ type FormatCreateScheduleParamsInput = {
   repeat: ScheduleRepeatValue;
 };
 
-// 데이트피커에서 만들어진 반복 설정과 폼 입력값을 일정 등록 요청 파라미터로 변환하는 함수
-export function formatCreateScheduleParams({
+// 데이트피커에서 만들어진 반복 설정과 폼 입력값을 일정 등록/수정 요청 파라미터로 변환하는 함수
+export function formatScheduleParams({
   categoryId,
   title,
   content,
   date,
   repeat,
-}: FormatCreateScheduleParamsInput): CreateScheduleParams {
+}: FormatScheduleParamsInput): CreateScheduleParams {
   const base = {
     categoryId,
     title: title.trim(),

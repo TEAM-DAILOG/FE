@@ -5,6 +5,7 @@ import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useComplete
 import type { CalendarDayInfo } from "@/src/types/calendar/calendarGrid.types";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
 import { getScheduleDday } from "@/src/utils";
+import { buildScheduleCheckboxAction } from "@/src/utils/buildScheduleCheckboxAction";
 import { ScheduleItem } from "../common";
 
 type SchedulePanelProps = {
@@ -84,22 +85,11 @@ export function SchedulePanel({
                     categoryLabel={schedule.categoryLabel}
                     categoryColor={schedule.categoryColor}
                     description={schedule.description}
-                    action={{
-                      type: "checkbox",
-                      id: schedule.id,
-                      date: schedule.date,
-                      groupId: schedule.groupId,
-                      memo: schedule.memo,
-                      repeatType: schedule.repeatType,
-                      repeatStartDate: schedule.repeatStartDate,
-                      repeatEndDate: schedule.repeatEndDate,
-                      repeatDays: schedule.repeatDays,
-                      repeatDates: schedule.repeatDates,
-                      isLastDayOfMonth: schedule.isLastDayOfMonth,
+                    action={buildScheduleCheckboxAction(schedule, {
                       checked: schedule.checked,
                       onToggle: () =>
                         toggleSchedule(schedule.id, schedule.checked),
-                    }}
+                    })}
                   />
                 </View>
               );

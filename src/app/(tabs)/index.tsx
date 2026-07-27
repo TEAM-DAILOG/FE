@@ -8,6 +8,7 @@ import { TabScrollView } from "@/src/components/common/TabScrollView";
 import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
 import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
 import { useGetSchedules } from "@/src/hooks/queries/schedules/useGetSchedules";
+import { buildScheduleCheckboxAction } from "@/src/utils/buildScheduleCheckboxAction";
 import { formatScheduleItem } from "@/src/utils/formatScheduleItem";
 import dayjs from "dayjs";
 import { router } from "expo-router";
@@ -89,21 +90,10 @@ export default function HomeScreen() {
                     categoryLabel={s.categoryLabel}
                     categoryColor={s.categoryColor}
                     description={s.description}
-                    action={{
-                      type: "checkbox",
-                      id: s.id,
-                      date: s.date,
-                      groupId: s.groupId,
-                      memo: s.memo,
-                      repeatType: s.repeatType,
-                      repeatStartDate: s.repeatStartDate,
-                      repeatEndDate: s.repeatEndDate,
-                      repeatDays: s.repeatDays,
-                      repeatDates: s.repeatDates,
-                      isLastDayOfMonth: s.isLastDayOfMonth,
+                    action={buildScheduleCheckboxAction(s, {
                       checked: s.checked,
                       onToggle: () => toggleSchedule(s.id, s.checked),
-                    }}
+                    })}
                   />
                 ))}
               </View>

@@ -19,6 +19,16 @@ export type ScheduleRepeatType =
 // 반복 요일 ENUM
 export type WeekdayCode = "SUN" | "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT";
 
+// 일정의 반복 설정 관련 필드
+export type ScheduleRepeatFields = {
+  repeatType: ScheduleRepeatType;
+  repeatStartDate: string | null;
+  repeatEndDate: string | null;
+  repeatDays: string | null;
+  repeatDates: string[] | null;
+  isLastDayOfMonth: boolean;
+};
+
 // 일정 아이템 타입
 export type Schedule = {
   scheduleId: number;
@@ -28,15 +38,9 @@ export type Schedule = {
   date: string;
   groupId: number | null;
   isCompleted: boolean;
-  repeatType: ScheduleRepeatType;
-  repeatStartDate: string | null;
-  repeatEndDate: string | null;
-  repeatDays: string | null;
-  repeatDates: string[] | null;
-  isLastDayOfMonth: boolean;
   createdAt: string;
   updatedAt: string | null;
-};
+} & ScheduleRepeatFields;
 
 // 일정 목록 조회 요청 파라미터 타입
 export type GetSchedulesParams = {

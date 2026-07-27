@@ -17,7 +17,7 @@ import type {
   ScheduleScope,
 } from "@/src/types/schedules/schedule.types";
 import { formatScheduleDate } from "@/src/utils";
-import { formatCreateScheduleParams } from "@/src/utils/formatCreateScheduleParams";
+import { formatScheduleParams } from "@/src/utils/formatScheduleParams";
 import { formatScheduleRepeatValue } from "@/src/utils/formatScheduleRepeatValue";
 import { formatUpdateScheduleParams } from "@/src/utils/formatUpdateScheduleParams";
 
@@ -147,7 +147,7 @@ export function useScheduleForm() {
   const handleSave = () => {
     if (!canSave || !categoryId) return;
 
-    const params = formatCreateScheduleParams({
+    const params = formatScheduleParams({
       categoryId: Number(categoryId),
       title,
       content: memo,
