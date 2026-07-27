@@ -176,6 +176,7 @@ export function ScheduleItem({
 
   // 일정 등록 화면을 수정 모드로 열어 기존 값을 채워서 보여준다
   const handleEdit = () => {
+    translateX.value = withSpring(0);
     closeModal();
     router.push({
       pathname: "/schedule",
@@ -198,6 +199,7 @@ export function ScheduleItem({
   };
 
   const handleDelete = () => {
+    translateX.value = withSpring(0);
     openModal("deleteScheduleModal", {
       props: {
         date: scheduleDate,
