@@ -94,6 +94,7 @@ export function SchedulePanel({
                       repeatStartDate: schedule.repeatStartDate,
                       repeatEndDate: schedule.repeatEndDate,
                       repeatDays: schedule.repeatDays,
+                      repeatDates: schedule.repeatDates,
                       isLastDayOfMonth: schedule.isLastDayOfMonth,
                       checked: schedule.checked,
                       onToggle: () =>

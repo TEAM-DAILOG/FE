@@ -121,6 +121,7 @@ export function buildMockUpcomingSchedules(
     repeatStartDate: null,
     repeatEndDate: null,
     repeatDays: null,
+    repeatDates: null,
     isLastDayOfMonth: false,
   }));
 }

@@ -32,6 +32,7 @@ export type Schedule = {
   repeatStartDate: string | null;
   repeatEndDate: string | null;
   repeatDays: string | null;
+  repeatDates: string[] | null;
   isLastDayOfMonth: boolean;
   createdAt: string;
   updatedAt: string | null;

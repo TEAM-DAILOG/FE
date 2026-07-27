@@ -99,6 +99,7 @@ export default function HomeScreen() {
                       repeatStartDate: s.repeatStartDate,
                       repeatEndDate: s.repeatEndDate,
                       repeatDays: s.repeatDays,
+                      repeatDates: s.repeatDates,
                       isLastDayOfMonth: s.isLastDayOfMonth,
                       checked: s.checked,
                       onToggle: () => toggleSchedule(s.id, s.checked),

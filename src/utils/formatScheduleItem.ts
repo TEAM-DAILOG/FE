@@ -22,6 +22,9 @@ export function formatScheduleItem(schedule: Schedule): UpcomingSchedule {
       ? dayjs(schedule.repeatEndDate).format("YYYY-MM-DD")
       : null,
     repeatDays: schedule.repeatDays,
+    repeatDates: schedule.repeatDates?.length
+      ? schedule.repeatDates.map((date) => dayjs(date).format("YYYY-MM-DD"))
+      : null,
     isLastDayOfMonth: schedule.isLastDayOfMonth,
   };
 }

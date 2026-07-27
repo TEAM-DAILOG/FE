@@ -14,5 +14,6 @@ export type UpcomingSchedule = {
   repeatStartDate: string | null;
   repeatEndDate: string | null;
   repeatDays: string | null;
+  repeatDates: string[] | null;
   isLastDayOfMonth: boolean;
 };

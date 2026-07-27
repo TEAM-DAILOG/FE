@@ -51,6 +51,7 @@ export function useScheduleForm() {
     repeatStartDate: initialRepeatStartDate,
     repeatEndDate: initialRepeatEndDate,
     repeatDays: initialRepeatDays,
+    repeatDates: initialRepeatDatesRaw,
     isLastDayOfMonth: initialIsLastDayOfMonth,
   } = useLocalSearchParams<{
     date?: string;
@@ -63,6 +64,7 @@ export function useScheduleForm() {
     repeatStartDate?: string;
     repeatEndDate?: string;
     repeatDays?: string;
+    repeatDates?: string;
     isLastDayOfMonth?: string;
   }>();
 
@@ -85,6 +87,9 @@ export function useScheduleForm() {
       repeatStartDate: initialRepeatStartDate,
       repeatEndDate: initialRepeatEndDate,
       repeatDays: initialRepeatDays,
+      repeatDates: initialRepeatDatesRaw
+        ? initialRepeatDatesRaw.split(",")
+        : undefined,
       isLastDayOfMonth: initialIsLastDayOfMonth === "true",
       date,
     })

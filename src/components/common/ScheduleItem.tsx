@@ -38,6 +38,7 @@ export type ScheduleItemAction =
       repeatStartDate: string | null;
       repeatEndDate: string | null;
       repeatDays: string | null;
+      repeatDates: string[] | null;
       isLastDayOfMonth: boolean;
       checked: boolean;
       onToggle: () => void;
@@ -170,6 +171,7 @@ export function ScheduleItem({
     repeatStartDate,
     repeatEndDate,
     repeatDays,
+    repeatDates,
     isLastDayOfMonth,
   } = action;
   const actionBgClassName = CATEGORY_COLOR_CLASS_NAMES[categoryColor].soft;
@@ -191,6 +193,9 @@ export function ScheduleItem({
         ...(repeatStartDate ? { repeatStartDate } : {}),
         ...(repeatEndDate ? { repeatEndDate } : {}),
         ...(repeatDays ? { repeatDays } : {}),
+        ...(repeatType === "MULTIPLE" && repeatDates?.length
+          ? { repeatDates: repeatDates.join(",") }
+          : {}),
         ...(repeatType === "MONTHLY"
           ? { isLastDayOfMonth: String(isLastDayOfMonth) }
           : {}),

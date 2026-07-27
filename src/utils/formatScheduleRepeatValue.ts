@@ -7,6 +7,7 @@ type FormatScheduleRepeatValueInput = {
   repeatStartDate?: string | null;
   repeatEndDate?: string | null;
   repeatDays?: string | null;
+  repeatDates?: string[];
   isLastDayOfMonth?: boolean;
   date: string;
 };
@@ -17,10 +18,16 @@ export function formatScheduleRepeatValue({
   repeatStartDate,
   repeatEndDate,
   repeatDays,
+  repeatDates,
   isLastDayOfMonth,
   date,
 }: FormatScheduleRepeatValueInput): ScheduleRepeatValue {
-  if (repeatType === "MULTIPLE") return { mode: "multi", dates: [date] };
+  if (repeatType === "MULTIPLE") {
+    return {
+      mode: "multi",
+      dates: repeatDates?.length ? repeatDates : [date],
+    };
+  }
 
   if (!repeatStartDate || !repeatEndDate) return { mode: "none" };
 
