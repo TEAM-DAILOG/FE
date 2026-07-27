@@ -17,6 +17,7 @@ import { CategoryChip } from "@/src/components/common/CategoryChip";
 import { TextField } from "@/src/components/common/TextField";
 import { ScheduleRepeatSummary } from "@/src/components/schedule/ScheduleRepeatSummary";
 import { useCreateSchedule } from "@/src/hooks/mutations/schedules/useCreateSchedule";
+import { useDeleteSchedule } from "@/src/hooks/mutations/schedules/useDeleteSchedule";
 import { useUpdateSchedule } from "@/src/hooks/mutations/schedules/useUpdateSchedule";
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
@@ -102,12 +103,15 @@ export default function ScheduleAddScreen() {
   );
 
   const [isRepeatDirty, setIsRepeatDirty] = useState(false);
+  const [isMemoFocused, setIsMemoFocused] = useState(false);
 
   const openModal = useBaseModal((state) => state.openModal);
   const createScheduleMutation = useCreateSchedule();
   const updateScheduleMutation = useUpdateSchedule();
+  const deleteScheduleMutation = useDeleteSchedule();
 
   const scrollViewRef = useRef<ScrollView>(null);
+  const memoOffsetYRef = useRef(0);
 
   const dateLabel = useMemo(() => formatScheduleDate(date), [date]);
   const isRepeatSubmitted = !isEdit || isRepeatDirty;
@@ -117,12 +121,21 @@ export default function ScheduleAddScreen() {
     (repeat.mode !== "multi" || !isRepeatSubmitted || repeat.dates.length >= 2);
   const isSaving =
     createScheduleMutation.isPending || updateScheduleMutation.isPending;
+  const isDeleting = deleteScheduleMutation.isPending;
 
   const handleMemoFocus = () => {
-    // 키보드가 메모란을 가리지 않도록 포커스 시 맨 아래로 스크롤
+    setIsMemoFocused(true);
+    // 키보드가 메모란을 가리지 않도록, 버튼까지 딸려오지 않게 메모 영역까지만 스크롤
     setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({ animated: true });
+      scrollViewRef.current?.scrollTo({
+        y: memoOffsetYRef.current,
+        animated: true,
+      });
     }, 100);
+  };
+
+  const handleMemoBlur = () => {
+    setIsMemoFocused(false);
   };
 
   const openDatePicker = () => {
@@ -186,6 +199,25 @@ export default function ScheduleAddScreen() {
     });
   };
 
+  // 삭제 버튼 핸들러
+  const handleDelete = () => {
+    if (!scheduleId) return;
+
+    openModal("deleteScheduleModal", {
+      props: {
+        date,
+        description: title,
+        isRepeating: !isBaseSchedule,
+        onConfirm: (scope: ScheduleScope) => {
+          deleteScheduleMutation.mutate(
+            { scheduleId: Number(scheduleId), scope },
+            { onSuccess: () => router.push("/(tabs)/calendar") }
+          );
+        },
+      },
+    });
+  };
+
   return (
     <ScreenContainer variant="stack">
       <BackHeader label={isEdit ? "일정수정" : "일정등록"} />
@@ -198,90 +230,118 @@ export default function ScheduleAddScreen() {
         <ScrollView
           ref={scrollViewRef}
           className="flex-1"
-          contentContainerClassName="gap-6 px-4 py-5"
+          contentContainerClassName="flex-grow justify-between px-4 pt-5 pb-12"
           keyboardShouldPersistTaps="handled"
         >
-          <View className="gap-4">
-            <View className="gap-3">
-              <Text className="text-gray-900 text-b-02-m">제목</Text>
+          <View className="gap-6">
+            {/* 제목 + 카테고리 */}
+            <View className="gap-4">
+              {/* 제목 */}
+              <View className="gap-3">
+                <Text className="text-gray-900 text-b-02-m">제목</Text>
+                <TextField
+                  placeholder="제목을 입력하세요"
+                  value={title}
+                  onChangeText={setTitle}
+                />
+              </View>
+
+              {/* 카테고리 */}
+              <View className="gap-3">
+                <Text className="text-gray-900 text-b-02-m">카테고리</Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {CATEGORY_OPTIONS.map((category) => (
+                    <CategoryChip
+                      key={category.id}
+                      color={category.color}
+                      label={category.label}
+                      selected={categoryId === category.id}
+                      onPress={() =>
+                        setCategoryId((prev) =>
+                          prev === category.id ? null : category.id
+                        )
+                      }
+                    />
+                  ))}
+                </View>
+              </View>
+            </View>
+
+            {/* 구분선 */}
+            <View className="-mx-4 border-t-2 border-gray-100" />
+
+            {/* 날짜 + 반복 */}
+            <View className="gap-4">
+              {/* 날자 */}
+              <Pressable
+                onPress={openDatePicker}
+                className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3"
+              >
+                <Text className="text-gray-900 text-b-02-m">날짜</Text>
+                <View className="flex-row items-center gap-1">
+                  <CalendarIcon width={24} height={24} color="#020303" />
+                  <Text className="text-gray-800 text-b-03-r">{dateLabel}</Text>
+                </View>
+              </Pressable>
+
+              {/* 반복 */}
+              <Pressable
+                onPress={openDatePicker}
+                className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3"
+              >
+                <Text className="text-gray-900 text-b-02-m">반복</Text>
+                <ScheduleRepeatSummary
+                  value={repeat}
+                  textClassName={cn(
+                    "text-b-03-m",
+                    repeat.mode === "none" ? "text-gray-400" : "text-gray-800"
+                  )}
+                />
+              </Pressable>
+            </View>
+
+            {/* 구분선 */}
+            <View className="-mx-4 border-t-2 border-gray-100" />
+
+            {/* 메모 */}
+            <View
+              className="gap-3"
+              onLayout={(e) => {
+                memoOffsetYRef.current = e.nativeEvent.layout.y;
+              }}
+            >
+              <Text className="text-gray-900 text-b-02-m">메모</Text>
               <TextField
-                placeholder="제목을 입력하세요"
-                value={title}
-                onChangeText={setTitle}
+                type="textarea"
+                placeholder="기억해야 할 정보를 메모하세요!"
+                value={memo}
+                onChangeText={setMemo}
+                onFocus={handleMemoFocus}
+                onBlur={handleMemoBlur}
               />
             </View>
-
-            <View className="gap-3">
-              <Text className="text-gray-900 text-b-02-m">카테고리</Text>
-              <View className="flex-row flex-wrap gap-2">
-                {CATEGORY_OPTIONS.map((category) => (
-                  <CategoryChip
-                    key={category.id}
-                    color={category.color}
-                    label={category.label}
-                    selected={categoryId === category.id}
-                    onPress={() =>
-                      setCategoryId((prev) =>
-                        prev === category.id ? null : category.id
-                      )
-                    }
-                  />
-                ))}
-              </View>
-            </View>
           </View>
-
-          <View className="-mx-4 border-t-2 border-gray-100" />
-
-          <View className="gap-4">
-            <Pressable
-              onPress={openDatePicker}
-              className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3"
-            >
-              <Text className="text-gray-900 text-b-02-m">날짜</Text>
-              <View className="flex-row items-center gap-1">
-                <CalendarIcon width={24} height={24} color="#020303" />
-                <Text className="text-gray-800 text-b-03-r">{dateLabel}</Text>
-              </View>
-            </Pressable>
-
-            <Pressable
-              onPress={openDatePicker}
-              className="flex-row items-center justify-between rounded-xl border border-gray-100 bg-white p-3"
-            >
-              <Text className="text-gray-900 text-b-02-m">반복</Text>
-              <ScheduleRepeatSummary
-                value={repeat}
-                textClassName={cn(
-                  "text-b-03-m",
-                  repeat.mode === "none" ? "text-gray-400" : "text-gray-800"
-                )}
+          {!isMemoFocused && (
+            <View className="flex-col gap-3">
+              {isEdit && (
+                <Button
+                  label={isDeleting ? "삭제 중" : "삭제"}
+                  variant="stroke-green"
+                  disabled={isDeleting}
+                  onPress={handleDelete}
+                  className="flex-1"
+                />
+              )}
+              <Button
+                label={isSaving ? "저장 중" : "저장"}
+                disabled={!canSave || isSaving}
+                onPress={handleSave}
+                className="flex-1"
               />
-            </Pressable>
-          </View>
-
-          <View className="-mx-4 border-t-2 border-gray-100" />
-
-          <View className="gap-3">
-            <Text className="text-gray-900 text-b-02-m">메모</Text>
-            <TextField
-              type="textarea"
-              placeholder="기억해야 할 정보를 메모하세요!"
-              value={memo}
-              onChangeText={setMemo}
-              onFocus={handleMemoFocus}
-            />
-          </View>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
-
-      <View className="px-4 pb-12 pt-2">
-        <Button
-          label={isSaving ? "저장 중" : "저장"}
-          disabled={!canSave || isSaving}
-          onPress={handleSave}
-        />
-      </View>
     </ScreenContainer>
   );
 }
