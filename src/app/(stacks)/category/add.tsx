@@ -10,15 +10,15 @@ import {
 } from "@/src/components/common/CategoryCircle";
 import { TextField } from "@/src/components/common/TextField";
 import { CATEGORY_COLORS } from "@/src/constants/categoryColors";
-import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { useAddCategory } from "@/src/hooks/mutations/category/useAddCategory";
+import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 export default function CategoryAddScreen() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [selectedColor, setSelectedColor] = useState<CategoryColor | null>(
-    null,
+    null
   );
 
   const { data: categories } = useGetCategories();
@@ -41,7 +41,7 @@ export default function CategoryAddScreen() {
 
     addCategory.mutate(
       { name: name.trim(), color: selectedColor },
-      { onSuccess: () => router.back() },
+      { onSuccess: () => router.back() }
     );
   };
 

@@ -8,13 +8,13 @@ import DraggableFlatList, {
 import DragIcon from "@/assets/icons/dragIcon.svg";
 import EditIcon from "@/assets/icons/editIcon.svg";
 import ExclamationIcon from "@/assets/icons/exclamationIcon.svg";
+import type { CategoryWithOrder } from "@/src/api/categoryService";
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categoryColors";
-import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { useUpdateCategoryOrder } from "@/src/hooks/mutations/category/useUpdateCategoryOrder";
+import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { cn } from "@/src/lib/cn";
-import type { CategoryWithOrder } from "@/src/api/categoryService";
 
 const MAX_CATEGORY_COUNT = 5;
 
@@ -38,7 +38,7 @@ export default function CategoryListScreen() {
   const handleDragEnd = (newData: CategoryWithOrder[]) => {
     setCategories(newData);
     updateOrder.mutate(
-      newData.map((item, index) => ({ id: item.id, order: index + 1 })),
+      newData.map((item, index) => ({ id: item.id, order: index + 1 }))
     );
   };
 
@@ -51,18 +51,16 @@ export default function CategoryListScreen() {
       className={cn(
         "h-14 flex-row items-center px-4",
         // TODO: 드래그 중 배경색(bg-gray-50) 디자인 확인 대기 중
-        isActive && "bg-gray-50",
+        isActive && "bg-gray-50"
       )}
     >
       <View
         className={cn(
           "h-5 w-5 rounded-full",
-          CATEGORY_DOT_CLASS_NAMES[item.color],
+          CATEGORY_DOT_CLASS_NAMES[item.color]
         )}
       />
-      <Text className="ml-2 flex-1 text-gray-900 text-b-03-m">
-        {item.name}
-      </Text>
+      <Text className="ml-2 flex-1 text-gray-900 text-b-03-m">{item.name}</Text>
       <Pressable
         onPress={() =>
           router.push({

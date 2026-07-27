@@ -1,12 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { categoryService, type CategoryWithOrder } from "@/src/api/categoryService";
-import type { CategoryColor } from "@/src/types/categories/category.types";
-
-type AddCategoryParams = {
-  name: string;
-  color: CategoryColor;
-};
+import { categoryService } from "@/src/api/categoryService";
+import type {
+  AddCategoryParams,
+  CategoryWithOrder,
+} from "@/src/types/categories/category.types";
 
 export function useAddCategory() {
   const queryClient = useQueryClient();

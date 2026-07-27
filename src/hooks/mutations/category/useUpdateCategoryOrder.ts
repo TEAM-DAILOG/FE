@@ -1,13 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { categoryService, type CategoryWithOrder } from "@/src/api/categoryService";
-
-type OrderItem = { id: string; order: number };
+import { categoryService } from "@/src/api/categoryService";
+import type {
+  CategoryOrderItem,
+  CategoryWithOrder,
+} from "@/src/types/categories/category.types";
 
 export function useUpdateCategoryOrder() {
   const queryClient = useQueryClient();
 
-  return useMutation<CategoryWithOrder[], Error, OrderItem[]>({
+  return useMutation<CategoryWithOrder[], Error, CategoryOrderItem[]>({
     mutationFn: (items) => categoryService.patchCategoryOrder(items),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });

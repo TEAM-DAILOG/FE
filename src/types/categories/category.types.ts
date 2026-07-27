@@ -34,3 +34,21 @@ export type PatchCategoryParams = {
 export type PatchCategoryOrderParams = {
   categories: { categoryId: number; categoryOrder: number }[];
 };
+
+// ---- hooks(mutation/query)에서 쓰던 타입들 분리 ----
+
+export type AddCategoryParams = {
+  name: string;
+  color: CategoryColor;
+};
+
+export type UpdateCategoryParams = {
+  categoryId: string;
+  name?: string;
+  color?: CategoryColor;
+};
+
+export type CategoryOrderItem = {
+  id: string;
+  order: number;
+};

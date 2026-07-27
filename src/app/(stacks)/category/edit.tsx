@@ -6,9 +6,9 @@ import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { CategoryCircle } from "@/src/components/common/CategoryCircle";
 import { CATEGORY_COLORS } from "@/src/constants/categoryColors";
-import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
-import { useUpdateCategory } from "@/src/hooks/mutations/category/useUpdateCategory";
 import { useDeleteCategory } from "@/src/hooks/mutations/category/useDeleteCategory";
+import { useUpdateCategory } from "@/src/hooks/mutations/category/useUpdateCategory";
+import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
@@ -25,7 +25,7 @@ export default function CategoryEditScreen() {
   const deleteCategory = useDeleteCategory();
 
   const [selectedColor, setSelectedColor] = useState<CategoryColor | null>(
-    null,
+    null
   );
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function CategoryEditScreen() {
     if (!hasChanged || !selectedColor) return;
     updateCategory.mutate(
       { categoryId: id, color: selectedColor },
-      { onSuccess: () => router.back() },
+      { onSuccess: () => router.back() }
     );
   };
 
