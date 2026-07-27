@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
+import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
 
 type Schedule = {
   id: string;
@@ -81,6 +82,8 @@ export default function HomeScreen() {
   const dateLabel = `${month}월 ${day}일 ${weekday}요일`;
   const [schedules, setSchedules] = useState<Schedule[]>(MOCK_SCHEDULES);
   const [isQuestionAnswered, setIsQuestionAnswered] = useState(false);
+  const { data: todayQuestion, isLoading: isQuestionLoading } =
+    useGetTodayQuestion();
   const hasSchedules = schedules.length > 0;
 
   const toggleSchedule = (id: string) => {
@@ -156,7 +159,10 @@ export default function HomeScreen() {
 
                   {/* 질문 내용 */}
                   <Text className="text-center text-green-800 text-b-02-m">
-                    Lorem ipsum dolor sit amet consectetur. | 294
+                    {isQuestionLoading
+                      ? "오늘의 질문을 불러오는 중입니다."
+                      : todayQuestion?.content ||
+                        "오늘의 질문을 불러올 수 없어요."}
                   </Text>
                 </View>
                 <Button

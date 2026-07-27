@@ -23,3 +23,54 @@ export type LoginResponse = {
 export type ReissueAccessTokenResponse = {
   accessToken: string;
 };
+
+export type LogoutParams = {
+  refreshToken: string;
+};
+
+export type SignupEmailParams = {
+  email: string;
+};
+
+export type CheckSignupEmailResponse = {
+  isAvailable: boolean;
+};
+
+export type SendSignupEmailVerificationResponse = {
+  expiresInSeconds: number;
+  resendAvailableInSeconds: number;
+};
+
+export type VerifySignupEmailCodeParams = {
+  email: string;
+  code: string;
+};
+
+export type VerifySignupEmailCodeResponse = {
+  emailVerificationToken: string;
+  expiresInSeconds: number;
+};
+
+export type SignupParams = {
+  email: string;
+  emailVerificationToken: string;
+  password: string;
+  name: string;
+  profileImage?: SignupProfileImage | null;
+  termsOfServiceAgreed: boolean;
+  privacyPolicyAgreed: boolean;
+  pushNotificationAgreed?: boolean | null;
+};
+
+export type SignupProfileImage = {
+  uri: string;
+  name: string;
+  type: string;
+};
+
+export type SignupResponse = {
+  userId: number;
+  email: string | null;
+  name: string;
+  profileImageUrl: string | null;
+};

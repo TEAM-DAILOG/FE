@@ -5,12 +5,20 @@ import { getErrorMessage } from "@/src/utils/getErrorMessage";
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: (error) => {
+    onError: (error, query) => {
+      if (query.meta?.skipGlobalErrorToast) {
+        return;
+      }
+
       useToastStore.getState().showToast(getErrorMessage(error));
     },
   }),
   mutationCache: new MutationCache({
-    onError: (error) => {
+    onError: (error, _variables, _context, mutation) => {
+      if (mutation.meta?.skipGlobalErrorToast) {
+        return;
+      }
+
       useToastStore.getState().showToast(getErrorMessage(error));
     },
   }),
