@@ -14,5 +14,14 @@ export function formatScheduleItem(schedule: Schedule): UpcomingSchedule {
     memo: schedule.content,
     checked: schedule.isCompleted,
     groupId: schedule.groupId,
+    repeatType: schedule.repeatType,
+    repeatStartDate: schedule.repeatStartDate
+      ? dayjs(schedule.repeatStartDate).format("YYYY-MM-DD")
+      : null,
+    repeatEndDate: schedule.repeatEndDate
+      ? dayjs(schedule.repeatEndDate).format("YYYY-MM-DD")
+      : null,
+    repeatDays: schedule.repeatDays,
+    isLastDayOfMonth: schedule.isLastDayOfMonth,
   };
 }

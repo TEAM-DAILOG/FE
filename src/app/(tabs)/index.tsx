@@ -95,6 +95,11 @@ export default function HomeScreen() {
                       date: s.date,
                       groupId: s.groupId,
                       memo: s.memo,
+                      repeatType: s.repeatType,
+                      repeatStartDate: s.repeatStartDate,
+                      repeatEndDate: s.repeatEndDate,
+                      repeatDays: s.repeatDays,
+                      isLastDayOfMonth: s.isLastDayOfMonth,
                       checked: s.checked,
                       onToggle: () => toggleSchedule(s.id, s.checked),
                     }}

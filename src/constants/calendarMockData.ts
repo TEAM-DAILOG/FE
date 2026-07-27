@@ -117,6 +117,11 @@ export function buildMockUpcomingSchedules(
     memo: null,
     checked: schedule.checked,
     groupId: null,
+    repeatType: "NONE",
+    repeatStartDate: null,
+    repeatEndDate: null,
+    repeatDays: null,
+    isLastDayOfMonth: false,
   }));
 }
 

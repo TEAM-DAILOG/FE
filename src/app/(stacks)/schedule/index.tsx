@@ -17,6 +17,7 @@ import { CategoryChip } from "@/src/components/common/CategoryChip";
 import { TextField } from "@/src/components/common/TextField";
 import { ScheduleRepeatSummary } from "@/src/components/schedule/ScheduleRepeatSummary";
 import { useCreateSchedule } from "@/src/hooks/mutations/schedules/useCreateSchedule";
+import { useUpdateSchedule } from "@/src/hooks/mutations/schedules/useUpdateSchedule";
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { CategoryColor } from "@/src/types/categories/category.types";
@@ -24,8 +25,13 @@ import type {
   DatePickerModalResult,
   ScheduleRepeatValue,
 } from "@/src/types/modals/datepickerModal.types";
+import type {
+  ScheduleRepeatType,
+  ScheduleScope,
+} from "@/src/types/schedules/schedule.types";
 import { formatScheduleDate } from "@/src/utils";
 import { formatCreateScheduleParams } from "@/src/utils/formatCreateScheduleParams";
+import { formatScheduleRepeatValue } from "@/src/utils/formatScheduleRepeatValue";
 
 // 카테고리 관리 화면과 데이터 연동 후 목록 API로 교체 예정
 type CategoryOption = {
@@ -36,8 +42,8 @@ type CategoryOption = {
 
 // 카테고리 관리 화면과 데이터 연동 후 목록 API로 교체 예정
 const CATEGORY_OPTIONS: CategoryOption[] = [
-  { id: "1", color: "BLUE", label: "카테고리" },
-  { id: "2", color: "BROWN", label: "카테고리" },
+  { id: "11", color: "BLUE", label: "카테고리" },
+  { id: "16", color: "BROWN", label: "카테고리" },
   { id: "3", color: "GREEN", label: "카테고리" },
   { id: "4", color: "PURPLE", label: "카테고리" },
   { id: "5", color: "PINK", label: "카테고리" },
@@ -51,14 +57,28 @@ export default function ScheduleAddScreen() {
     title: initialTitle,
     categoryColor: initialCategoryColor,
     memo: initialMemo,
+    groupId,
+    repeatType: initialRepeatType,
+    repeatStartDate: initialRepeatStartDate,
+    repeatEndDate: initialRepeatEndDate,
+    repeatDays: initialRepeatDays,
+    isLastDayOfMonth: initialIsLastDayOfMonth,
   } = useLocalSearchParams<{
     date?: string;
     scheduleId?: string;
     title?: string;
     categoryColor?: CategoryColor;
     memo?: string;
+    groupId?: string;
+    repeatType?: ScheduleRepeatType;
+    repeatStartDate?: string;
+    repeatEndDate?: string;
+    repeatDays?: string;
+    isLastDayOfMonth?: string;
   }>();
   const isEdit = !!scheduleId;
+
+  const isBaseSchedule = !groupId;
 
   const [title, setTitle] = useState(initialTitle ?? "");
   const [categoryId, setCategoryId] = useState<string | null>(
@@ -70,15 +90,33 @@ export default function ScheduleAddScreen() {
   const [date, setDate] = useState(() =>
     initialDate ? initialDate : dayjs().format("YYYY-MM-DD")
   );
-  const [repeat, setRepeat] = useState<ScheduleRepeatValue>({ mode: "none" });
+  const [repeat, setRepeat] = useState<ScheduleRepeatValue>(() =>
+    formatScheduleRepeatValue({
+      repeatType: initialRepeatType,
+      repeatStartDate: initialRepeatStartDate,
+      repeatEndDate: initialRepeatEndDate,
+      repeatDays: initialRepeatDays,
+      isLastDayOfMonth: initialIsLastDayOfMonth === "true",
+      date,
+    })
+  );
+
+  const [isRepeatDirty, setIsRepeatDirty] = useState(false);
 
   const openModal = useBaseModal((state) => state.openModal);
   const createScheduleMutation = useCreateSchedule();
+  const updateScheduleMutation = useUpdateSchedule();
 
   const scrollViewRef = useRef<ScrollView>(null);
 
   const dateLabel = useMemo(() => formatScheduleDate(date), [date]);
-  const canSave = title.trim().length > 0 && categoryId !== null;
+  const isRepeatSubmitted = !isEdit || isRepeatDirty;
+  const canSave =
+    title.trim().length > 0 &&
+    categoryId !== null &&
+    (repeat.mode !== "multi" || !isRepeatSubmitted || repeat.dates.length >= 2);
+  const isSaving =
+    createScheduleMutation.isPending || updateScheduleMutation.isPending;
 
   const handleMemoFocus = () => {
     // 키보드가 메모란을 가리지 않도록 포커스 시 맨 아래로 스크롤
@@ -98,6 +136,7 @@ export default function ScheduleAddScreen() {
         }: DatePickerModalResult) => {
           setDate(nextDate);
           setRepeat(nextRepeat);
+          setIsRepeatDirty(true);
         },
       },
     });
@@ -107,12 +146,6 @@ export default function ScheduleAddScreen() {
   const handleSave = () => {
     if (!canSave || !categoryId) return;
 
-    if (isEdit) {
-      // TODO: 수정 API 연동 후 실제 수정 요청으로 교체
-      router.push("/(tabs)/calendar");
-      return;
-    }
-
     const params = formatCreateScheduleParams({
       categoryId: Number(categoryId),
       title,
@@ -120,6 +153,33 @@ export default function ScheduleAddScreen() {
       date,
       repeat,
     });
+
+    if (isEdit) {
+      const scope: ScheduleScope =
+        isBaseSchedule && repeat.mode === "none" ? "SINGLE" : "ALL";
+
+      const editParams =
+        scope === "SINGLE"
+          ? {
+              categoryId: params.categoryId,
+              title: params.title,
+              content: params.content,
+              date,
+            }
+          : isRepeatDirty
+            ? params
+            : {
+                categoryId: params.categoryId,
+                title: params.title,
+                content: params.content,
+              };
+
+      updateScheduleMutation.mutate(
+        { scheduleId: Number(scheduleId), scope, params: editParams },
+        { onSuccess: () => router.push("/(tabs)/calendar") }
+      );
+      return;
+    }
 
     createScheduleMutation.mutate(params, {
       onSuccess: () => router.push("/(tabs)/calendar"),
@@ -217,14 +277,8 @@ export default function ScheduleAddScreen() {
 
       <View className="px-4 pb-12 pt-2">
         <Button
-          label={
-            createScheduleMutation.isPending
-              ? "저장 중"
-              : isEdit
-                ? "수정"
-                : "저장"
-          }
-          disabled={!canSave || createScheduleMutation.isPending}
+          label={isSaving ? "저장 중" : "저장"}
+          disabled={!canSave || isSaving}
           onPress={handleSave}
         />
       </View>

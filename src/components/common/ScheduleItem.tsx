@@ -21,7 +21,10 @@ import { useDeleteSchedule } from "@/src/hooks/mutations/schedules/useDeleteSche
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CategoryColor } from "@/src/types/categories/category.types";
-import type { ScheduleScope } from "@/src/types/schedules/schedule.types";
+import type {
+  ScheduleRepeatType,
+  ScheduleScope,
+} from "@/src/types/schedules/schedule.types";
 
 export type ScheduleItemAction =
   | {
@@ -31,6 +34,11 @@ export type ScheduleItemAction =
       date: string;
       groupId: number | null;
       memo: string | null;
+      repeatType: ScheduleRepeatType;
+      repeatStartDate: string | null;
+      repeatEndDate: string | null;
+      repeatDays: string | null;
+      isLastDayOfMonth: boolean;
       checked: boolean;
       onToggle: () => void;
     }
@@ -153,7 +161,17 @@ export function ScheduleItem({
   // 체크박스 모드(할 일 목록)에서만 왼쪽 스와이프로 수정/삭제 버튼을 노출
   if (action.type !== "checkbox") return row;
 
-  const { id, date: scheduleDate, groupId, memo } = action;
+  const {
+    id,
+    date: scheduleDate,
+    groupId,
+    memo,
+    repeatType,
+    repeatStartDate,
+    repeatEndDate,
+    repeatDays,
+    isLastDayOfMonth,
+  } = action;
   const actionBgClassName = CATEGORY_COLOR_CLASS_NAMES[categoryColor].soft;
 
   // 일정 등록 화면을 수정 모드로 열어 기존 값을 채워서 보여준다
@@ -168,6 +186,13 @@ export function ScheduleItem({
         categoryColor,
         ...(groupId !== null ? { groupId: String(groupId) } : {}),
         ...(memo ? { memo } : {}),
+        repeatType,
+        ...(repeatStartDate ? { repeatStartDate } : {}),
+        ...(repeatEndDate ? { repeatEndDate } : {}),
+        ...(repeatDays ? { repeatDays } : {}),
+        ...(repeatType === "MONTHLY"
+          ? { isLastDayOfMonth: String(isLastDayOfMonth) }
+          : {}),
       },
     });
   };
@@ -186,7 +211,7 @@ export function ScheduleItem({
   };
 
   return (
-    <View className="relative">
+    <View className="relative overflow-hidden">
       <View
         pointerEvents="box-none"
         className="absolute inset-y-0 right-0 flex-row items-stretch"

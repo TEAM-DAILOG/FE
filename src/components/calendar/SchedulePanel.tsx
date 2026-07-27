@@ -90,6 +90,11 @@ export function SchedulePanel({
                       date: schedule.date,
                       groupId: schedule.groupId,
                       memo: schedule.memo,
+                      repeatType: schedule.repeatType,
+                      repeatStartDate: schedule.repeatStartDate,
+                      repeatEndDate: schedule.repeatEndDate,
+                      repeatDays: schedule.repeatDays,
+                      isLastDayOfMonth: schedule.isLastDayOfMonth,
                       checked: schedule.checked,
                       onToggle: () =>
                         toggleSchedule(schedule.id, schedule.checked),

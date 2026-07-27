@@ -189,7 +189,7 @@ export function DatePickerModal({
     }
 
     if (activeTab === "multi") {
-      if (multiDates.length === 0) return null;
+      if (multiDates.length < 2) return null;
       const sorted = [...multiDates].sort();
       return { date: sorted[0], repeat: { mode: "multi", dates: sorted } };
     }
