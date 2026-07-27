@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useRef, useState } from "react";
-import type { LayoutChangeEvent } from "react-native";
 import { ScrollView } from "react-native";
 
 import { useCreateSchedule } from "@/src/hooks/mutations/schedules/useCreateSchedule";
@@ -92,7 +91,6 @@ export function useScheduleForm() {
   );
 
   const [isRepeatDirty, setIsRepeatDirty] = useState(false);
-  const [isMemoFocused, setIsMemoFocused] = useState(false);
 
   const openModal = useBaseModal((state) => state.openModal);
   const createScheduleMutation = useCreateSchedule();
@@ -100,7 +98,6 @@ export function useScheduleForm() {
   const deleteScheduleMutation = useDeleteSchedule();
 
   const scrollViewRef = useRef<ScrollView>(null);
-  const memoOffsetYRef = useRef(0);
 
   const dateLabel = useMemo(() => formatScheduleDate(date), [date]);
   const canSave =
@@ -117,23 +114,11 @@ export function useScheduleForm() {
     setCategoryId((prev) => (prev === id ? null : id));
   };
 
-  // 메모 영역의 스크롤 위치(부모 컨텐츠 기준 y)를 기억해뒀다가 포커스 시 그 위치까지만 스크롤
-  const handleMemoLayout = (event: LayoutChangeEvent) => {
-    memoOffsetYRef.current = event.nativeEvent.layout.y;
-  };
-
+  // 키보드가 메모란을 가리지 않도록 포커스 시 맨 아래로 스크롤
   const handleMemoFocus = () => {
-    setIsMemoFocused(true);
     setTimeout(() => {
-      scrollViewRef.current?.scrollTo({
-        y: memoOffsetYRef.current,
-        animated: true,
-      });
+      scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 100);
-  };
-
-  const handleMemoBlur = () => {
-    setIsMemoFocused(false);
   };
 
   const openDatePicker = () => {
@@ -220,11 +205,8 @@ export function useScheduleForm() {
     canSave,
     isSaving,
     isDeleting,
-    isMemoFocused,
     scrollViewRef,
-    handleMemoLayout,
     handleMemoFocus,
-    handleMemoBlur,
     openDatePicker,
     handleSave,
     handleDelete,

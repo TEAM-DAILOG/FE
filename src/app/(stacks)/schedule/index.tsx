@@ -33,11 +33,8 @@ export default function ScheduleAddScreen() {
     canSave,
     isSaving,
     isDeleting,
-    isMemoFocused,
     scrollViewRef,
-    handleMemoLayout,
     handleMemoFocus,
-    handleMemoBlur,
     openDatePicker,
     handleSave,
     handleDelete,
@@ -55,7 +52,7 @@ export default function ScheduleAddScreen() {
         <ScrollView
           ref={scrollViewRef}
           className="flex-1"
-          contentContainerClassName="flex-grow justify-between px-4 pt-5 pb-12"
+          contentContainerClassName="px-4 pt-5 pb-6"
           keyboardShouldPersistTaps="handled"
         >
           <View className="gap-6">
@@ -125,7 +122,7 @@ export default function ScheduleAddScreen() {
             <Divider className="-mx-4 border-gray-100" thickness={2} />
 
             {/* 메모 */}
-            <View className="gap-3" onLayout={handleMemoLayout}>
+            <View className="gap-3">
               <Text className="text-gray-900 text-b-02-m">메모</Text>
               <TextField
                 type="textarea"
@@ -133,31 +130,27 @@ export default function ScheduleAddScreen() {
                 value={memo}
                 onChangeText={setMemo}
                 onFocus={handleMemoFocus}
-                onBlur={handleMemoBlur}
               />
             </View>
           </View>
-          {!isMemoFocused && (
-            <View className="flex-col gap-3">
-              {isEdit && (
-                <Button
-                  label={isDeleting ? "삭제 중" : "삭제"}
-                  variant="stroke-green"
-                  disabled={isDeleting}
-                  onPress={handleDelete}
-                  className="flex-1"
-                />
-              )}
-              <Button
-                label={isSaving ? "저장 중" : "저장"}
-                disabled={!canSave || isSaving}
-                onPress={handleSave}
-                className="flex-1"
-              />
-            </View>
-          )}
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <View className="flex-col gap-3 px-4 pb-12 pt-2">
+        {isEdit && (
+          <Button
+            label={isDeleting ? "삭제 중" : "삭제"}
+            variant="stroke-green"
+            disabled={isDeleting}
+            onPress={handleDelete}
+          />
+        )}
+        <Button
+          label={isSaving ? "저장 중" : "저장"}
+          disabled={!canSave || isSaving}
+          onPress={handleSave}
+        />
+      </View>
     </ScreenContainer>
   );
 }
