@@ -30,6 +30,7 @@ export type ScheduleItemAction =
       // 수정 이동/삭제 모달에 쓰는 실제 일정 날짜(YYYY-MM-DD). 화면에 보이는 date prop과는 별개.
       date: string;
       groupId: number | null;
+      memo: string | null;
       checked: boolean;
       onToggle: () => void;
     }
@@ -62,6 +63,7 @@ export function ScheduleItem({
 }: ScheduleItemProps) {
   const router = useRouter();
   const openModal = useBaseModal((state) => state.openModal);
+  const closeModal = useBaseModal((state) => state.closeModal);
   const deleteScheduleMutation = useDeleteSchedule();
 
   // 버튼/체크박스가 있으면 오른쪽 공간이 좁아 날짜를 위에 따로 쌓고,
@@ -151,11 +153,12 @@ export function ScheduleItem({
   // 체크박스 모드(할 일 목록)에서만 왼쪽 스와이프로 수정/삭제 버튼을 노출
   if (action.type !== "checkbox") return row;
 
-  const { id, date: scheduleDate, groupId } = action;
+  const { id, date: scheduleDate, groupId, memo } = action;
   const actionBgClassName = CATEGORY_COLOR_CLASS_NAMES[categoryColor].soft;
 
   // 일정 등록 화면을 수정 모드로 열어 기존 값을 채워서 보여준다
   const handleEdit = () => {
+    closeModal();
     router.push({
       pathname: "/schedule",
       params: {
@@ -163,6 +166,8 @@ export function ScheduleItem({
         title: description,
         date: scheduleDate,
         categoryColor,
+        ...(groupId !== null ? { groupId: String(groupId) } : {}),
+        ...(memo ? { memo } : {}),
       },
     });
   };

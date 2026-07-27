@@ -11,6 +11,7 @@ export function formatScheduleItem(schedule: Schedule): UpcomingSchedule {
     categoryLabel: schedule.category.categoryName,
     categoryColor: schedule.category.categoryColor,
     description: schedule.title,
+    memo: schedule.content,
     checked: schedule.isCompleted,
     groupId: schedule.groupId,
   };

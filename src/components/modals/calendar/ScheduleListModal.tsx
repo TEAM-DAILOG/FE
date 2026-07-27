@@ -63,6 +63,7 @@ export function ScheduleListModal({
         id: schedule.id,
         date: schedule.date,
         groupId: schedule.groupId,
+        memo: schedule.memo,
         checked: schedule.checked,
         onToggle: () => toggleSchedule(schedule.id),
       }}

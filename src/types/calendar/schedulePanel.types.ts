@@ -6,6 +6,7 @@ export type UpcomingSchedule = {
   categoryLabel: string;
   categoryColor: CategoryColor;
   description: string;
+  memo: string | null;
   checked: boolean;
   groupId: number | null;
 };
