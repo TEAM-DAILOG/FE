@@ -13,10 +13,7 @@ import { Button } from "@/src/components/common/Button";
 import { CategoryChip } from "@/src/components/common/CategoryChip";
 import { TextField } from "@/src/components/common/TextField";
 import { ScheduleRepeatSummary } from "@/src/components/schedule/ScheduleRepeatSummary";
-import {
-  CATEGORY_OPTIONS,
-  useScheduleForm,
-} from "@/src/hooks/schedules/useScheduleForm";
+import { useScheduleForm } from "@/src/hooks/schedules/useScheduleForm";
 import { cn } from "@/src/lib/cn";
 
 export default function ScheduleAddScreen() {
@@ -24,6 +21,7 @@ export default function ScheduleAddScreen() {
     isEdit,
     title,
     setTitle,
+    categories,
     categoryId,
     toggleCategory,
     memo,
@@ -72,11 +70,11 @@ export default function ScheduleAddScreen() {
               <View className="gap-3">
                 <Text className="text-gray-900 text-b-02-m">카테고리</Text>
                 <View className="flex-row flex-wrap gap-2">
-                  {CATEGORY_OPTIONS.map((category) => (
+                  {categories.map((category) => (
                     <CategoryChip
                       key={category.id}
                       color={category.color}
-                      label={category.label}
+                      label={category.name}
                       selected={categoryId === category.id}
                       onPress={() => toggleCategory(category.id)}
                     />

@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView } from "react-native";
 
+import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { useCreateSchedule } from "@/src/hooks/mutations/schedules/useCreateSchedule";
 import { useDeleteSchedule } from "@/src/hooks/mutations/schedules/useDeleteSchedule";
 import { useUpdateSchedule } from "@/src/hooks/mutations/schedules/useUpdateSchedule";
@@ -20,22 +21,6 @@ import { formatScheduleDate } from "@/src/utils";
 import { formatScheduleParams } from "@/src/utils/formatScheduleParams";
 import { formatScheduleRepeatValue } from "@/src/utils/formatScheduleRepeatValue";
 import { formatUpdateScheduleParams } from "@/src/utils/formatUpdateScheduleParams";
-
-// 카테고리 관리 화면과 데이터 연동 후 목록 API로 교체 예정
-export type CategoryOption = {
-  id: string;
-  color: CategoryColor;
-  label: string;
-};
-
-// 카테고리 관리 화면과 데이터 연동 후 목록 API로 교체 예정
-export const CATEGORY_OPTIONS: CategoryOption[] = [
-  { id: "11", color: "BLUE", label: "카테고리" },
-  { id: "16", color: "BROWN", label: "카테고리" },
-  { id: "3", color: "GREEN", label: "카테고리" },
-  { id: "4", color: "PURPLE", label: "카테고리" },
-  { id: "5", color: "PINK", label: "카테고리" },
-];
 
 // 일정 등록/수정에 필요한 상태, 핸들러 등을 관리하는 hook
 export function useScheduleForm() {
@@ -71,12 +56,30 @@ export function useScheduleForm() {
   const isEdit = !!scheduleId;
   const isRepeatingSchedule = !!groupId;
 
-  const [title, setTitle] = useState(initialTitle ?? "");
-  const [categoryId, setCategoryId] = useState<string | null>(
-    () =>
-      CATEGORY_OPTIONS.find((option) => option.color === initialCategoryColor)
-        ?.id ?? null
+  const { data: categoriesData } = useGetCategories();
+  const categories = useMemo(
+    () => [...(categoriesData ?? [])].sort((a, b) => a.order - b.order),
+    [categoriesData]
   );
+
+  const [title, setTitle] = useState(initialTitle ?? "");
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const hasAppliedInitialCategoryRef = useRef(false);
+
+  // 수정 진입 시 전달받은 카테고리 색상으로 목록 로딩 후 최초 1회만 초기 선택값을 채움
+  useEffect(() => {
+    if (hasAppliedInitialCategoryRef.current) return;
+    if (!initialCategoryColor || categories.length === 0) return;
+
+    const matched = categories.find(
+      (category) => category.color === initialCategoryColor
+    );
+    if (matched) {
+      setCategoryId(matched.id);
+      hasAppliedInitialCategoryRef.current = true;
+    }
+  }, [categories, initialCategoryColor]);
+
   const [memo, setMemo] = useState(initialMemo ?? "");
   const [date, setDate] = useState(() =>
     initialDate ? initialDate : dayjs().format("YYYY-MM-DD")
@@ -201,6 +204,7 @@ export function useScheduleForm() {
     isEdit,
     title,
     setTitle,
+    categories,
     categoryId,
     toggleCategory,
     memo,
