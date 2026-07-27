@@ -146,8 +146,10 @@ export default function HomeScreen() {
 
                   {/* 질문 내용 */}
                   <Text className="text-center text-green-800 text-b-02-m">
-                    {todayQuestion?.content ||
-                      "Lorem ipsum dolor sit amet consectetur. | 294"}
+                    {isQuestionLoading
+                      ? "오늘의 질문을 불러오는 중입니다."
+                      : todayQuestion?.content ||
+                        "오늘의 질문을 불러올 수 없어요."}
                   </Text>
                 </View>
                 <Button
