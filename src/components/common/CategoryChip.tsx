@@ -23,18 +23,18 @@ const CATEGORY_CHIP_COLORS: Record<
   CategoryColor,
   { border: string; hex: string }
 > = {
-  BLUE: { border: "border-category-01-1", hex: "#6A92AF" },
-  BROWN: { border: "border-category-02-1", hex: "#C49C64" },
-  GREEN: { border: "border-category-03-1", hex: "#79A659" },
-  PURPLE: { border: "border-category-04-1", hex: "#A381BB" },
-  PINK: { border: "border-category-05-1", hex: "#BD7593" },
+  blue: { border: "border-category-01-1", hex: "#6A92AF" },
+  brown: { border: "border-category-02-1", hex: "#C49C64" },
+  green: { border: "border-category-03-1", hex: "#79A659" },
+  purple: { border: "border-category-04-1", hex: "#A381BB" },
+  pink: { border: "border-category-05-1", hex: "#BD7593" },
 };
 
 const GRAY_0 = "#FCFDFD";
 const TRANSITION_DURATION = 300;
 
 export function CategoryChip({
-  color = "BLUE",
+  color = "blue",
   label,
   selected = false,
   onPress,

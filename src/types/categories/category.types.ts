@@ -1,5 +1,4 @@
-// 카테고리 색상 ENUM
-export type CategoryColor = "BLUE" | "BROWN" | "GREEN" | "PURPLE" | "PINK";
+export type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
 
 export type Category = {
   id: string;
