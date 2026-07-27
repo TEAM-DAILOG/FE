@@ -10,6 +10,7 @@ import {
   TabScrollView,
 } from "@/src/components/common";
 import { PillButton, PushAlarmCard } from "@/src/components/settings";
+import { useLogout } from "@/src/hooks/mutations/auth/useLogout";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { useToastStore } from "@/src/store/toast/toastStore";
 import type {
@@ -21,6 +22,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const openModal = useBaseModal((state) => state.openModal);
   const showToast = useToastStore((state) => state.showToast);
+  const logoutMutation = useLogout();
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(false);
   const [isDiaryReplyEnabled, setIsDiaryReplyEnabled] = useState(false);
@@ -29,6 +31,14 @@ export default function SettingsScreen() {
   const [email, setEmail] = useState("dailog@naver.com");
   const [nickname, setNickname] = useState("USER NAME");
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+
+  const handleLogout = () => {
+    if (logoutMutation.isPending) {
+      return;
+    }
+
+    logoutMutation.mutate();
+  };
 
   const openChangePasswordModal = () => {
     openModal("changePasswordModal", {
@@ -115,7 +125,11 @@ export default function SettingsScreen() {
           </View>
 
           <View className="flex-1 items-start justify-end gap-3 px-4 pb-10">
-            <Pressable className="border-b border-gray-400 pb-0.5">
+            <Pressable
+              className="border-b border-gray-400 pb-0.5"
+              disabled={logoutMutation.isPending}
+              onPress={handleLogout}
+            >
               <Text className="text-gray-400 text-b-04-m">로그아웃</Text>
             </Pressable>
             <Pressable

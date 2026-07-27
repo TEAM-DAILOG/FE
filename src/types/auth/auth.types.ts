@@ -24,6 +24,10 @@ export type ReissueAccessTokenResponse = {
   accessToken: string;
 };
 
+export type LogoutParams = {
+  refreshToken: string;
+};
+
 export type SignupEmailParams = {
   email: string;
 };
