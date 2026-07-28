@@ -9,7 +9,7 @@ export function formatDiaryThreadItem(diary: Diary): ThreadItem {
   return {
     diaryId: diary.diaryId,
     date: dayjs(diary.createdAt).format("YYYY-MM-DD"),
-    summary: diary.aiSummary ?? diary.diaryTitle,
+    summary: diary.aiSummary ?? "AI 일기 요약을 받지 못했어요",
     title: diary.diaryTitle,
     content: diary.content,
     images: diary.images ?? [],
