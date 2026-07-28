@@ -5,7 +5,12 @@ export type ScheduleRepeatValue =
   | { mode: "multi"; dates: string[] }
   | { mode: "range"; startDate: string; endDate: string }
   | { mode: "weekly"; weekdays: number[]; startDate: string; endDate: string }
-  | { mode: "monthly"; startDate: string; endDate: string }
+  | {
+      mode: "monthly";
+      startDate: string;
+      endDate: string;
+      isLastDayOfMonth: boolean;
+    }
   | { mode: "yearly"; startDate: string; endDate: string };
 
 export type DatePickerCell = {
@@ -19,6 +24,7 @@ export type DatePickerDayState = {
   isRangeStart?: boolean;
   isRangeEnd?: boolean;
   isInRange?: boolean;
+  isDisabled?: boolean;
 };
 
 export type DatePickerModalResult = {

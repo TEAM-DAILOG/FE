@@ -20,19 +20,19 @@ const INCOMPLETE_SCHEDULES: ScheduleEntry[] = [
   {
     date: "2026.05.01",
     categoryLabel: "업무업무업",
-    categoryColor: "blue",
+    categoryColor: "BLUE",
     description: "보고서 초안 작성하기",
   },
   {
     date: "2026.05.03",
     categoryLabel: "약속",
-    categoryColor: "brown",
+    categoryColor: "BROWN",
     description: "친구 생일 선물 사러 가기",
   },
   {
     date: "2026.05.07",
     categoryLabel: "운동",
-    categoryColor: "green",
+    categoryColor: "GREEN",
     description: "헬스장 등록하기",
   },
 ];
@@ -41,13 +41,13 @@ const COMPLETED_SCHEDULES: ScheduleEntry[] = [
   {
     date: "2026.05.02",
     categoryLabel: "업무업무업",
-    categoryColor: "blue",
+    categoryColor: "BLUE",
     description: "주간 회의 참석하기",
   },
   {
     date: "2026.05.05",
     categoryLabel: "운동",
-    categoryColor: "green",
+    categoryColor: "GREEN",
     description: "아침 조깅하기",
   },
 ];

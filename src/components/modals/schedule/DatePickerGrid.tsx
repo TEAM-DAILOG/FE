@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
-import { WEEKDAY_LABELS } from "@/src/constants";
+import { WEEKDAYS } from "@/src/constants";
 import { cn } from "@/src/lib/cn";
 import type { DatePickerDayState } from "@/src/types/modals/datepickerModal.types";
 import { buildCalendarGrid, chunkIntoWeeks } from "@/src/utils";
@@ -13,7 +13,12 @@ type DatePickerGridProps = {
 
 const COLUMN_COUNT = 7;
 
-function getRowRangeFill(states: DatePickerDayState[]) {
+function getRowRangeFill(
+  states: DatePickerDayState[],
+  hasConfirmedRange: boolean
+) {
+  if (!hasConfirmedRange) return null;
+
   const filledIndexes = states
     .map((state, index) =>
       state.isInRange || state.isRangeStart || state.isRangeEnd ? index : -1
@@ -22,10 +27,11 @@ function getRowRangeFill(states: DatePickerDayState[]) {
 
   if (filledIndexes.length === 0) return null;
 
-  const start = filledIndexes[0];
-  const end = filledIndexes[filledIndexes.length - 1];
   const hasStart = states.some((state) => state.isRangeStart);
   const hasEnd = states.some((state) => state.isRangeEnd);
+
+  const start = filledIndexes[0];
+  const end = filledIndexes[filledIndexes.length - 1];
 
   return {
     leftPercent: (start / COLUMN_COUNT) * 100,
@@ -42,13 +48,21 @@ export function DatePickerGrid({
 }: DatePickerGridProps) {
   const weeks = chunkIntoWeeks(buildCalendarGrid(month));
 
+  // 달 전체 기준으로 종료일(또는 범위 내부 날짜)이 실제로 존재하는지 확인
+  const hasConfirmedRange = weeks.some((week) =>
+    week.some((cell) => {
+      const state = getDayState?.(cell.date, cell.isCurrentMonth) ?? {};
+      return state.isRangeEnd || state.isInRange;
+    })
+  );
+
   return (
     <View className="flex-col gap-1 overflow-hidden rounded-xl border border-gray-100 bg-white">
       {/* 요일 */}
       <View className="flex-row border-b border-gray-100 py-1">
-        {WEEKDAY_LABELS.map((label) => (
+        {WEEKDAYS.map(({ code, label }) => (
           <View
-            key={label}
+            key={code}
             className="size-12 flex-1 items-center justify-center"
           >
             <Text className="text-center text-gray-900 text-b-03-r">
@@ -64,7 +78,7 @@ export function DatePickerGrid({
           const states = week.map(
             (cell) => getDayState?.(cell.date, cell.isCurrentMonth) ?? {}
           );
-          const rowRangeFill = getRowRangeFill(states);
+          const rowRangeFill = getRowRangeFill(states, hasConfirmedRange);
 
           return (
             <View key={week[0].date} className="flex-row">
@@ -84,35 +98,53 @@ export function DatePickerGrid({
               ) : null}
 
               {week.map((cell, index) => {
-                const { isSelected, isRangeStart, isRangeEnd, isInRange } =
-                  states[index];
-                const isEndpoint = isSelected || isRangeStart || isRangeEnd;
+                const {
+                  isSelected,
+                  isRangeStart,
+                  isRangeEnd,
+                  isInRange,
+                  isDisabled,
+                } = states[index];
+                const isEndpoint =
+                  !isDisabled && (isSelected || isRangeStart || isRangeEnd);
 
                 return (
                   <Pressable
                     key={cell.date}
-                    onPress={() => onDayPress(cell.date, cell.isCurrentMonth)}
+                    onPress={() =>
+                      !isDisabled && onDayPress(cell.date, cell.isCurrentMonth)
+                    }
                     className="aspect-square flex-1 items-center justify-center"
                   >
                     <View
                       className={cn(
-                        "aspect-square flex-1 items-center justify-center self-stretch rounded-full",
+                        "aspect-square h-full w-full items-center justify-center overflow-hidden rounded-full",
                         isEndpoint && "bg-green-600"
                       )}
                     >
                       <Text
                         className={cn(
-                          isEndpoint
-                            ? "text-green-100 text-b-03-sb"
-                            : isInRange
-                              ? "text-green-600 text-b-03-r"
-                              : cell.isCurrentMonth
-                                ? "text-gray-900 text-b-03-r"
-                                : "text-gray-600 text-b-03-sb"
+                          isDisabled
+                            ? "text-gray-400 text-b-03-sb"
+                            : isEndpoint
+                              ? "text-green-100 text-b-03-sb"
+                              : isInRange
+                                ? "text-green-600 text-b-03-r"
+                                : cell.isCurrentMonth
+                                  ? "text-gray-900 text-b-03-r"
+                                  : "text-gray-600 text-b-03-sb"
                         )}
                       >
                         {cell.day}
                       </Text>
+                      {isDisabled && (
+                        <View
+                          pointerEvents="none"
+                          className="absolute inset-0 items-center justify-center"
+                        >
+                          <View className="h-[1px] w-[40%] bg-gray-400" />
+                        </View>
+                      )}
                     </View>
                   </Pressable>
                 );

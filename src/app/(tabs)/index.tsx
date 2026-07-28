@@ -5,57 +5,15 @@ import { LogoHeader } from "@/src/components/common/Header";
 import { ScheduleItem } from "@/src/components/common/ScheduleItem";
 import { ScreenContainer } from "@/src/components/common/ScreenContainer";
 import { TabScrollView } from "@/src/components/common/TabScrollView";
-import type { CategoryColor } from "@/src/types/categories/category.types";
+import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
+import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
+import { useGetSchedules } from "@/src/hooks/queries/schedules/useGetSchedules";
+import { buildScheduleCheckboxAction } from "@/src/utils/buildScheduleCheckboxAction";
+import { formatScheduleItem } from "@/src/utils/formatScheduleItem";
+import dayjs from "dayjs";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
-import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
-
-type Schedule = {
-  id: string;
-  categoryLabel: string;
-  categoryColor: CategoryColor;
-  description: string;
-  checked: boolean;
-};
-
-const MOCK_SCHEDULES: Schedule[] = [
-  {
-    id: "1",
-    categoryLabel: "CATEGORY",
-    categoryColor: "blue",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-    checked: false,
-  },
-  {
-    id: "2",
-    categoryLabel: "CATEGORY",
-    categoryColor: "brown",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-    checked: false,
-  },
-  {
-    id: "3",
-    categoryLabel: "CATEGORY",
-    categoryColor: "green",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-    checked: false,
-  },
-  {
-    id: "4",
-    categoryLabel: "CATEGORY",
-    categoryColor: "purple",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-    checked: false,
-  },
-  {
-    id: "5",
-    categoryLabel: "CATEGORY",
-    categoryColor: "pink",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-    checked: false,
-  },
-];
 
 function useDateParts() {
   const days = ["일", "월", "화", "수", "목", "금", "토"];
@@ -70,16 +28,41 @@ function useDateParts() {
 export default function HomeScreen() {
   const { month, day, weekday } = useDateParts();
   const dateLabel = `${month}월 ${day}일 ${weekday}요일`;
-  const [schedules, setSchedules] = useState<Schedule[]>(MOCK_SCHEDULES);
   const [isQuestionAnswered, setIsQuestionAnswered] = useState(false);
   const { data: todayQuestion, isLoading: isQuestionLoading } =
     useGetTodayQuestion();
+
+  // 오늘 화면이므로 조회 범위도 오늘 날짜로 고정
+  const TODAY = dayjs().format("YYYY-MM-DD");
+
+  // 오늘 날짜 기준 일정 조회
+  const { data: schedulesData } = useGetSchedules({
+    startDate: TODAY,
+    endDate: TODAY,
+  });
+  const completeScheduleMutation = useCompleteSchedule();
+
+  const pendingVariables = completeScheduleMutation.variables;
+  const isMutationSettled =
+    completeScheduleMutation.isPending || completeScheduleMutation.isSuccess;
+
+  const schedules = (schedulesData?.schedules ?? [])
+    .map(formatScheduleItem)
+    .map((schedule) => ({
+      ...schedule,
+      checked:
+        isMutationSettled &&
+        pendingVariables?.scheduleId === Number(schedule.id)
+          ? pendingVariables.isCompleted
+          : schedule.checked,
+    }));
   const hasSchedules = schedules.length > 0;
 
-  const toggleSchedule = (id: string) => {
-    setSchedules((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, checked: !s.checked } : s))
-    );
+  const toggleSchedule = (id: string, checked: boolean) => {
+    completeScheduleMutation.mutate({
+      scheduleId: Number(id),
+      isCompleted: !checked,
+    });
   };
 
   return (
@@ -107,11 +90,10 @@ export default function HomeScreen() {
                     categoryLabel={s.categoryLabel}
                     categoryColor={s.categoryColor}
                     description={s.description}
-                    action={{
-                      type: "checkbox",
+                    action={buildScheduleCheckboxAction(s, {
                       checked: s.checked,
-                      onToggle: () => toggleSchedule(s.id),
-                    }}
+                      onToggle: () => toggleSchedule(s.id, s.checked),
+                    })}
                   />
                 ))}
               </View>
@@ -119,54 +101,55 @@ export default function HomeScreen() {
             <AddScheduleButton onPress={() => router.push("/schedule")} />
           </View>
 
-          {/* 오늘의 질문 */}
-          <View className="mt-7">
-            <Text className="mb-4 text-green-900 text-h-02">오늘의 질문</Text>
-            {isQuestionAnswered ? (
-              <View className="gap-3">
-                {/* 질문 응답 카드 */}
-                <View className="w-full items-center justify-center gap-2 rounded-lg border border-green-100 bg-gray-0 px-8 py-6 shadow-card-1">
-                  {/* 날짜 */}
-                  <View className="flex-row items-center gap-1">
-                    <View className="flex-row items-center gap-0.5">
+          {hasSchedules && (
+            <View className="mt-7">
+              <Text className="mb-4 text-green-900 text-h-02">오늘의 질문</Text>
+              {isQuestionAnswered ? (
+                <View className="gap-3">
+                  {/* 질문 응답 카드 */}
+                  <View className="w-full items-center justify-center gap-2 rounded-lg border border-green-100 bg-gray-0 px-8 py-6 shadow-card-1">
+                    {/* 날짜 */}
+                    <View className="flex-row items-center gap-1">
+                      <View className="flex-row items-center gap-0.5">
+                        <Text className="text-green-700 text-b-03-sb">
+                          {month}월
+                        </Text>
+                        <Text className="text-green-700 text-b-03-sb">
+                          {day}일
+                        </Text>
+                      </View>
                       <Text className="text-green-700 text-b-03-sb">
-                        {month}월
-                      </Text>
-                      <Text className="text-green-700 text-b-03-sb">
-                        {day}일
+                        {weekday}요일
                       </Text>
                     </View>
-                    <Text className="text-green-700 text-b-03-sb">
-                      {weekday}요일
+
+                    {/* 구분선 */}
+                    <Divider className="w-[278px] border-green-100" />
+
+                    {/* 질문 내용 */}
+                    <Text className="text-center text-green-800 text-b-02-m">
+                      {isQuestionLoading
+                        ? "오늘의 질문을 불러오는 중입니다."
+                        : todayQuestion?.content ||
+                          "오늘의 질문을 불러올 수 없어요."}
                     </Text>
                   </View>
-
-                  {/* 구분선 */}
-                  <Divider className="w-[278px] border-green-100" />
-
-                  {/* 질문 내용 */}
-                  <Text className="text-center text-green-800 text-b-02-m">
-                    {isQuestionLoading
-                      ? "오늘의 질문을 불러오는 중입니다."
-                      : todayQuestion?.content ||
-                        "오늘의 질문을 불러올 수 없어요."}
-                  </Text>
+                  <Button
+                    label="질문 답변하기"
+                    onPress={() => router.push("/diary/write")} // 질문 데이터 전달 필요
+                  />
                 </View>
+              ) : (
                 <Button
-                  label="질문 답변하기"
-                  onPress={() => router.push("/diary/write")} // 질문 데이터 전달 필요
+                  label="질문 받기"
+                  onPress={() => {
+                    // TODO: 실제 질문 API 연동 시, 응답 받아온 뒤 setIsQuestionAnswered(true)
+                    setIsQuestionAnswered(true);
+                  }}
                 />
-              </View>
-            ) : (
-              <Button
-                label="질문 받기"
-                onPress={() => {
-                  // TODO: 실제 질문 API 연동 시, 응답 받아온 뒤 setIsQuestionAnswered(true)
-                  setIsQuestionAnswered(true);
-                }}
-              />
-            )}
-          </View>
+              )}
+            </View>
+          )}
         </View>
       </TabScrollView>
     </ScreenContainer>

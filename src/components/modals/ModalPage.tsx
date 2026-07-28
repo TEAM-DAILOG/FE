@@ -14,6 +14,10 @@ import {
 import { DeleteCategoryModal } from "./category/DeleteCategoryModal";
 import { ModalBackground } from "./ModalBackground";
 import { DatePickerModal } from "./schedule/DatePickerModal";
+import {
+  DeleteScheduleModal,
+  DeleteScheduleModalProps,
+} from "./schedule/DeleteScheduleModal";
 import { ChangePasswordModal } from "./settings/ChangePasswordModal";
 import { DeleteAccountModal } from "./settings/DeleteAccountModal";
 import { EditProfileModal } from "./settings/EditProfileModal";
@@ -53,6 +57,11 @@ export function ModalPage() {
       {modalType === "deleteCategoryModal" ? (
         <DeleteCategoryModal
           {...(modalProps as unknown as DeleteCategoryModalProps)}
+        />
+      ) : null}
+      {modalType === "deleteScheduleModal" ? (
+        <DeleteScheduleModal
+          {...(modalProps as unknown as DeleteScheduleModalProps)}
         />
       ) : null}
     </ModalBackground>
