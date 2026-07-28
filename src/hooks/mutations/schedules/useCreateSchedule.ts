@@ -13,6 +13,7 @@ export function useCreateSchedule() {
     mutationFn: scheduleService.createSchedule,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
     },
   });
 }

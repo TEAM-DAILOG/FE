@@ -14,6 +14,7 @@ export function useUpdateSchedule() {
       scheduleService.updateSchedule(scheduleId, scope, params),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
     },
   });
 }

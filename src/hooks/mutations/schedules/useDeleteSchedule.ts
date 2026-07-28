@@ -14,6 +14,7 @@ export function useDeleteSchedule() {
       scheduleService.deleteSchedule(scheduleId, scope),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
     },
   });
 }
