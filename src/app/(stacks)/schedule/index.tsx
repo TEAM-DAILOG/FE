@@ -139,13 +139,14 @@ export default function ScheduleAddScreen() {
           <Button
             label={isDeleting ? "삭제 중" : "삭제"}
             variant="stroke-green"
-            disabled={isDeleting}
+            disabled={isDeleting || isSaving}
             onPress={handleDelete}
           />
         )}
         <Button
           label={isSaving ? "저장 중" : "저장"}
-          disabled={!canSave || isSaving}
+          variant="fill-green"
+          disabled={!canSave || isSaving || isDeleting}
           onPress={handleSave}
         />
       </View>
