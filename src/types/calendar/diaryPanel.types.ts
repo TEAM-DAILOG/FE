@@ -9,3 +9,9 @@ export type ThreadItem = {
   images: string[];
   isUnread?: boolean;
 };
+
+export type ThreadGroup = {
+  monthKey: string;
+  date: string;
+  items: ThreadItem[];
+};

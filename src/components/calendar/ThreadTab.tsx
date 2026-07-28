@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 
+import { DiaryThreadCard } from "@/src/components/calendar/DiaryThreadCard";
 import { Divider } from "@/src/components/common";
 import { DiaryCard } from "@/src/components/common/DiaryCard";
 import type { ThreadItem } from "@/src/types/calendar/diaryPanel.types";
@@ -8,6 +9,7 @@ import {
   getThreadMonthKey,
   getThreadMonthLabelParts,
 } from "@/src/utils";
+import { groupThreadItemsByMonth } from "@/src/utils/groupThreadItemsByMonth";
 
 type ThreadTabProps = {
   month: string;
@@ -15,77 +17,12 @@ type ThreadTabProps = {
   isAiSummaryEnabled: boolean;
 };
 
-// 임시 함수
-function DiaryThreadCard({ item }: { item: ThreadItem }) {
-  const images = item.images.slice(0, 3);
-
-  if (images.length === 0) {
-    return (
-      <DiaryCard variant="no-image" title={item.title} content={item.content} />
-    );
-  }
-
-  if (images.length === 1) {
-    return (
-      <DiaryCard
-        variant="one-image"
-        title={item.title}
-        content={item.content}
-        images={[{ uri: images[0] }]}
-      />
-    );
-  }
-
-  if (images.length === 2) {
-    return (
-      <DiaryCard
-        variant="two-images"
-        title={item.title}
-        content={item.content}
-        images={[{ uri: images[0] }, { uri: images[1] }]}
-      />
-    );
-  }
-
-  return (
-    <DiaryCard
-      variant="three-images"
-      title={item.title}
-      content={item.content}
-      images={[{ uri: images[0] }, { uri: images[1] }, { uri: images[2] }]}
-    />
-  );
-}
-
-type ThreadGroup = {
-  monthKey: string;
-  date: string;
-  items: ThreadItem[];
-};
-
-function groupByMonth(items: ThreadItem[]): ThreadGroup[] {
-  const groups: ThreadGroup[] = [];
-
-  for (const item of items) {
-    const monthKey = getThreadMonthKey(item.date);
-    const lastGroup = groups[groups.length - 1];
-
-    if (lastGroup?.monthKey === monthKey) {
-      lastGroup.items.push(item);
-    } else {
-      groups.push({ monthKey, date: item.date, items: [item] });
-    }
-  }
-
-  return groups;
-}
-
 export function ThreadTab({
   month,
   items,
   isAiSummaryEnabled,
 }: ThreadTabProps) {
-  const groups = groupByMonth(items);
+  const groups = groupThreadItemsByMonth(items);
   const currentMonthKey = getThreadMonthKey(month);
 
   return (
