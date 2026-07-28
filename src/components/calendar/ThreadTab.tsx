@@ -9,8 +9,6 @@ import {
   getThreadMonthLabelParts,
 } from "@/src/utils";
 
-const DIARY_PLACEHOLDER_IMAGE = require("@/assets/images/diaryPlaceholder.png");
-
 type ThreadTabProps = {
   month: string;
   items: ThreadItem[];
@@ -19,32 +17,32 @@ type ThreadTabProps = {
 
 // 임시 함수
 function DiaryThreadCard({ item }: { item: ThreadItem }) {
-  const imageCount = Math.min(Math.max(item.imageCount, 0), 3);
+  const images = item.images.slice(0, 3);
 
-  if (imageCount === 0) {
+  if (images.length === 0) {
     return (
       <DiaryCard variant="no-image" title={item.title} content={item.content} />
     );
   }
 
-  if (imageCount === 1) {
+  if (images.length === 1) {
     return (
       <DiaryCard
         variant="one-image"
         title={item.title}
         content={item.content}
-        images={[DIARY_PLACEHOLDER_IMAGE]}
+        images={[{ uri: images[0] }]}
       />
     );
   }
 
-  if (imageCount === 2) {
+  if (images.length === 2) {
     return (
       <DiaryCard
         variant="two-images"
         title={item.title}
         content={item.content}
-        images={[DIARY_PLACEHOLDER_IMAGE, DIARY_PLACEHOLDER_IMAGE]}
+        images={[{ uri: images[0] }, { uri: images[1] }]}
       />
     );
   }
@@ -54,11 +52,7 @@ function DiaryThreadCard({ item }: { item: ThreadItem }) {
       variant="three-images"
       title={item.title}
       content={item.content}
-      images={[
-        DIARY_PLACEHOLDER_IMAGE,
-        DIARY_PLACEHOLDER_IMAGE,
-        DIARY_PLACEHOLDER_IMAGE,
-      ]}
+      images={[{ uri: images[0] }, { uri: images[1] }, { uri: images[2] }]}
     />
   );
 }
@@ -114,7 +108,7 @@ export function ThreadTab({
               const { dayLabel, weekdayLabel } = getThreadDateParts(item.date);
 
               return (
-                <View key={item.date} className="gap-2">
+                <View key={item.diaryId} className="gap-2">
                   <View className="flex-row items-start gap-1">
                     <Text className="text-gray-900 text-b-03-m">
                       {dayLabel}

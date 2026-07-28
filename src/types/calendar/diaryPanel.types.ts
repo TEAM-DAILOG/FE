@@ -1,10 +1,11 @@
 export type DiaryPanelTab = "calendar" | "thread";
 
 export type ThreadItem = {
+  diaryId: number;
   date: string; // YYYY-MM-DD
   summary: string;
   title: string;
   content: string;
-  imageCount: number; // 0~3
+  images: string[];
   isUnread?: boolean;
 };
