@@ -8,8 +8,9 @@ export function useDeleteDiary() {
 
   return useMutation<DeleteDiaryResponse, Error, number>({
     mutationFn: (diaryId) => diaryService.deleteDiary(diaryId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["diaries"] });
+    onSuccess: (_data, diaryId) => {
+      queryClient.removeQueries({ queryKey: ["diaries", diaryId] });
+      queryClient.invalidateQueries({ queryKey: ["diaries"], exact: true });
     },
   });
 }

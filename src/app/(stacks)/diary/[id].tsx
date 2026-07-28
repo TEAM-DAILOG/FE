@@ -109,7 +109,7 @@ export default function DiaryDetailScreen() {
         description: diary.diaryTitle,
         onConfirm: () => {
           deleteDiaryMutation.mutate(diaryId, {
-            onSuccess: () => router.push("/(tabs)/calendar"),
+            onSuccess: () => router.replace("/(tabs)/calendar"),
           });
         },
       },
