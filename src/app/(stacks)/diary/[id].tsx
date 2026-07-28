@@ -22,6 +22,7 @@ import { useGetDiaries } from "@/src/hooks/queries/diaries/useGetDiaries";
 import { useGetDiaryDetail } from "@/src/hooks/queries/diaries/useGetDiaryDetail";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CategoryColor } from "@/src/types/categories/category.types";
+import { getErrorMessage } from "@/src/utils/getErrorMessage";
 
 const ICON_COLOR_ACTIVE = "#020303";
 const ICON_COLOR_DISABLED = "#AEB2B0";
@@ -64,7 +65,12 @@ export default function DiaryDetailScreen() {
   const openModal = useBaseModal((state) => state.openModal);
   const { id } = useLocalSearchParams<{ id: string }>();
   const diaryId = Number(id);
-  const { data: diary, isLoading } = useGetDiaryDetail(diaryId);
+  const {
+    data: diary,
+    isLoading,
+    isError,
+    error,
+  } = useGetDiaryDetail(diaryId);
   const { data: diariesData } = useGetDiaries();
   const deleteDiaryMutation = useDeleteDiary();
 
@@ -87,6 +93,19 @@ export default function DiaryDetailScreen() {
       params: { id: String(targetDiaryId) },
     });
   };
+
+  if (isError) {
+    return (
+      <ScreenContainer variant="stack">
+        <BackHeader label="" />
+        <View className="flex-1 items-center justify-center px-4">
+          <Text className="text-center text-gray-900 text-b-02-m">
+            {getErrorMessage(error)}
+          </Text>
+        </View>
+      </ScreenContainer>
+    );
+  }
 
   if (isLoading || !diary) {
     return (
