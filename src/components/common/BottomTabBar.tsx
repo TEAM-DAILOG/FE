@@ -117,7 +117,6 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
           {/* 일정등록 버튼 */}
           <Pressable
             onPress={() => {
-              console.log("일정등록 클릭"); // 터미널 확인용 로그
               setIsOpen(false);
               router.push("/schedule");
             }}
@@ -135,7 +134,6 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
           {/* 일기작성 버튼 */}
           <Pressable
             onPress={() => {
-              console.log("일기작성 클릭"); // 터미널 확인용 로그
               setIsOpen(false);
               router.push("/diary/write");
             }}
