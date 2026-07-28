@@ -11,7 +11,7 @@ import { cn } from "@/src/lib/cn";
 export type ScheduleListGroupEntry = Pick<
   ScheduleItemProps,
   "date" | "categoryLabel" | "categoryColor" | "description"
->;
+> & { id: string };
 
 export type ScheduleListGroupProps = {
   title: ReactNode;
@@ -31,12 +31,8 @@ export function ScheduleListGroup({
       {title}
 
       <View className="w-full gap-2">
-        {schedules.map((schedule) => (
-          <ScheduleItem
-            key={`${schedule.date}-${schedule.categoryLabel}`}
-            {...schedule}
-            action={action}
-          />
+        {schedules.map(({ id, ...schedule }) => (
+          <ScheduleItem key={id} {...schedule} action={action} />
         ))}
       </View>
     </View>

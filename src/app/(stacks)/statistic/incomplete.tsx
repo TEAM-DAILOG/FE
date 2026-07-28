@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
@@ -11,52 +12,31 @@ import {
   DetailToggleButton,
   MonthSelector,
   ScheduleListGroup,
-  type ScheduleListGroupEntry,
 } from "@/src/components/statistics";
-
-type ScheduleEntry = ScheduleListGroupEntry;
-
-const INCOMPLETE_SCHEDULES: ScheduleEntry[] = [
-  {
-    date: "2026.05.01",
-    categoryLabel: "업무업무업",
-    categoryColor: "BLUE",
-    description: "보고서 초안 작성하기",
-  },
-  {
-    date: "2026.05.03",
-    categoryLabel: "약속",
-    categoryColor: "BROWN",
-    description: "친구 생일 선물 사러 가기",
-  },
-  {
-    date: "2026.05.07",
-    categoryLabel: "운동",
-    categoryColor: "GREEN",
-    description: "헬스장 등록하기",
-  },
-];
-
-const COMPLETED_SCHEDULES: ScheduleEntry[] = [
-  {
-    date: "2026.05.02",
-    categoryLabel: "업무업무업",
-    categoryColor: "BLUE",
-    description: "주간 회의 참석하기",
-  },
-  {
-    date: "2026.05.05",
-    categoryLabel: "운동",
-    categoryColor: "GREEN",
-    description: "아침 조깅하기",
-  },
-];
-
-const ACHIEVEMENT_RATE = 80;
+import { useGetCompletedSchedules } from "@/src/hooks/queries/stats/useGetCompletedSchedules";
+import { useGetPendingSchedules } from "@/src/hooks/queries/stats/useGetPendingSchedules";
+import { clampPercentage } from "@/src/utils/clampPercentage";
+import { formatYearMonth } from "@/src/utils/formatDate";
+import { formatStatsScheduleItem } from "@/src/utils/formatStatsScheduleItem";
 
 export default function StatisticIncompleteScreen() {
   const [isCompletedOpen, setIsCompletedOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const { year, month } = formatYearMonth(selectedDate);
+
+  const { data: pendingData } = useGetPendingSchedules({ year, month });
+  const { data: completedData } = useGetCompletedSchedules({ year, month });
+
+  const incompleteSchedules = [...(pendingData?.incompletedSchedules ?? [])]
+    .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
+    .map(formatStatsScheduleItem);
+  const completedSchedules = [...(completedData?.completedSchedules ?? [])]
+    .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
+    .map(formatStatsScheduleItem);
+  // 서버는 미완료율만 내려주므로, 달성률은 그 나머지로 계산한다
+  const achievementRate = clampPercentage(
+    100.0 - (pendingData?.incompletedScheduleRate ?? 0)
+  );
 
   return (
     <ScreenContainer variant="stack">
@@ -81,12 +61,12 @@ export default function StatisticIncompleteScreen() {
               <Text className="text-gray-800 text-b-02-m">
                 일정 달성률{" "}
                 <Text className="text-green-600 text-b-02-sb">
-                  {ACHIEVEMENT_RATE}%
+                  {achievementRate}%
                 </Text>
               </Text>
             </View>
 
-            <ProgressBar value={ACHIEVEMENT_RATE} />
+            <ProgressBar value={achievementRate} />
           </View>
 
           <ScheduleListGroup
@@ -94,12 +74,13 @@ export default function StatisticIncompleteScreen() {
               <Text className="text-gray-900 text-b-02-m">
                 미완료된 일정이{" "}
                 <Text className="text-green-600 text-b-02-sb">
-                  {INCOMPLETE_SCHEDULES.length}
+                  {pendingData?.incompletedScheduleCount ??
+                    incompleteSchedules.length}
                 </Text>
                 개 있어요.
               </Text>
             }
-            schedules={INCOMPLETE_SCHEDULES}
+            schedules={incompleteSchedules}
             action={{ type: "button", label: "일정재등록" }}
           />
 
@@ -119,12 +100,13 @@ export default function StatisticIncompleteScreen() {
                 title={
                   <Text className="text-gray-900 text-b-03-m">
                     <Text className="text-green-600 text-b-03-sb">
-                      {COMPLETED_SCHEDULES.length}
+                      {completedData?.completedScheduleCount ??
+                        completedSchedules.length}
                     </Text>
                     개의 완료된 일정
                   </Text>
                 }
-                schedules={COMPLETED_SCHEDULES}
+                schedules={completedSchedules}
                 action={{ type: "none" }}
               />
             </Animated.View>
