@@ -15,9 +15,12 @@ import {
   ScheduleItem,
   ScreenContainer,
 } from "@/src/components/common";
+import { Button } from "@/src/components/common/Button";
 import { DiaryDetailCard } from "@/src/components/diaries/DiaryDetailCard";
+import { useDeleteDiary } from "@/src/hooks/mutations/diaries/useDeleteDiary";
 import { useGetDiaries } from "@/src/hooks/queries/diaries/useGetDiaries";
 import { useGetDiaryDetail } from "@/src/hooks/queries/diaries/useGetDiaryDetail";
+import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 const ICON_COLOR_ACTIVE = "#020303";
@@ -58,10 +61,12 @@ const DUMMY_RECOMMENDATIONS: DiaryRecommendation[] = [
 
 export default function DiaryDetailScreen() {
   const router = useRouter();
+  const openModal = useBaseModal((state) => state.openModal);
   const { id } = useLocalSearchParams<{ id: string }>();
   const diaryId = Number(id);
   const { data: diary, isLoading } = useGetDiaryDetail(diaryId);
   const { data: diariesData } = useGetDiaries();
+  const deleteDiaryMutation = useDeleteDiary();
 
   const sortedDiaries = [...(diariesData ?? [])].sort(
     (a, b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf()
@@ -95,6 +100,21 @@ export default function DiaryDetailScreen() {
   }
 
   const hasQuestion = diary.diaryType === "QUESTION";
+
+  const handleDelete = () => {
+    openModal("deleteConfirmModal", {
+      props: {
+        target: "일기",
+        date: diary.createdAt,
+        description: diary.diaryTitle,
+        onConfirm: () => {
+          deleteDiaryMutation.mutate(diaryId, {
+            onSuccess: () => router.push("/(tabs)/calendar"),
+          });
+        },
+      },
+    });
+  };
 
   return (
     <ScreenContainer variant="stack">
@@ -221,6 +241,14 @@ export default function DiaryDetailScreen() {
             </View>
           </View>
         ) : null}
+
+        <Button
+          label={deleteDiaryMutation.isPending ? "일기 삭제 중" : "일기 삭제"}
+          variant="stroke-green"
+          disabled={deleteDiaryMutation.isPending}
+          onPress={handleDelete}
+          className="mt-5"
+        />
       </ScrollView>
     </ScreenContainer>
   );
