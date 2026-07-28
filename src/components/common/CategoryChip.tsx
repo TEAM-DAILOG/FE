@@ -8,6 +8,10 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+import {
+  CATEGORY_HEX_COLORS,
+  CATEGORY_SOLID_BORDER_CLASS_NAMES,
+} from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
 import { CategoryColor } from "@/src/types/categories/category.types";
 
@@ -19,28 +23,17 @@ export type CategoryChipProps = {
   className?: string;
 };
 
-const CATEGORY_CHIP_COLORS: Record<
-  CategoryColor,
-  { border: string; hex: string }
-> = {
-  blue: { border: "border-category-01-1", hex: "#6A92AF" },
-  brown: { border: "border-category-02-1", hex: "#C49C64" },
-  green: { border: "border-category-03-1", hex: "#79A659" },
-  purple: { border: "border-category-04-1", hex: "#A381BB" },
-  pink: { border: "border-category-05-1", hex: "#BD7593" },
-};
-
 const GRAY_0 = "#FCFDFD";
 const TRANSITION_DURATION = 300;
 
 export function CategoryChip({
-  color = "blue",
+  color = "BLUE",
   label,
   selected = false,
   onPress,
   className,
 }: CategoryChipProps) {
-  const styles = CATEGORY_CHIP_COLORS[color];
+  const hex = CATEGORY_HEX_COLORS[color];
   const progress = useSharedValue(selected ? 1 : 0);
 
   useEffect(() => {
@@ -51,23 +44,15 @@ export function CategoryChip({
   }, [progress, selected]);
 
   const containerStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      progress.value,
-      [0, 1],
-      [GRAY_0, styles.hex]
-    ),
+    backgroundColor: interpolateColor(progress.value, [0, 1], [GRAY_0, hex]),
   }));
 
   const dotStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      progress.value,
-      [0, 1],
-      [styles.hex, GRAY_0]
-    ),
+    backgroundColor: interpolateColor(progress.value, [0, 1], [hex, GRAY_0]),
   }));
 
   const textStyle = useAnimatedStyle(() => ({
-    color: interpolateColor(progress.value, [0, 1], [styles.hex, GRAY_0]),
+    color: interpolateColor(progress.value, [0, 1], [hex, GRAY_0]),
   }));
 
   return (
@@ -75,7 +60,7 @@ export function CategoryChip({
       <Animated.View
         className={cn(
           "flex-row items-center gap-1 rounded-[100px] border px-2 py-1",
-          styles.border,
+          CATEGORY_SOLID_BORDER_CLASS_NAMES[color],
           className
         )}
         style={containerStyle}

@@ -1,9 +1,6 @@
 import { baseApi } from "@/src/api/baseApi";
 import type { ApiSuccessResponse } from "@/src/types/api/api.types";
-import {
-  toApiColor,
-  toCategory,
-} from "@/src/types/categories/category.mappers";
+import { toCategory } from "@/src/types/categories/category.mappers";
 import type {
   CategoryApiRaw,
   CategoryWithOrder,
@@ -22,7 +19,7 @@ export const categoryService = {
     baseApi
       .post<ApiSuccessResponse<CategoryApiRaw>>("/api/v1/categories", {
         categoryName: params.name,
-        categoryColor: toApiColor(params.color),
+        categoryColor: params.color,
       })
       .then((res) => toCategory(res.data.data)),
 
@@ -32,7 +29,7 @@ export const categoryService = {
         `/api/v1/categories/${categoryId}`,
         {
           ...(name !== undefined && { categoryName: name }),
-          ...(color !== undefined && { categoryColor: toApiColor(color) }),
+          ...(color !== undefined && { categoryColor: color }),
         }
       )
       .then((res) => toCategory(res.data.data)),

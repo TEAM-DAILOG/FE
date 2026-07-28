@@ -1,4 +1,4 @@
-export type CategoryColor = "blue" | "brown" | "green" | "purple" | "pink";
+export type CategoryColor = "BLUE" | "BROWN" | "GREEN" | "PURPLE" | "PINK";
 
 export type Category = {
   id: string;
@@ -11,12 +11,10 @@ export type CategoryWithOrder = Category & { order: number };
 
 // ---- 서버 응답/요청 관련 타입 ----
 
-export type CategoryColorApi = "BLUE" | "BROWN" | "GREEN" | "PURPLE" | "PINK";
-
 export type CategoryApiRaw = {
   categoryId: number;
   categoryName: string;
-  categoryColor: CategoryColorApi;
+  categoryColor: CategoryColor;
   categoryOrder: number;
 };
 

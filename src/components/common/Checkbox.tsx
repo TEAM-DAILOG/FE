@@ -7,12 +7,16 @@ import { cn } from "@/src/lib/cn";
 export type CheckboxProps = Omit<PressableProps, "children" | "onPress"> & {
   checked: boolean;
   onToggle: () => void;
+  color?: string;
+  size?: number;
   className?: string;
 };
 
 export function Checkbox({
   checked,
   onToggle,
+  color = "#020303",
+  size = 24,
   className,
   ...rest
 }: CheckboxProps) {
@@ -22,11 +26,11 @@ export function Checkbox({
     <Pressable
       onPress={onToggle}
       hitSlop={8}
-      className={cn("h-6 w-6 items-center justify-center", className)}
-      style={{ outlineStyle: "none" } as any}
+      className={cn("items-center justify-center", className)}
+      style={{ outlineStyle: "none", width: size, height: size } as any}
       {...rest}
     >
-      <Icon width={24} height={24} color="#020303" />
+      <Icon width={size} height={size} color={color} />
     </Pressable>
   );
 }

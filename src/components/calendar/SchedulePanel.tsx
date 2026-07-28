@@ -1,11 +1,11 @@
-import dayjs from "dayjs";
-import { useState } from "react";
 import { Text, View } from "react-native";
 
 import { CalendarGrid } from "@/src/components/calendar/CalendarGrid";
+import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
 import type { CalendarDayInfo } from "@/src/types/calendar/calendarGrid.types";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
 import { getScheduleDday } from "@/src/utils";
+import { buildScheduleCheckboxAction } from "@/src/utils/buildScheduleCheckboxAction";
 import { ScheduleItem } from "../common";
 
 type SchedulePanelProps = {
@@ -15,29 +15,32 @@ type SchedulePanelProps = {
   upcomingSchedules: UpcomingSchedule[];
 };
 
-const UPCOMING_RANGE_DAYS = 7;
-
 export function SchedulePanel({
   month,
   onDayPress,
   getDayInfo,
   upcomingSchedules,
 }: SchedulePanelProps) {
-  const [schedules, setSchedules] = useState(upcomingSchedules);
+  const completeScheduleMutation = useCompleteSchedule();
 
-  const toggleSchedule = (id: string) => {
-    setSchedules((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, checked: !s.checked } : s))
-    );
+  const toggleSchedule = (id: string, checked: boolean) => {
+    completeScheduleMutation.mutate({
+      scheduleId: Number(id),
+      isCompleted: !checked,
+    });
   };
 
-  const today = dayjs().startOf("day");
-  const visibleSchedules = schedules
-    .filter((s) => {
-      const diff = dayjs(s.date).startOf("day").diff(today, "day");
-      return diff >= 0 && diff <= UPCOMING_RANGE_DAYS;
-    })
-    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  const pendingVariables = completeScheduleMutation.variables;
+  const isMutationSettled =
+    completeScheduleMutation.isPending || completeScheduleMutation.isSuccess;
+
+  const visibleSchedules = upcomingSchedules.map((schedule) => ({
+    ...schedule,
+    checked:
+      isMutationSettled && pendingVariables?.scheduleId === Number(schedule.id)
+        ? pendingVariables.isCompleted
+        : schedule.checked,
+  }));
 
   return (
     <View className="flex-col gap-7 px-4 pt-5">
@@ -54,7 +57,7 @@ export function SchedulePanel({
         <View className="flex-col gap-3">
           {visibleSchedules.length === 0 ? (
             <Text className="text-gray-800 text-b-03-r">
-              다음 일주일 이내에 등록된 일정이 없습니다.
+              등록된 가까운 일정이 없습니다.
             </Text>
           ) : (
             visibleSchedules.map((schedule) => {
@@ -82,11 +85,11 @@ export function SchedulePanel({
                     categoryLabel={schedule.categoryLabel}
                     categoryColor={schedule.categoryColor}
                     description={schedule.description}
-                    action={{
-                      type: "checkbox",
+                    action={buildScheduleCheckboxAction(schedule, {
                       checked: schedule.checked,
-                      onToggle: () => toggleSchedule(schedule.id),
-                    }}
+                      onToggle: () =>
+                        toggleSchedule(schedule.id, schedule.checked),
+                    })}
                   />
                 </View>
               );
