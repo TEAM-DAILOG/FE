@@ -1,13 +1,20 @@
 import { baseApi } from "@/src/api/baseApi";
 import type { ApiSuccessResponse } from "@/src/types/api/api.types";
 import type {
+  ResetPasswordParams,
+  ChangePasswordParams,
+  CheckPasswordParams,
   CheckSignupEmailResponse,
   LoginParams,
   LoginResponse,
+  ResetPasswordEmailParams,
+  SendResetPasswordEmailResponse,
   SendSignupEmailVerificationResponse,
   SignupParams,
   SignupResponse,
   SignupEmailParams,
+  VerifyResetPasswordEmailParams,
+  VerifyResetPasswordEmailResponse,
   VerifySignupEmailCodeParams,
   VerifySignupEmailCodeResponse,
 } from "@/src/types/auth/auth.types";
@@ -75,4 +82,33 @@ export const authService = {
     baseApi
       .post<ApiSuccessResponse<LoginResponse>>("/api/v1/auth/login", params)
       .then((res) => res.data.data),
+
+  checkPassword: (params: CheckPasswordParams) =>
+    baseApi
+      .post<ApiSuccessResponse<null>>("/api/v1/auth/password/check", params)
+      .then((res) => res.data),
+
+  changePassword: (params: ChangePasswordParams) =>
+    baseApi
+      .patch<ApiSuccessResponse<null>>("/api/v1/auth/password", params)
+      .then((res) => res.data),
+
+  sendResetPasswordEmail: (params: ResetPasswordEmailParams) =>
+    baseApi
+      .post<
+        ApiSuccessResponse<SendResetPasswordEmailResponse>
+      >("/api/v1/auth/password/reset/email/verification/send", params)
+      .then((res) => res.data.data),
+
+  verifyResetPasswordEmail: (params: VerifyResetPasswordEmailParams) =>
+    baseApi
+      .post<
+        ApiSuccessResponse<VerifyResetPasswordEmailResponse>
+      >("/api/v1/auth/password/reset/email/verification/verify", params)
+      .then((res) => res.data.data),
+
+  resetPassword: (params: ResetPasswordParams) =>
+    baseApi
+      .patch<ApiSuccessResponse<null>>("/api/v1/auth/password/reset", params)
+      .then((res) => res.data),
 };

@@ -70,3 +70,37 @@ export type SignupResponse = {
   name: string;
   profileImageUrl: string | null;
 };
+
+export interface CheckPasswordParams {
+  currentPassword: string;
+}
+
+export interface ChangePasswordParams {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ResetPasswordEmailParams {
+  email: string;
+}
+
+export interface SendResetPasswordEmailResponse {
+  expiresInSeconds: number;
+  resendAvailableInSeconds: number;
+}
+
+export interface VerifyResetPasswordEmailParams {
+  email: string;
+  code: string;
+}
+
+export interface VerifyResetPasswordEmailResponse {
+  passwordResetToken: string;
+  expiresInSeconds: number;
+}
+
+export interface ResetPasswordParams {
+  email: string;
+  passwordResetToken: string;
+  newPassword: string;
+}
