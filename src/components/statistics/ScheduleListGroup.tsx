@@ -16,7 +16,9 @@ export type ScheduleListGroupEntry = Pick<
 export type ScheduleListGroupProps = {
   title: ReactNode;
   schedules: ScheduleListGroupEntry[];
-  action: ScheduleItemAction;
+  action:
+    | ScheduleItemAction
+    | ((entry: ScheduleListGroupEntry) => ScheduleItemAction);
   className?: string;
 };
 
@@ -31,9 +33,15 @@ export function ScheduleListGroup({
       {title}
 
       <View className="w-full gap-2">
-        {schedules.map(({ id, ...schedule }) => (
-          <ScheduleItem key={id} {...schedule} action={action} />
-        ))}
+        {schedules.map((entry) => {
+          const { id, ...schedule } = entry;
+          const resolvedAction =
+            typeof action === "function" ? action(entry) : action;
+
+          return (
+            <ScheduleItem key={id} {...schedule} action={resolvedAction} />
+          );
+        })}
       </View>
     </View>
   );

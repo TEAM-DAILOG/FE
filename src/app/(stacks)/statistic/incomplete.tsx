@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
@@ -12,6 +13,7 @@ import {
   DetailToggleButton,
   MonthSelector,
   ScheduleListGroup,
+  type ScheduleListGroupEntry,
 } from "@/src/components/statistics";
 import { useGetCompletedSchedules } from "@/src/hooks/queries/stats/useGetCompletedSchedules";
 import { useGetPendingSchedules } from "@/src/hooks/queries/stats/useGetPendingSchedules";
@@ -20,6 +22,7 @@ import { formatYearMonth } from "@/src/utils/formatDate";
 import { formatStatsScheduleItem } from "@/src/utils/formatStatsScheduleItem";
 
 export default function StatisticIncompleteScreen() {
+  const router = useRouter();
   const [isCompletedOpen, setIsCompletedOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { year, month } = formatYearMonth(selectedDate);
@@ -36,6 +39,18 @@ export default function StatisticIncompleteScreen() {
   const achievementRate = clampPercentage(
     Math.round((100 - (pendingData?.incompletedScheduleRate ?? 0)) * 10) / 10
   );
+
+  // 미완료 일정을 오늘 날짜로 다시 등록할 수 있도록 일정등록 화면으로 이동
+  const handleReRegister = (schedule: ScheduleListGroupEntry) => {
+    router.push({
+      pathname: "/schedule",
+      params: {
+        title: schedule.description,
+        categoryColor: schedule.categoryColor,
+        date: dayjs().format("YYYY-MM-DD"),
+      },
+    });
+  };
 
   return (
     <ScreenContainer variant="stack">
@@ -80,7 +95,11 @@ export default function StatisticIncompleteScreen() {
               </Text>
             }
             schedules={incompleteSchedules}
-            action={{ type: "button", label: "일정재등록" }}
+            action={(schedule) => ({
+              type: "button",
+              label: "일정재등록",
+              onPress: () => handleReRegister(schedule),
+            })}
           />
 
           <DetailToggleButton
