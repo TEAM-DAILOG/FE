@@ -1,6 +1,12 @@
 import dayjs from "dayjs";
-import { useLocalSearchParams } from "expo-router";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
 import LeftIcon from "@/assets/icons/leftIcon.svg";
 import RightIcon from "@/assets/icons/rightIcon.svg";
@@ -10,7 +16,12 @@ import {
   ScreenContainer,
 } from "@/src/components/common";
 import { DiaryDetailCard } from "@/src/components/diaries/DiaryDetailCard";
+import { useGetDiaries } from "@/src/hooks/queries/diaries/useGetDiaries";
+import { useGetDiaryDetail } from "@/src/hooks/queries/diaries/useGetDiaryDetail";
 import type { CategoryColor } from "@/src/types/categories/category.types";
+
+const ICON_COLOR_ACTIVE = "#020303";
+const ICON_COLOR_DISABLED = "#AEB2B0";
 
 type DiaryRecommendation = {
   id: string;
@@ -19,53 +30,71 @@ type DiaryRecommendation = {
   content: string;
 };
 
-type DiaryDetail = {
-  date: string;
-  hasQuestion: boolean;
-  question?: string;
-  title: string;
-  content: string;
-  images: string[];
-  aiReply: string | null;
-  recommendations: DiaryRecommendation[];
-};
+// AI 답장 조회 API 연동 후 대체
+const DUMMY_AI_REPLY: string | null =
+  "Lorem ipsum dolor sit amet consectetur. Dignissim felis facilisi sed in. Urna lorem ac eu ipsum. Et eleifend vitae mi non mattis sem purus. Nunc at amet suspendisse orci tempor fames.";
 
-// TODO: id로 실제 일기 데이터 조회 (API 연동 전까지는 더미)
-const DUMMY_DIARY: DiaryDetail = {
-  date: "2026-05-21",
-  hasQuestion: true,
-  question: "Lorem ipsum dolor sit amet consectetur.",
-  title: "제목을 입력하세요",
-  content:
-    "Lorem ipsum dolor sit amet consectetur. Dignissim felis facilisi sed in. Urna lorem ac eu ipsum. Et eleifend vitae mi non mattis sem purus. Nunc at amet suspendisse orci tempor fames.",
-  images: [],
-  aiReply:
-    "Lorem ipsum dolor sit amet consectetur. Dignissim felis facilisi sed in. Urna lorem ac eu ipsum. Et eleifend vitae mi non mattis sem purus. Nunc at amet suspendisse orci tempor fames.",
-  recommendations: [
-    {
-      id: "1",
-      categoryName: "CATEGORY",
-      categoryColor: "BLUE",
-      content: "Lorem ipsum dolor sit amet consectetur.",
-    },
-    {
-      id: "2",
-      categoryName: "CATEGORY",
-      categoryColor: "BROWN",
-      content: "Lorem ipsum dolor sit amet consectetur.",
-    },
-    {
-      id: "3",
-      categoryName: "CATEGORY",
-      categoryColor: "GREEN",
-      content: "Lorem ipsum dolor sit amet consectetur.",
-    },
-  ],
-};
+// AI 일정 추천 API 연동 후 대체
+const DUMMY_RECOMMENDATIONS: DiaryRecommendation[] = [
+  {
+    id: "1",
+    categoryName: "CATEGORY",
+    categoryColor: "BLUE",
+    content: "Lorem ipsum dolor sit amet consectetur.",
+  },
+  {
+    id: "2",
+    categoryName: "CATEGORY",
+    categoryColor: "BROWN",
+    content: "Lorem ipsum dolor sit amet consectetur.",
+  },
+  {
+    id: "3",
+    categoryName: "CATEGORY",
+    categoryColor: "GREEN",
+    content: "Lorem ipsum dolor sit amet consectetur.",
+  },
+];
 
 export default function DiaryDetailScreen() {
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const diary = DUMMY_DIARY; // TODO: id(${id})로 실제 데이터 교체
+  const diaryId = Number(id);
+  const { data: diary, isLoading } = useGetDiaryDetail(diaryId);
+  const { data: diariesData } = useGetDiaries();
+
+  const sortedDiaries = [...(diariesData ?? [])].sort(
+    (a, b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf()
+  );
+  const currentIndex = sortedDiaries.findIndex(
+    (item) => item.diaryId === diaryId
+  );
+  const previousDiaryId =
+    currentIndex > 0 ? sortedDiaries[currentIndex - 1].diaryId : null;
+  const nextDiaryId =
+    currentIndex !== -1 && currentIndex < sortedDiaries.length - 1
+      ? sortedDiaries[currentIndex + 1].diaryId
+      : null;
+
+  const openDiary = (targetDiaryId: number) => {
+    router.replace({
+      pathname: "/diary/[id]",
+      params: { id: String(targetDiaryId) },
+    });
+  };
+
+  if (isLoading || !diary) {
+    return (
+      <ScreenContainer variant="stack">
+        <BackHeader label="" />
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator />
+        </View>
+      </ScreenContainer>
+    );
+  }
+
+  const hasQuestion = diary.diaryType === "QUESTION";
 
   return (
     <ScreenContainer variant="stack">
@@ -80,84 +109,101 @@ export default function DiaryDetailScreen() {
           <View className="flex-row items-center gap-0.5">
             <Pressable
               hitSlop={8}
-              onPress={() => {
-                // TODO: 이전 날짜 이동 로직 연결
-              }}
+              disabled={previousDiaryId === null}
+              onPress={() =>
+                previousDiaryId !== null && openDiary(previousDiaryId)
+              }
             >
-              <LeftIcon width={24} height={24} />
+              <LeftIcon
+                width={24}
+                height={24}
+                color={
+                  previousDiaryId !== null
+                    ? ICON_COLOR_ACTIVE
+                    : ICON_COLOR_DISABLED
+                }
+              />
             </Pressable>
 
-            {/* h-01 타이포 적용 + 'M월'/'D일' 사이 4px 간격 위해 분리 */}
             <View className="flex-row items-center gap-1">
               <Text className="text-gray-900 text-h-01">
-                {dayjs(diary.date).format("M월")}
+                {dayjs(diary.createdAt).format("M월")}
               </Text>
               <Text className="text-gray-900 text-h-01">
-                {dayjs(diary.date).format("D일")}
+                {dayjs(diary.createdAt).format("D일")}
               </Text>
             </View>
 
             <Pressable
               hitSlop={8}
-              onPress={() => {
-                // TODO: 다음 날짜 이동 로직 연결
-              }}
+              disabled={nextDiaryId === null}
+              onPress={() => nextDiaryId !== null && openDiary(nextDiaryId)}
             >
-              <RightIcon width={24} height={24} />
+              <RightIcon
+                width={24}
+                height={24}
+                color={
+                  nextDiaryId !== null ? ICON_COLOR_ACTIVE : ICON_COLOR_DISABLED
+                }
+              />
             </Pressable>
           </View>
 
           {/* 질문일기일 때만 뱃지 노출 */}
-          {diary.hasQuestion && (
+          {hasQuestion && (
             <View className="flex-row items-center gap-2.5 rounded border border-green-700 bg-white px-2 py-1">
-              <Text className="text-05-m text-green-700">질문일기</Text>
+              <Text className="text-green-700 text-b-05-m">질문일기</Text>
             </View>
           )}
         </View>
 
         {/* 오늘의 질문 */}
-        {diary.hasQuestion && diary.question ? (
+        {hasQuestion && diary.questionContent ? (
           <View className="gap-3">
             <Text className="text-gray-900 text-b-02-m">오늘의 질문</Text>
             <View className="flex items-center justify-center rounded-xl border border-green-200 bg-green-100 p-3">
               <Text className="text-green-800 text-b-03-sb">
-                {diary.question}
+                {diary.questionContent}
               </Text>
             </View>
           </View>
         ) : null}
 
         <DiaryDetailCard
-          title={diary.title}
+          title={diary.diaryTitle}
           content={diary.content}
           images={diary.images}
         />
 
         {/* AI의 답장 */}
-        <View className="gap-3">
-          <Text className="text-gray-900 text-b-02-m">AI의 답장</Text>
-          {diary.aiReply ? (
-            <View className="rounded-xl bg-green-200 p-3">
-              <Text className="text-green-800 text-b-02-m">
-                {diary.aiReply}
-              </Text>
-            </View>
-          ) : (
-            <View className="rounded-xl border border-green-100 bg-gray-100 p-3">
-              <Text className="text-green-600 text-b-02-m">
-                아직 답장이 도착하지 않았어요.
-              </Text>
-            </View>
-          )}
-        </View>
+        {hasQuestion && (
+          <View className="gap-3">
+            <Text className="text-gray-900 text-b-02-m">AI의 답장</Text>
+            {/* AI 답장 조회 API 연동 후 대체 예정 */}
+            {DUMMY_AI_REPLY ? (
+              <View className="rounded-xl bg-green-200 p-3">
+                <Text className="text-green-800 text-b-02-m">
+                  {DUMMY_AI_REPLY}
+                </Text>
+              </View>
+            ) : (
+              <View className="rounded-xl border border-green-100 bg-gray-100 p-3">
+                <Text className="text-green-600 text-b-02-m">
+                  아직 답장이 도착하지 않았어요.
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
 
         {/* AI 추천일정 */}
-        {diary.aiReply && diary.recommendations.length > 0 ? (
+        {/* AI 추천일정 생성 API 연동 후 대체 예정 */}
+        {DUMMY_RECOMMENDATIONS.length > 0 ? (
           <View className="gap-3">
             <Text className="text-gray-900 text-b-02-m">AI 추천일정</Text>
 
             <View className="gap-2 rounded-xl border border-gray-100 bg-white p-3">
-              {diary.recommendations.map((rec) => (
+              {DUMMY_RECOMMENDATIONS.map((rec) => (
                 <ScheduleItem
                   key={rec.id}
                   categoryLabel={rec.categoryName}

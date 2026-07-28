@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, Text, View } from "react-native";
 
 import { DiaryThreadCard } from "@/src/components/calendar/DiaryThreadCard";
 import { Divider } from "@/src/components/common";
@@ -22,8 +23,13 @@ export function ThreadTab({
   items,
   isAiSummaryEnabled,
 }: ThreadTabProps) {
+  const router = useRouter();
   const groups = groupThreadItemsByMonth(items);
   const currentMonthKey = getThreadMonthKey(month);
+
+  const openDiaryDetail = (diaryId: number) => {
+    router.push({ pathname: "/diary/[id]", params: { id: String(diaryId) } });
+  };
 
   return (
     <View className="gap-4">
@@ -55,16 +61,18 @@ export function ThreadTab({
                         {weekdayLabel}
                       </Text>
                       {item.isUnread ? (
-                        <View className="size-1.5 rounded-full bg-notification" />
+                        <View className="bg-notification size-1.5 rounded-full" />
                       ) : null}
                     </View>
                   </View>
 
-                  {isAiSummaryEnabled ? (
-                    <DiaryCard variant="summary" summary={item.summary} />
-                  ) : (
-                    <DiaryThreadCard item={item} />
-                  )}
+                  <Pressable onPress={() => openDiaryDetail(item.diaryId)}>
+                    {isAiSummaryEnabled ? (
+                      <DiaryCard variant="summary" summary={item.summary} />
+                    ) : (
+                      <DiaryThreadCard item={item} />
+                    )}
+                  </Pressable>
                 </View>
               );
             })}
