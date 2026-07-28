@@ -15,9 +15,6 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
-// 오늘 화면이므로 조회 범위도 오늘 날짜로 고정
-const TODAY = dayjs().format("YYYY-MM-DD");
-
 function useDateParts() {
   const days = ["일", "월", "화", "수", "목", "금", "토"];
   const now = new Date();
@@ -34,6 +31,9 @@ export default function HomeScreen() {
   const [isQuestionAnswered, setIsQuestionAnswered] = useState(false);
   const { data: todayQuestion, isLoading: isQuestionLoading } =
     useGetTodayQuestion();
+
+  // 오늘 화면이므로 조회 범위도 오늘 날짜로 고정
+  const TODAY = dayjs().format("YYYY-MM-DD");
 
   // 오늘 날짜 기준 일정 조회
   const { data: schedulesData } = useGetSchedules({
