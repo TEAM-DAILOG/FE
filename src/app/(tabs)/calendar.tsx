@@ -47,6 +47,7 @@ export default function CalendarScreen() {
   }, [categoriesData]);
 
   const isCategoryVisible = (schedule: Schedule) =>
+    categoriesData === undefined ||
     selectedCategoryIds.includes(String(schedule.category.categoryId));
 
   // 선택한 달의 일정 목록 조회
