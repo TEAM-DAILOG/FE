@@ -1,4 +1,4 @@
-import type { CategoryColorApi } from "@/src/types/categories/category.types";
+import type { CategoryColor } from "@/src/types/categories/category.types";
 
 // 미완료 일정 조회 요청 파라미터 타입
 export type GetPendingSchedulesParams = {
@@ -19,7 +19,7 @@ export type StatsSchedule = {
   date: string;
   categoryId: number;
   categoryName: string;
-  categoryColor: CategoryColorApi;
+  categoryColor: CategoryColor;
 };
 
 // 미완료 일정 조회 응답값 타입
