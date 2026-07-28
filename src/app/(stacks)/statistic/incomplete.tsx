@@ -33,9 +33,8 @@ export default function StatisticIncompleteScreen() {
   const completedSchedules = [...(completedData?.completedSchedules ?? [])]
     .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
     .map(formatStatsScheduleItem);
-  // 서버는 미완료율만 내려주므로, 달성률은 그 나머지로 계산한다
   const achievementRate = clampPercentage(
-    100.0 - (pendingData?.incompletedScheduleRate ?? 0)
+    Math.round((100 - (pendingData?.incompletedScheduleRate ?? 0)) * 10) / 10
   );
 
   return (
