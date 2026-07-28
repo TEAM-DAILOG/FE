@@ -21,7 +21,7 @@ export function formatUpdateScheduleParams({
   const base: UpdateScheduleParams = {
     categoryId: params.categoryId,
     title: params.title,
-    content: params.content,
+    content: params.content ?? null,
   };
 
   if (scope === "SINGLE") return { ...base, date };

@@ -34,7 +34,7 @@ export type Schedule = {
   scheduleId: number;
   category: ScheduleCategory;
   title: string;
-  content: string;
+  content: string | null;
   date: string;
   groupId: number | null;
   isCompleted: boolean;
@@ -105,8 +105,8 @@ export type UpdateScheduleParams = {
   isLastDayOfMonth?: boolean;
 };
 
-// 일정 수정 요청 응답값 타입
-export type UpdateScheduleResponse = {
+// 일정 수정(SINGLE) 응답값 타입
+export type UpdateScheduleSingleResponse = {
   scheduleId: number;
   categoryId: number;
   title: string;
@@ -118,7 +118,22 @@ export type UpdateScheduleResponse = {
   repeatStartDate: string | null;
   repeatEndDate: string | null;
   repeatDays: string | null;
+  isLastDayOfMonth: boolean;
 };
+
+// 일정 수정(ALL) 응답값 타입
+export type UpdateScheduleAllResponse = {
+  scheduleId: number | null;
+  groupId: number | null;
+  createdCount: number;
+  updatedCount: number;
+  deletedCount: number;
+};
+
+// 일정 수정 응답값 타입
+export type UpdateScheduleResponse =
+  | UpdateScheduleSingleResponse
+  | UpdateScheduleAllResponse;
 
 // 일정 수정 요청 변수 타입
 export type UpdateScheduleVariables = {
