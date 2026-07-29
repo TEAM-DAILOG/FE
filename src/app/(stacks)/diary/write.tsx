@@ -1,3 +1,5 @@
+import { isAxiosError } from "axios";
+import dayjs from "dayjs";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -18,12 +20,11 @@ import {
   DiaryTabBar,
   type DiaryTabType,
 } from "@/src/components/daily";
-
-// TODO: API 연동 전까지 오늘의 질문 더미 사용
-const DUMMY_QUESTION = "Lorem ipsum dolor sit amet consectetur.";
-
-// TODO: API 연동 전까지 오늘 질문 생성 가능 여부 더미 사용 (false로 바꾸면 빈 상태 확인 가능)
-const HAS_TODAY_QUESTION = true;
+import { useCreateDiary } from "@/src/hooks/mutations/diaries/useCreateDiary";
+import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
+import { useToastStore } from "@/src/store/toast/toastStore";
+import type { DiaryImageFile } from "@/src/types/diaries/diary.types";
+import { getErrorMessage } from "@/src/utils/getErrorMessage";
 
 const PHOTO_MAX_COUNT = 3;
 
@@ -33,13 +34,17 @@ export default function DiaryWriteScreen() {
   const [selectedDate] = useState(new Date());
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [images, setImages] = useState<DiaryImageFile[]>([]);
+
+  const { data: todayQuestion } = useGetTodayQuestion();
+  const createDiary = useCreateDiary();
+  const showToast = useToastStore((state) => state.showToast);
 
   // TODO: 날짜 선택 모달 머지되면 가져와서 여기서 열기
   const handlePressDate = () => {};
 
   const handleAddPhoto = async () => {
-    if (photos.length >= PHOTO_MAX_COUNT) return;
+    if (images.length >= PHOTO_MAX_COUNT) return;
 
     const permission = await ImagePicker.getMediaLibraryPermissionsAsync();
 
@@ -58,30 +63,64 @@ export default function DiaryWriteScreen() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsMultipleSelection: true,
-      selectionLimit: PHOTO_MAX_COUNT - photos.length,
+      selectionLimit: PHOTO_MAX_COUNT - images.length,
+      quality: 0.5,
     });
 
     if (!result.canceled) {
-      setPhotos((prev) => [
+      setImages((prev) => [
         ...prev,
-        ...result.assets.map((asset) => asset.uri),
+        ...result.assets.map((asset) => {
+          const fileExtension = asset.mimeType?.split("/")[1] ?? "jpg";
+          return {
+            uri: asset.uri,
+            name: asset.fileName ?? `diary.${fileExtension}`,
+            type: asset.mimeType ?? "image/jpeg",
+          };
+        }),
       ]);
     }
   };
 
   const handleRemovePhoto = (index: number) => {
-    setPhotos((prev) => prev.filter((_, i) => i !== index));
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const isFormValid = content.trim().length > 0;
 
   const handleSave = () => {
     if (!isFormValid) return;
-    // TODO: API 연동 단계에서 실제 저장 로직 연결
-    router.push("/diary/recommendations");
+
+    createDiary.mutate(
+      {
+        title: title.trim(),
+        content: content.trim(),
+        questionId:
+          selectedTab === "question" ? todayQuestion?.questionId : undefined,
+        date: dayjs(selectedDate).format("YYYY-MM-DDTHH:mm:ssZ"),
+        images,
+      },
+      {
+        onSuccess: () => {
+          router.push("/diary/recommendations");
+        },
+        onError: (error) => {
+          if (isAxiosError(error)) {
+            console.error("[postDiary] request failed", {
+              status: error.response?.status,
+              data: error.response?.data,
+              message: error.message,
+            });
+          } else {
+            console.error("[postDiary] request failed", error);
+          }
+          showToast(getErrorMessage(error));
+        },
+      }
+    );
   };
 
-  const showEmptyState = selectedTab === "question" && !HAS_TODAY_QUESTION;
+  const showEmptyState = selectedTab === "question" && !todayQuestion;
 
   return (
     <ScreenContainer variant="stack">
@@ -119,8 +158,8 @@ export default function DiaryWriteScreen() {
           <Divider className="mt-6 border-green-100" />
 
           <View className="gap-4 px-4 pt-6">
-            {selectedTab === "question" && (
-              <DiaryQuestionCard question={DUMMY_QUESTION} />
+            {selectedTab === "question" && todayQuestion && (
+              <DiaryQuestionCard question={todayQuestion.content} />
             )}
 
             <View className="gap-3">
@@ -137,7 +176,7 @@ export default function DiaryWriteScreen() {
             </View>
 
             <DiaryPhotoCard
-              photos={photos}
+              photos={images.map((image) => image.uri)}
               onAddPhoto={handleAddPhoto}
               onRemovePhoto={handleRemovePhoto}
               maxCount={PHOTO_MAX_COUNT}
@@ -152,7 +191,11 @@ export default function DiaryWriteScreen() {
               </Text>
             </View>
 
-            <Button label="저장" onPress={handleSave} disabled={!isFormValid} />
+            <Button
+              label="저장"
+              onPress={handleSave}
+              disabled={!isFormValid || createDiary.isPending}
+            />
           </View>
         </ScrollView>
       )}
