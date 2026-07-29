@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { Pressable, Text, View } from "react-native";
 
 import BambooIcon from "@/assets/images/bambooLogo.svg";
-import { WEEKDAY_LABELS } from "@/src/constants";
+import { WEEKDAYS } from "@/src/constants";
 import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
 import type {
@@ -36,9 +36,9 @@ export function CalendarGrid({
     <View className="gap-2 overflow-hidden rounded-xl bg-gray-0 px-3 pb-2 pt-1 shadow-card-1">
       {/* 요일 */}
       <View className="flex-row border-b border-green-100">
-        {WEEKDAY_LABELS.map((label) => (
+        {WEEKDAYS.map(({ code, label }) => (
           <View
-            key={label}
+            key={code}
             className="size-12 flex-1 items-center justify-center p-2.5"
           >
             <Text className="text-center text-gray-900 text-b-04-r">

@@ -125,8 +125,12 @@ export default function PasswordScreen() {
     resetPassword(
       { email, passwordResetToken, newPassword },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          console.log("재설정 응답:", data);
           router.back();
+        },
+        onError: (error) => {
+          console.log("재설정 에러:", error);
         },
       }
     );

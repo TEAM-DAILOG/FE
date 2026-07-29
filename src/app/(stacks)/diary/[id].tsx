@@ -45,19 +45,19 @@ const DUMMY_DIARY: DiaryDetail = {
     {
       id: "1",
       categoryName: "CATEGORY",
-      categoryColor: "blue",
+      categoryColor: "BLUE",
       content: "Lorem ipsum dolor sit amet consectetur.",
     },
     {
       id: "2",
       categoryName: "CATEGORY",
-      categoryColor: "brown",
+      categoryColor: "BROWN",
       content: "Lorem ipsum dolor sit amet consectetur.",
     },
     {
       id: "3",
       categoryName: "CATEGORY",
-      categoryColor: "green",
+      categoryColor: "GREEN",
       content: "Lorem ipsum dolor sit amet consectetur.",
     },
   ],

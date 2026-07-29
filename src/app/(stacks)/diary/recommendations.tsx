@@ -19,19 +19,19 @@ const DUMMY_RECOMMENDED_SCHEDULES: {
   {
     id: "1",
     categoryLabel: "CATEGORY",
-    categoryColor: "green",
+    categoryColor: "GREEN",
     description: "Lorem ipsum dolor sit amet consectet.",
   },
   {
     id: "2",
     categoryLabel: "CATEGORY",
-    categoryColor: "blue",
+    categoryColor: "BLUE",
     description: "Lorem ipsum dolor sit amet consectet.",
   },
   {
     id: "3",
     categoryLabel: "CATEGORY",
-    categoryColor: "purple",
+    categoryColor: "PURPLE",
     description: "Lorem ipsum dolor sit amet consectet.",
   },
 ];

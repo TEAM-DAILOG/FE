@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import DraggableFlatList, {
   type RenderItemParams,
 } from "react-native-draggable-flatlist";
@@ -8,30 +8,45 @@ import DraggableFlatList, {
 import DragIcon from "@/assets/icons/dragIcon.svg";
 import EditIcon from "@/assets/icons/editIcon.svg";
 import ExclamationIcon from "@/assets/icons/exclamationIcon.svg";
+import type { CategoryWithOrder } from "@/src/api/categoryService";
 import { BackHeader, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categoryColors";
+import { useUpdateCategoryOrder } from "@/src/hooks/mutations/category/useUpdateCategoryOrder";
+import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { cn } from "@/src/lib/cn";
-import type { Category } from "@/src/types/categories/category.types";
 
 const MAX_CATEGORY_COUNT = 5;
 
-const DUMMY_CATEGORIES: Category[] = [
-  { id: "1", name: "CATEGORY", color: "blue" },
-  { id: "2", name: "CATEGORY", color: "brown" },
-  { id: "3", name: "CATEGORY", color: "green" },
-  { id: "4", name: "CATEGORY", color: "purple" },
-  { id: "5", name: "CATEGORY", color: "pink" },
-];
-
 export default function CategoryListScreen() {
   const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>(DUMMY_CATEGORIES);
+  const { data, isLoading } = useGetCategories();
+  const updateOrder = useUpdateCategoryOrder();
+
+  // 서버에서 받은 순서대로 정렬해서 로컬 state로 관리 (드래그 중엔 로컬만 바뀜)
+  const [categories, setCategories] = useState<CategoryWithOrder[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setCategories([...data].sort((a, b) => a.order - b.order));
+    }
+  }, [data]);
 
   const isEmpty = categories.length === 0;
   const isMaxReached = categories.length >= MAX_CATEGORY_COUNT;
 
-  const renderItem = ({ item, drag, isActive }: RenderItemParams<Category>) => (
+  const handleDragEnd = (newData: CategoryWithOrder[]) => {
+    setCategories(newData);
+    updateOrder.mutate(
+      newData.map((item, index) => ({ id: item.id, order: index + 1 }))
+    );
+  };
+
+  const renderItem = ({
+    item,
+    drag,
+    isActive,
+  }: RenderItemParams<CategoryWithOrder>) => (
     <View
       className={cn(
         "h-14 flex-row items-center px-4",
@@ -63,6 +78,17 @@ export default function CategoryListScreen() {
     </View>
   );
 
+  if (isLoading) {
+    return (
+      <ScreenContainer variant="stack">
+        <BackHeader label="카테고리 설정" />
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator />
+        </View>
+      </ScreenContainer>
+    );
+  }
+
   return (
     <ScreenContainer variant="stack">
       <BackHeader label="카테고리 설정" />
@@ -81,7 +107,7 @@ export default function CategoryListScreen() {
               <DraggableFlatList
                 data={categories}
                 keyExtractor={(item) => item.id}
-                onDragEnd={({ data }) => setCategories(data)}
+                onDragEnd={({ data: newData }) => handleDragEnd(newData)}
                 scrollEnabled={false}
                 ItemSeparatorComponent={() => (
                   <View className="h-px bg-gray-100" />
