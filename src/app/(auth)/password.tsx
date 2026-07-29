@@ -1,9 +1,12 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Keyboard, Pressable, Text, View } from "react-native";
+import { tokenStorage } from "@/src/lib/tokenStorage";
+import { useAuthStore } from "@/src/store/auth/authStore";
 import { useSendResetPasswordEmail } from "@/src/hooks/mutations/auth/useSendResetPasswordEmail";
 import { useVerifyResetPasswordEmail } from "@/src/hooks/mutations/auth/useVerifyResetPasswordEmail";
 import { useResetPassword } from "@/src/hooks/mutations/auth/useResetPassword";
+
 import { BackHeader, Button, ScreenContainer } from "@/src/components/common";
 import {
   CODE_LENGTH,
@@ -122,15 +125,14 @@ export default function PasswordScreen() {
       return;
     }
 
+    // step === "reset"
     resetPassword(
       { email, passwordResetToken, newPassword },
       {
-        onSuccess: (data) => {
-          console.log("재설정 응답:", data);
+        onSuccess: async () => {
+          await tokenStorage.clearTokens();
+          useAuthStore.getState().clearAuthenticated();
           router.back();
-        },
-        onError: (error) => {
-          console.log("재설정 에러:", error);
         },
       }
     );
