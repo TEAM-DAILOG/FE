@@ -40,9 +40,6 @@ export default function DiaryWriteScreen() {
   const createDiary = useCreateDiary();
   const showToast = useToastStore((state) => state.showToast);
 
-  // TODO: 날짜 선택 모달 머지되면 가져와서 여기서 열기
-  const handlePressDate = () => {};
-
   const handleAddPhoto = async () => {
     if (images.length >= PHOTO_MAX_COUNT) return;
 
@@ -143,7 +140,7 @@ export default function DiaryWriteScreen() {
               selectedTab={selectedTab}
               onSelectTab={setSelectedTab}
             />
-            <DiaryDateCard date={selectedDate} onPress={handlePressDate} />
+            <DiaryDateCard date={selectedDate} />
 
             <View className="gap-3">
               <Text className="text-gray-900 text-b-02-m">제목</Text>
