@@ -36,7 +36,8 @@ export default function DiaryWriteScreen() {
   const [content, setContent] = useState("");
   const [images, setImages] = useState<DiaryImageFile[]>([]);
 
-  const { data: todayQuestion } = useGetTodayQuestion();
+  const { data: todayQuestion, isLoading: isQuestionLoading } =
+    useGetTodayQuestion();
   const createDiary = useCreateDiary();
   const showToast = useToastStore((state) => state.showToast);
 
@@ -117,7 +118,8 @@ export default function DiaryWriteScreen() {
     );
   };
 
-  const showEmptyState = selectedTab === "question" && !todayQuestion;
+  const showEmptyState =
+    selectedTab === "question" && !isQuestionLoading && !todayQuestion;
 
   return (
     <ScreenContainer variant="stack">
@@ -155,6 +157,9 @@ export default function DiaryWriteScreen() {
           <Divider className="mt-6 border-green-100" />
 
           <View className="gap-4 px-4 pt-6">
+            {selectedTab === "question" && isQuestionLoading && (
+              <DiaryQuestionCard question="오늘의 질문을 불러오는 중입니다." />
+            )}
             {selectedTab === "question" && todayQuestion && (
               <DiaryQuestionCard question={todayQuestion.content} />
             )}
