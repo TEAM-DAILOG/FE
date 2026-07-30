@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import dayjs from "dayjs";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
@@ -20,6 +19,7 @@ import {
   DiaryTabBar,
   type DiaryTabType,
 } from "@/src/components/daily";
+import { useCreateSchedules } from "@/src/hooks/mutations/ai/useCreateSchedules";
 import { useCreateDiary } from "@/src/hooks/mutations/diaries/useCreateDiary";
 import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
 import { useToastStore } from "@/src/store/toast/toastStore";
@@ -39,6 +39,7 @@ export default function DiaryWriteScreen() {
   const { data: todayQuestion, isLoading: isQuestionLoading } =
     useGetTodayQuestion();
   const createDiary = useCreateDiary();
+  const createSchedules = useCreateSchedules();
   const showToast = useToastStore((state) => state.showToast);
 
   const handleAddPhoto = async () => {
@@ -100,18 +101,24 @@ export default function DiaryWriteScreen() {
       },
       {
         onSuccess: () => {
-          router.push("/diary/recommendations");
+          createSchedules.mutate(undefined, {
+            onSuccess: (data) => {
+              router.push({
+                pathname: "/diary/recommendations",
+                params: {
+                  recommendedSchedules: JSON.stringify(
+                    data.recommendedSchedules
+                  ),
+                },
+              });
+            },
+            onError: (error) => {
+              showToast(getErrorMessage(error));
+              router.push("/diary/recommendations");
+            },
+          });
         },
         onError: (error) => {
-          if (isAxiosError(error)) {
-            console.error("[postDiary] request failed", {
-              status: error.response?.status,
-              data: error.response?.data,
-              message: error.message,
-            });
-          } else {
-            console.error("[postDiary] request failed", error);
-          }
           showToast(getErrorMessage(error));
         },
       }
@@ -196,7 +203,11 @@ export default function DiaryWriteScreen() {
             <Button
               label="저장"
               onPress={handleSave}
-              disabled={!isFormValid || createDiary.isPending}
+              disabled={
+                !isFormValid ||
+                createDiary.isPending ||
+                createSchedules.isPending
+              }
             />
           </View>
         </ScrollView>

@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Text, View } from "react-native";
 
 import {
@@ -7,40 +7,28 @@ import {
   ScheduleItem,
   ScreenContainer,
 } from "@/src/components/common";
-import type { CategoryColor } from "@/src/types/categories/category.types";
+import type { RecommendedSchedule } from "@/src/types/ai/ai.types";
 
-// TODO: API 연동 전까지 더미 사용
-const DUMMY_RECOMMENDED_SCHEDULES: {
-  id: string;
-  categoryLabel: string;
-  categoryColor: CategoryColor;
-  description: string;
-}[] = [
-  {
-    id: "1",
-    categoryLabel: "CATEGORY",
-    categoryColor: "GREEN",
-    description: "Lorem ipsum dolor sit amet consectet.",
-  },
-  {
-    id: "2",
-    categoryLabel: "CATEGORY",
-    categoryColor: "BLUE",
-    description: "Lorem ipsum dolor sit amet consectet.",
-  },
-  {
-    id: "3",
-    categoryLabel: "CATEGORY",
-    categoryColor: "PURPLE",
-    description: "Lorem ipsum dolor sit amet consectet.",
-  },
-];
+function parseRecommendedSchedules(raw?: string): RecommendedSchedule[] {
+  if (!raw) return [];
+
+  try {
+    return JSON.parse(raw) as RecommendedSchedule[];
+  } catch {
+    return [];
+  }
+}
 
 export default function DiaryRecommendationsScreen() {
   const router = useRouter();
+  const { recommendedSchedules: recommendedSchedulesParam } =
+    useLocalSearchParams<{ recommendedSchedules?: string }>();
+  const recommendedSchedules = parseRecommendedSchedules(
+    recommendedSchedulesParam
+  );
 
-  // TODO: API 연동되면 실제 일정 추가 로직 연결
-  const handleAddSchedule = (id: string) => {};
+  // TODO: 추천 일정 추가(POST /api/v1/ai/schedules/add) API 연동되면 실제 일정 추가 로직 연결
+  const handleAddSchedule = (recommendId: number) => {};
 
   return (
     <ScreenContainer variant="stack">
@@ -59,16 +47,16 @@ export default function DiaryRecommendationsScreen() {
             <Text className="text-gray-900 text-b-03-m">추천 일정</Text>
 
             <View className="gap-2">
-              {DUMMY_RECOMMENDED_SCHEDULES.map((schedule) => (
+              {recommendedSchedules.map((schedule) => (
                 <ScheduleItem
-                  key={schedule.id}
-                  categoryLabel={schedule.categoryLabel}
+                  key={schedule.recommendId}
+                  categoryLabel={schedule.categoryTitle}
                   categoryColor={schedule.categoryColor}
-                  description={schedule.description}
+                  description={schedule.scheduleTitle}
                   action={{
                     type: "button",
                     label: "일정추가",
-                    onPress: () => handleAddSchedule(schedule.id),
+                    onPress: () => handleAddSchedule(schedule.recommendId),
                   }}
                 />
               ))}
