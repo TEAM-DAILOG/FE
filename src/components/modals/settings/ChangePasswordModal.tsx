@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Text, View } from "react-native";
-
+import { useCheckPassword } from "@/src/hooks/mutations/auth/useCheckPassword";
 import CloseIcon from "@/assets/icons/closeIcon.svg";
 import CheckIcon from "@/assets/icons/lightCheckIcon.svg";
 import { TextField } from "@/src/components/common";
@@ -8,7 +8,6 @@ import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { ChangePasswordModalProps } from "@/src/types/modals/settingModal.types";
 import { hasRequiredCharacters, hasValidLength } from "@/src/utils";
-
 import { SettingsModalContainer } from "./SettingsModalContainer";
 
 type RuleStatus = "neutral" | "valid" | "invalid";
@@ -47,6 +46,26 @@ export function ChangePasswordModal({ onSave }: ChangePasswordModalProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [currentPasswordCheckStatus, setCurrentPasswordCheckStatus] =
+    useState<RuleStatus>("neutral");
+  const checkPasswordMutation = useCheckPassword();
+
+  const handleChangeCurrentPassword = (value: string) => {
+    setCurrentPassword(value);
+    setCurrentPasswordCheckStatus("neutral");
+  };
+
+  const handleBlurCurrentPassword = () => {
+    if (currentPassword.length === 0) return;
+    checkPasswordMutation.mutate(
+      { currentPassword },
+      {
+        onSuccess: () => setCurrentPasswordCheckStatus("valid"),
+        onError: () => setCurrentPasswordCheckStatus("invalid"),
+      }
+    );
+  };
+
   const ruleStatus = (satisfied: boolean): RuleStatus => {
     if (newPassword.length === 0) return "neutral";
     return satisfied ? "valid" : "invalid";
@@ -72,16 +91,30 @@ export function ChangePasswordModal({ onSave }: ChangePasswordModalProps) {
       canConfirm={canSave}
       onConfirm={handleSave}
     >
-      {/* TODO: 기존 비밀번호 일치/불일치 여부 나타나는거 확정 후 수정  */}
-      <View className="w-full items-start gap-3">
-        <Text className="text-gray-900 text-b-03-r">기존 비밀번호</Text>
-        <TextField
-          value={currentPassword}
-          onChangeText={setCurrentPassword}
-          secureTextEntry
-          textContentType="oneTimeCode"
-          placeholder="기존 비밀번호를 입력하세요"
-        />
+      <View className="w-full items-start gap-1">
+        <View className="w-full items-start gap-3">
+          <Text className="text-gray-900 text-b-03-r">기존 비밀번호</Text>
+          <TextField
+            value={currentPassword}
+            onChangeText={handleChangeCurrentPassword}
+            onBlur={handleBlurCurrentPassword}
+            secureTextEntry
+            textContentType="oneTimeCode"
+            placeholder="기존 비밀번호를 입력하세요"
+          />
+        </View>
+        {currentPasswordCheckStatus !== "neutral" && (
+          <Text
+            className={cn(
+              "text-b-04-r",
+              RULE_TEXT_COLOR[currentPasswordCheckStatus]
+            )}
+          >
+            {currentPasswordCheckStatus === "valid"
+              ? "비밀번호가 일치합니다."
+              : "비밀번호가 일치하지 않습니다."}
+          </Text>
+        )}
       </View>
 
       <View className="w-full items-start gap-1">
