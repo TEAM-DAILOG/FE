@@ -12,12 +12,12 @@ import {
   type ScheduleListModalProps,
 } from "./calendar/ScheduleListModal";
 import { DeleteCategoryModal } from "./category/DeleteCategoryModal";
+import {
+  DeleteConfirmModal,
+  type DeleteConfirmModalProps,
+} from "./DeleteConfirmModal";
 import { ModalBackground } from "./ModalBackground";
 import { DatePickerModal } from "./schedule/DatePickerModal";
-import {
-  DeleteScheduleModal,
-  DeleteScheduleModalProps,
-} from "./schedule/DeleteScheduleModal";
 import { ChangePasswordModal } from "./settings/ChangePasswordModal";
 import { DeleteAccountModal } from "./settings/DeleteAccountModal";
 import { EditProfileModal } from "./settings/EditProfileModal";
@@ -59,9 +59,9 @@ export function ModalPage() {
           {...(modalProps as unknown as DeleteCategoryModalProps)}
         />
       ) : null}
-      {modalType === "deleteScheduleModal" ? (
-        <DeleteScheduleModal
-          {...(modalProps as unknown as DeleteScheduleModalProps)}
+      {modalType === "deleteConfirmModal" ? (
+        <DeleteConfirmModal
+          {...(modalProps as unknown as DeleteConfirmModalProps)}
         />
       ) : null}
     </ModalBackground>

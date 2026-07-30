@@ -198,8 +198,9 @@ export function ScheduleItem({
 
   const handleDelete = () => {
     translateX.value = withSpring(0);
-    openModal("deleteScheduleModal", {
+    openModal("deleteConfirmModal", {
       props: {
+        target: "일정",
         date: scheduleDate,
         description,
         isRepeating: groupId !== null,
