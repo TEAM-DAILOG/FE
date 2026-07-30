@@ -1,7 +1,8 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
-
+import { useGetMe } from "@/src/hooks/queries/user/useGetMe";
+import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
 import BambooLogo from "@/assets/images/bambooLogo.svg";
 import {
   Divider,
@@ -27,10 +28,12 @@ export default function SettingsScreen() {
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(false);
   const [isDiaryReplyEnabled, setIsDiaryReplyEnabled] = useState(false);
 
-  // TODO: 내 정보 조회 API 연동 시 실제 유저로 교체
-  const [email, setEmail] = useState("dailog@naver.com");
-  const [nickname, setNickname] = useState("USER NAME");
-  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const { data: me } = useGetMe();
+  const updateMeMutation = useUpdateMe();
+
+  const email = me?.email ?? "";
+  const nickname = me?.name ?? "";
+  const photoUri = me?.profileImageUrl ?? null;
 
   const handleLogout = () => {
     if (logoutMutation.isPending) {
@@ -71,9 +74,27 @@ export default function SettingsScreen() {
           nickname: nextNickname,
           photoUri: nextPhotoUri,
         }: EditProfileModalResult) => {
-          setEmail(nextEmail);
-          setNickname(nextNickname);
-          if (nextPhotoUri) setPhotoUri(nextPhotoUri);
+          updateMeMutation.mutate(
+            {
+              name: nextNickname,
+              email: nextEmail,
+              profileImage: nextPhotoUri
+                ? {
+                    uri: nextPhotoUri,
+                    name: "profile.jpg",
+                    type: "image/jpeg",
+                  }
+                : null,
+            },
+            {
+              onSuccess: () => {
+                showToast("내 정보가 수정되었습니다.");
+              },
+              onError: () => {
+                showToast("이미 사용 중인 이메일이거나 오류가 발생했습니다.");
+              },
+            }
+          );
         },
       },
     });
