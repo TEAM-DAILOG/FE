@@ -85,7 +85,7 @@ export default function CalendarScreen() {
   // 일기가 있는 날짜 매핑
   const diaryDays: Record<string, boolean> = {};
   for (const item of threadItems) {
-    diaryDays[item.date] = true;
+    if (item.date) diaryDays[item.date] = true;
   }
 
   const getDayInfo = (date: string) => ({

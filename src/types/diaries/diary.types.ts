@@ -9,8 +9,7 @@ export type Diary = {
   diaryTitle: string;
   content: string;
   aiSummary: string | null;
-  createdAt: string;
-  updatedAt: string;
+  date: string | null;
   images: string[];
 };
 

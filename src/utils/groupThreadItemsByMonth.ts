@@ -6,10 +6,13 @@ import type {
   ThreadItem,
 } from "@/src/types/calendar/diaryPanel.types";
 
+const toTimeValue = (date: string | null) =>
+  date ? dayjs(date).valueOf() : -Infinity;
+
 // 일기 스레드 아이템을 월 단위로 묶는 함수
 export function groupThreadItemsByMonth(items: ThreadItem[]): ThreadGroup[] {
   const sortedItems = [...items].sort(
-    (a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
+    (a, b) => toTimeValue(b.date) - toTimeValue(a.date)
   );
   const groups: ThreadGroup[] = [];
 

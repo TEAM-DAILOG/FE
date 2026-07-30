@@ -74,8 +74,10 @@ export default function DiaryDetailScreen() {
   const { data: diariesData } = useGetDiaries();
   const deleteDiaryMutation = useDeleteDiary();
 
+  const toTimeValue = (date: string | null) =>
+    date ? dayjs(date).valueOf() : -Infinity;
   const sortedDiaries = [...(diariesData ?? [])].sort(
-    (a, b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf()
+    (a, b) => toTimeValue(a.date) - toTimeValue(b.date)
   );
   const currentIndex = sortedDiaries.findIndex(
     (item) => item.diaryId === diaryId
@@ -124,7 +126,7 @@ export default function DiaryDetailScreen() {
     openModal("deleteConfirmModal", {
       props: {
         target: "일기",
-        date: diary.createdAt,
+        date: diary.date ?? undefined,
         description: diary.diaryTitle,
         onConfirm: () => {
           deleteDiaryMutation.mutate(diaryId, {
@@ -166,10 +168,10 @@ export default function DiaryDetailScreen() {
 
             <View className="flex-row items-center gap-1">
               <Text className="text-gray-900 text-h-01">
-                {dayjs(diary.createdAt).format("M월")}
+                {diary.date ? dayjs(diary.date).format("M월") : "-"}
               </Text>
               <Text className="text-gray-900 text-h-01">
-                {dayjs(diary.createdAt).format("D일")}
+                {diary.date ? dayjs(diary.date).format("D일") : "-"}
               </Text>
             </View>
 

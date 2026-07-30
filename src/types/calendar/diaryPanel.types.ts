@@ -2,7 +2,7 @@ export type DiaryPanelTab = "calendar" | "thread";
 
 export type ThreadItem = {
   diaryId: number;
-  date: string; // YYYY-MM-DD
+  date: string | null; // YYYY-MM-DD
   summary: string;
   title: string;
   content: string;
@@ -12,6 +12,6 @@ export type ThreadItem = {
 
 export type ThreadGroup = {
   monthKey: string;
-  date: string;
+  date: string | null;
   items: ThreadItem[];
 };

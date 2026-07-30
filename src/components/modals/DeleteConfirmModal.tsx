@@ -53,15 +53,24 @@ export function DeleteConfirmModal({
       <View className="items-center justify-center gap-5 px-[30px] py-10">
         <View className="gap-3">
           <View className="flex-col items-center justify-center">
-            {date && description ? (
+            {date || description ? (
               <View className="flex-row items-center gap-1.5">
-                <Text className="text-green-600 text-b-03-m">
-                  {dayjs(date).format("M월 D일")}
-                </Text>
-                <View className="h-3 w-[1px] bg-green-200" />
-                <Text numberOfLines={1} className="text-green-600 text-b-03-m">
-                  {description}
-                </Text>
+                {date && (
+                  <Text className="text-green-600 text-b-03-m">
+                    {dayjs(date).format("M월 D일")}
+                  </Text>
+                )}
+                {date && description && (
+                  <View className="h-3 w-[1px] bg-green-200" />
+                )}
+                {description && (
+                  <Text
+                    numberOfLines={1}
+                    className="text-green-600 text-b-03-m"
+                  >
+                    {description}
+                  </Text>
+                )}
               </View>
             ) : null}
             <Text className="text-gray-900 text-b-02-m">{question}</Text>

@@ -8,7 +8,7 @@ import { isDiaryUnread } from "@/src/utils/isDiaryUnread";
 export function formatDiaryThreadItem(diary: Diary): ThreadItem {
   return {
     diaryId: diary.diaryId,
-    date: dayjs(diary.createdAt).format("YYYY-MM-DD"),
+    date: diary.date ? dayjs(diary.date).format("YYYY-MM-DD") : null,
     summary: diary.aiSummary ?? "AI 일기 요약을 받지 못했어요",
     title: diary.diaryTitle,
     content: diary.content,
