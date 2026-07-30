@@ -1,6 +1,6 @@
 import { baseApi } from "@/src/api/baseApi";
 import type {
-  CreateRecommendedSchedulesResponse,
+  RecommendedSchedulesResponse,
   TodayQuestionResponse,
 } from "@/src/types/ai/ai.types";
 import type { ApiSuccessResponse } from "@/src/types/api/api.types";
@@ -16,7 +16,14 @@ export const aiService = {
   postSchedules: () =>
     baseApi
       .post<
-        ApiSuccessResponse<CreateRecommendedSchedulesResponse>
+        ApiSuccessResponse<RecommendedSchedulesResponse>
+      >("/api/v1/ai/schedules")
+      .then((res) => res.data.data),
+
+  getSchedules: () =>
+    baseApi
+      .get<
+        ApiSuccessResponse<RecommendedSchedulesResponse>
       >("/api/v1/ai/schedules")
       .then((res) => res.data.data),
 };

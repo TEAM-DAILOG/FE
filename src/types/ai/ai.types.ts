@@ -7,7 +7,7 @@ export interface TodayQuestionResponse {
   targetDate: string;
 }
 
-// AI 일정 추천 최초 생성 응답 타입
+// AI 일정 추천 최초 생성 및 조회 응답 타입
 export type RecommendedSchedule = {
   recommendId: number;
   categoryId: number;
@@ -17,7 +17,7 @@ export type RecommendedSchedule = {
   isAdded: boolean;
 };
 
-export type CreateRecommendedSchedulesResponse = {
+export type RecommendedSchedulesResponse = {
   recommendedScheduleCount: number;
   recommendedSchedules: RecommendedSchedule[];
 };

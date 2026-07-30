@@ -1,10 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { aiService } from "@/src/api/aiService";
-import type { CreateRecommendedSchedulesResponse } from "@/src/types/ai/ai.types";
+import type { RecommendedSchedulesResponse } from "@/src/types/ai/ai.types";
 
 export function useCreateSchedules() {
-  return useMutation<CreateRecommendedSchedulesResponse, Error, void>({
+  const queryClient = useQueryClient();
+
+  return useMutation<RecommendedSchedulesResponse, Error, void>({
     mutationFn: aiService.postSchedules,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["aiSchedules"] });
+    },
   });
 }
