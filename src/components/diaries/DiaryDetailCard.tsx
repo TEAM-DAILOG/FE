@@ -34,17 +34,13 @@ export function DiaryDetailCard({
               key={index}
               source={{ uri }}
               className={cn(
-                "aspect-square rounded-s bg-green-100",
+                "aspect-square rounded-s",
                 images.length === 1 ? "w-1/2" : "flex-1"
               )}
             />
           ))}
         </View>
-      ) : (
-        // TODO: 이미지 업로드 기능 붙기 전까지 임시 placeholder
-        // (실제 이미지 생기면 위 images.length > 0 분기만 타게 됨)
-        <View className="aspect-square w-1/2 rounded-s bg-green-100" />
-      )}
+      ) : null}
     </View>
   );
 }

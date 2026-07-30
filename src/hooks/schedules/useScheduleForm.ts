@@ -185,8 +185,9 @@ export function useScheduleForm() {
   const handleDelete = () => {
     if (!scheduleId) return;
 
-    openModal("deleteScheduleModal", {
+    openModal("deleteConfirmModal", {
       props: {
+        target: "일정",
         date,
         description: title,
         isRepeating: isRepeatingSchedule,
