@@ -59,12 +59,14 @@ export function getScheduleDday(date: string) {
 }
 
 // 일기 스레드를 월 단위로 묶기 위한 고유 키(YYYY-MM)를 생성하는 함수
-export function getThreadMonthKey(date: string) {
-  return dayjs(date).format("YYYY-MM");
+export function getThreadMonthKey(date: string | null) {
+  return date ? dayjs(date).format("YYYY-MM") : "미정";
 }
 
 // 일기 스레드의 날짜(date)를 년(YYYY년)과 월(M월) 레이블 조각으로 분리하는 함수
-export function getThreadMonthLabelParts(date: string) {
+export function getThreadMonthLabelParts(date: string | null) {
+  if (!date) return { yearLabel: "", monthLabel: "날짜 미정" };
+
   const yearLabel = dayjs(date).format("YYYY년");
   const monthLabel = dayjs(date).format("M월");
 
@@ -72,7 +74,9 @@ export function getThreadMonthLabelParts(date: string) {
 }
 
 // 일기 스레드의 날짜(date)를 일(day) 숫자와 (요일) 레이블 조각으로 분리하는 함수
-export function getThreadDateParts(date: string) {
+export function getThreadDateParts(date: string | null) {
+  if (!date) return { dayLabel: "-", weekdayLabel: "" };
+
   const dayLabel = dayjs(date).format("D");
   const weekdayLabel = `(${WEEKDAYS[dayjs(date).day()].label})`;
 
