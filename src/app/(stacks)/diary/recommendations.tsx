@@ -8,14 +8,24 @@ import {
   ScreenContainer,
 } from "@/src/components/common";
 import { useGetSchedules } from "@/src/hooks/queries/ai/useGetSchedules";
+import type { RecommendedSchedule } from "@/src/types/ai/ai.types";
 
 export default function DiaryRecommendationsScreen() {
   const router = useRouter();
   const { data } = useGetSchedules();
   const recommendedSchedules = data?.recommendedSchedules ?? [];
 
-  // TODO: 추천 일정 추가(POST /api/v1/ai/schedules/add) API 연동되면 실제 일정 추가 로직 연결
-  const handleAddSchedule = (recommendId: number) => {};
+  // 추천 일정의 제목/카테고리를 채운 채로 일정 등록 화면으로 이동
+  const handleAddSchedule = (schedule: RecommendedSchedule) => {
+    router.push({
+      pathname: "/schedule",
+      params: {
+        title: schedule.scheduleTitle,
+        categoryId: String(schedule.categoryId),
+        categoryColor: schedule.categoryColor,
+      },
+    });
+  };
 
   return (
     <ScreenContainer variant="stack">
@@ -43,7 +53,7 @@ export default function DiaryRecommendationsScreen() {
                   action={{
                     type: "button",
                     label: "일정추가",
-                    onPress: () => handleAddSchedule(schedule.recommendId),
+                    onPress: () => handleAddSchedule(schedule),
                   }}
                 />
               ))}
