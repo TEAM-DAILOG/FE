@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Text, View } from "react-native";
 
 import {
@@ -7,25 +7,12 @@ import {
   ScheduleItem,
   ScreenContainer,
 } from "@/src/components/common";
-import type { RecommendedSchedule } from "@/src/types/ai/ai.types";
-
-function parseRecommendedSchedules(raw?: string): RecommendedSchedule[] {
-  if (!raw) return [];
-
-  try {
-    return JSON.parse(raw) as RecommendedSchedule[];
-  } catch {
-    return [];
-  }
-}
+import { useGetSchedules } from "@/src/hooks/queries/ai/useGetSchedules";
 
 export default function DiaryRecommendationsScreen() {
   const router = useRouter();
-  const { recommendedSchedules: recommendedSchedulesParam } =
-    useLocalSearchParams<{ recommendedSchedules?: string }>();
-  const recommendedSchedules = parseRecommendedSchedules(
-    recommendedSchedulesParam
-  );
+  const { data } = useGetSchedules();
+  const recommendedSchedules = data?.recommendedSchedules ?? [];
 
   // TODO: 추천 일정 추가(POST /api/v1/ai/schedules/add) API 연동되면 실제 일정 추가 로직 연결
   const handleAddSchedule = (recommendId: number) => {};
