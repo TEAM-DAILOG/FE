@@ -18,6 +18,7 @@ export function useCompleteSchedule() {
       scheduleService.completeSchedule(scheduleId, isCompleted),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
     },
   });
 }
