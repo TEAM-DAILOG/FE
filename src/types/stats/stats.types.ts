@@ -25,7 +25,7 @@ export type StatsSchedule = {
 // 미완료 일정 조회 응답값 타입
 export type GetPendingSchedulesResponse = {
   incompletedScheduleCount: number;
-  incompletedScheduleRate: number;
+  completionRate: number;
   targetYear: number;
   targetMonth: number;
   incompletedSchedules: StatsSchedule[];

@@ -17,7 +17,6 @@ import {
 } from "@/src/components/statistics";
 import { useGetCompletedSchedules } from "@/src/hooks/queries/stats/useGetCompletedSchedules";
 import { useGetPendingSchedules } from "@/src/hooks/queries/stats/useGetPendingSchedules";
-import { clampPercentage } from "@/src/utils/clampPercentage";
 import { formatYearMonth } from "@/src/utils/formatDate";
 import { formatStatsScheduleItem } from "@/src/utils/formatStatsScheduleItem";
 
@@ -36,9 +35,6 @@ export default function StatisticIncompleteScreen() {
   const completedSchedules = [...(completedData?.completedSchedules ?? [])]
     .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
     .map(formatStatsScheduleItem);
-  const achievementRate = clampPercentage(
-    Math.round((100 - (pendingData?.incompletedScheduleRate ?? 0)) * 10) / 10
-  );
 
   // 미완료 일정을 오늘 날짜로 다시 등록할 수 있도록 일정등록 화면으로 이동
   const handleReRegister = (schedule: ScheduleListGroupEntry) => {
@@ -75,12 +71,12 @@ export default function StatisticIncompleteScreen() {
               <Text className="text-gray-800 text-b-02-m">
                 일정 달성률{" "}
                 <Text className="text-green-600 text-b-02-sb">
-                  {achievementRate}%
+                  {pendingData?.completionRate ?? 0}%
                 </Text>
               </Text>
             </View>
 
-            <ProgressBar value={achievementRate} />
+            <ProgressBar value={pendingData?.completionRate ?? 0} />
           </View>
 
           <ScheduleListGroup
