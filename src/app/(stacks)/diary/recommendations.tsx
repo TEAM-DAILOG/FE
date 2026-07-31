@@ -44,19 +44,25 @@ export default function DiaryRecommendationsScreen() {
             <Text className="text-gray-900 text-b-03-m">추천 일정</Text>
 
             <View className="gap-2">
-              {recommendedSchedules.map((schedule) => (
-                <ScheduleItem
-                  key={schedule.recommendId}
-                  categoryLabel={schedule.categoryTitle}
-                  categoryColor={schedule.categoryColor}
-                  description={schedule.scheduleTitle}
-                  action={{
-                    type: "button",
-                    label: "일정추가",
-                    onPress: () => handleAddSchedule(schedule),
-                  }}
-                />
-              ))}
+              {recommendedSchedules.length === 0 ? (
+                <Text className="text-gray-400 text-b-04-m">
+                  추천할 일정이 없어요
+                </Text>
+              ) : (
+                recommendedSchedules.map((schedule) => (
+                  <ScheduleItem
+                    key={schedule.recommendId}
+                    categoryLabel={schedule.categoryTitle}
+                    categoryColor={schedule.categoryColor}
+                    description={schedule.scheduleTitle}
+                    action={{
+                      type: "button",
+                      label: "일정추가",
+                      onPress: () => handleAddSchedule(schedule),
+                    }}
+                  />
+                ))
+              )}
             </View>
           </View>
         </View>
