@@ -2,52 +2,24 @@ import { useState } from "react";
 import { ScrollView } from "react-native";
 
 import { BackHeader, ScreenContainer } from "@/src/components/common";
+import { MonthlyCategoryStatCard } from "@/src/components/statistics";
+import { useGetStatsDetail } from "@/src/hooks/queries/stats/useGetStatsDetail";
 import {
-  type CategoryBarChartItem,
-  MonthlyCategoryStatCard,
-} from "@/src/components/statistics";
-
-const CATEGORY_STATS: CategoryBarChartItem[] = [
-  {
-    id: "1",
-    label: "업무업무업",
-    count: 20,
-    color: "BLUE",
-    schedules: [
-      { id: "1-1", name: "팀 회의", date: "2026.05.21" },
-      { id: "1-2", name: "보고서 작성", date: "2026.05.18" },
-      { id: "1-3", name: "클라이언트 미팅", date: "2026.05.12" },
-    ],
-  },
-  {
-    id: "2",
-    label: "약속",
-    count: 3,
-    color: "BROWN",
-    schedules: [{ id: "2-1", name: "친구 생일 파티", date: "2026.05.09" }],
-  },
-  {
-    id: "3",
-    label: "운동",
-    count: 6,
-    color: "GREEN",
-    schedules: [
-      { id: "3-1", name: "헬스장", date: "2026.05.20" },
-      { id: "3-2", name: "요가 클래스", date: "2026.05.14" },
-    ],
-  },
-  { id: "4", label: "기타", count: 0, color: "PINK", schedules: [] },
-  {
-    id: "5",
-    label: "티키탁",
-    count: 1,
-    color: "PURPLE",
-    schedules: [{ id: "5-1", name: "친구 생일 파티", date: "2026.05.09" }],
-  },
-];
+  toCategoryBarChartItem,
+  toTopCategory,
+} from "@/src/types/stats/stats.mappers";
+import { formatYearMonth } from "@/src/utils/formatDate";
 
 export default function StatisticDetailScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const { year, month } = formatYearMonth(selectedDate);
+  const { data } = useGetStatsDetail({ year, month });
+
+  const categoryStats = (data?.categoryRankInfo ?? []).map(
+    toCategoryBarChartItem
+  );
+
+  const topCategory = toTopCategory(data?.mostFrequentCategory ?? null);
 
   return (
     <ScreenContainer variant="stack">
@@ -63,8 +35,8 @@ export default function StatisticDetailScreen() {
       >
         <MonthlyCategoryStatCard
           date={selectedDate}
-          topCategory={{ label: "업무업무업", color: "BLUE" }}
-          data={CATEGORY_STATS}
+          topCategory={topCategory}
+          data={categoryStats}
           onSelectMonth={setSelectedDate}
         />
       </ScrollView>
