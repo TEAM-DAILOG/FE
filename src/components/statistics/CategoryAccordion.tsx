@@ -62,14 +62,16 @@ function CategoryAccordionRow({
         className="flex-row items-center justify-between"
         onPress={onToggle}
       >
-        <View className="flex-row items-center gap-1">
+        <View className="flex-1 flex-row items-center gap-1 pr-2">
           <View
             className={cn(
-              "h-5 w-5 rounded-full",
+              "h-5 w-5 shrink-0 rounded-full",
               CATEGORY_DOT_CLASS_NAMES[group.color]
             )}
           />
-          <Text className="text-gray-900 text-b-03-m">{group.label}</Text>
+          <Text className="shrink text-gray-900 text-b-03-m">
+            {group.label}
+          </Text>
         </View>
 
         <View style={{ transform: [{ rotate: isOpen ? "180deg" : "0deg" }] }}>
@@ -93,10 +95,10 @@ function CategoryAccordionRow({
                 key={schedule.id}
                 className="flex-row items-center justify-between pl-6"
               >
-                <Text className="text-green-800 text-b-04-m">
+                <Text className="flex-1 shrink pr-2 text-green-800 text-b-04-m">
                   {schedule.name}
                 </Text>
-                <Text className="text-gray-400 text-b-05-m">
+                <Text className="shrink-0 text-gray-400 text-b-05-m">
                   {schedule.date}
                 </Text>
               </View>
