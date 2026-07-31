@@ -1,3 +1,4 @@
+import type { RecommendedSchedule } from "@/src/types/ai/ai.types";
 import type { CategoryColor } from "@/src/types/categories/category.types";
 
 // 미완료 일정 조회 요청 파라미터 타입
@@ -37,4 +38,11 @@ export type GetCompletedSchedulesResponse = {
   targetYear: number;
   targetMonth: number;
   completedSchedules: StatsSchedule[];
+};
+
+// 통계 메인 조회 응답값 타입
+export type GetStatsResponse = {
+  lastMonth: number;
+  lastMonthCompletionRate: number;
+  recommendedSchedules: RecommendedSchedule[];
 };
