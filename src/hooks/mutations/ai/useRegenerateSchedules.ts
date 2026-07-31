@@ -11,6 +11,5 @@ export function useRegenerateSchedules() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stats"] });
     },
-    meta: { skipGlobalErrorToast: true },
   });
 }
