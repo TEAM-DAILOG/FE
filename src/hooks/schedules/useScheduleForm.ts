@@ -77,9 +77,15 @@ export function useScheduleForm() {
     )
       return;
 
-    const matched = initialCategoryId
+    const matchedById = initialCategoryId
       ? categories.find((category) => category.id === initialCategoryId)
-      : categories.find((category) => category.color === initialCategoryColor);
+      : undefined;
+    // id로 못 찾으면 색상으로 폴백 추가
+    const matched =
+      matchedById ??
+      (initialCategoryColor
+        ? categories.find((category) => category.color === initialCategoryColor)
+        : undefined);
 
     if (matched) {
       setCategoryId(matched.id);
