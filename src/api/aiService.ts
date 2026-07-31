@@ -26,4 +26,11 @@ export const aiService = {
         ApiSuccessResponse<RecommendedSchedulesResponse>
       >("/api/v1/ai/schedules")
       .then((res) => res.data.data),
+
+  postRegenerateSchedules: () =>
+    baseApi
+      .post<
+        ApiSuccessResponse<RecommendedSchedulesResponse>
+      >("/api/v1/ai/schedules/regenerate")
+      .then((res) => res.data.data),
 };
