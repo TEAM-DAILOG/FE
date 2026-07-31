@@ -12,17 +12,20 @@ import { SettingsModalContainer } from "./SettingsModalContainer";
 export function EditProfileModal({
   initialEmail,
   initialNickname,
+  initialPhotoUri,
   onSave,
 }: EditProfileModalProps) {
   const closeModal = useBaseModal((state) => state.closeModal);
 
   const [email, setEmail] = useState(initialEmail);
   const [nickname, setNickname] = useState(initialNickname);
-  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [photoUri, setPhotoUri] = useState<string | null>(initialPhotoUri);
 
   // 저장 버튼 활성화 여부
   const canSave =
-    email !== initialEmail || nickname !== initialNickname || photoUri !== null;
+    email !== initialEmail ||
+    nickname !== initialNickname ||
+    photoUri !== initialPhotoUri;
 
   //  사진 업로드 클릭 시 실행 함수
   const handlePickPhoto = async () => {
@@ -51,7 +54,12 @@ export function EditProfileModal({
   // 저장 버튼 클릭 시 실행 함수
   const handleSave = () => {
     if (!canSave) return;
-    onSave({ email, nickname, photoUri });
+    const isPhotoChanged = photoUri !== initialPhotoUri;
+    onSave({
+      email,
+      nickname,
+      photoUri: isPhotoChanged ? photoUri : null,
+    });
     closeModal();
   };
 

@@ -1,6 +1,11 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Keyboard, Pressable, Text, View } from "react-native";
+import { tokenStorage } from "@/src/lib/tokenStorage";
+import { useAuthStore } from "@/src/store/auth/authStore";
+import { useSendResetPasswordEmail } from "@/src/hooks/mutations/auth/useSendResetPasswordEmail";
+import { useVerifyResetPasswordEmail } from "@/src/hooks/mutations/auth/useVerifyResetPasswordEmail";
+import { useResetPassword } from "@/src/hooks/mutations/auth/useResetPassword";
 
 import { BackHeader, Button, ScreenContainer } from "@/src/components/common";
 import {
@@ -30,8 +35,6 @@ const PREVIOUS_STEP: Partial<Record<Step, Step>> = {
 };
 
 const CODE_TIMER_SECONDS = 180;
-// 임시 인증 코드
-const MOCK_VALID_CODE = "123456";
 
 export default function PasswordScreen() {
   const router = useRouter();
@@ -46,6 +49,15 @@ export default function PasswordScreen() {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [passwordResetToken, setPasswordResetToken] = useState("");
+
+  const { mutate: sendResetPasswordEmail, isPending: isSendingEmail } =
+    useSendResetPasswordEmail();
+  const { mutate: verifyResetPasswordEmail, isPending: isVerifyingCode } =
+    useVerifyResetPasswordEmail();
+  const { mutate: resetPassword, isPending: isResettingPassword } =
+    useResetPassword();
 
   useEffect(() => {
     if (step !== "code") return;
@@ -80,20 +92,50 @@ export default function PasswordScreen() {
 
   function handlePrimaryPress() {
     if (step === "email") {
-      setRemainingSeconds(CODE_TIMER_SECONDS);
-      setCodeCheckStatus("idle");
-      setStep("code");
+      sendResetPasswordEmail(
+        { email },
+        {
+          onSuccess: (data) => {
+            setRemainingSeconds(data.expiresInSeconds);
+            setCodeCheckStatus("idle");
+            setStep("code");
+          },
+        }
+      );
       return;
     }
+
     if (step === "code") {
       if (codeCheckStatus === "valid") {
         setStep("reset");
         return;
       }
-      setCodeCheckStatus(code === MOCK_VALID_CODE ? "valid" : "invalid");
+      verifyResetPasswordEmail(
+        { email, code },
+        {
+          onSuccess: (data) => {
+            setPasswordResetToken(data.passwordResetToken);
+            setCodeCheckStatus("valid");
+          },
+          onError: () => {
+            setCodeCheckStatus("invalid");
+          },
+        }
+      );
       return;
     }
-    router.back();
+
+    // step === "reset"
+    resetPassword(
+      { email, passwordResetToken, newPassword },
+      {
+        onSuccess: async () => {
+          await tokenStorage.clearTokens();
+          useAuthStore.getState().clearAuthenticated();
+          router.back();
+        },
+      }
+    );
   }
 
   const primaryButtonLabel =
@@ -107,10 +149,10 @@ export default function PasswordScreen() {
 
   const isPrimaryButtonDisabled =
     step === "email"
-      ? !isEmailValid
+      ? !isEmailValid || isSendingEmail
       : step === "code"
-        ? code.length < CODE_LENGTH
-        : !(isPasswordRuleValid && isPasswordMatch);
+        ? code.length < CODE_LENGTH || isVerifyingCode
+        : !(isPasswordRuleValid && isPasswordMatch) || isResettingPassword;
 
   return (
     <ScreenContainer>
