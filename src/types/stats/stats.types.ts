@@ -46,3 +46,37 @@ export type GetStatsResponse = {
   lastMonthCompletionRate: number;
   recommendedSchedules: RecommendedSchedule[];
 };
+
+// 일정 통계 상세 조회 요청 파라미터 타입
+export type GetStatsDetailParams = {
+  year?: number;
+  month?: number;
+};
+
+// 카테고리별 사용 순위에 속한 일정 항목 타입
+export type StatsDetailScheduleItem = {
+  scheduleId: number;
+  title: string;
+  date: string;
+};
+
+// 가장 많이 사용한 카테고리 타입
+export type StatsDetailCategory = {
+  categoryId: number;
+  categoryName: string;
+  categoryColor: CategoryColor;
+};
+
+// 카테고리별 사용 횟수·일정 목록 타입
+export type StatsDetailCategoryRank = StatsDetailCategory & {
+  count: number;
+  schedules: StatsDetailScheduleItem[];
+};
+
+// 일정 통계 상세 조회 응답값 타입
+export type GetStatsDetailResponse = {
+  targetYear: number;
+  targetMonth: number;
+  mostFrequentCategory: StatsDetailCategory | null;
+  categoryRankInfo: StatsDetailCategoryRank[];
+};

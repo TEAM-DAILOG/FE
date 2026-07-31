@@ -5,6 +5,8 @@ import type {
   GetCompletedSchedulesResponse,
   GetPendingSchedulesParams,
   GetPendingSchedulesResponse,
+  GetStatsDetailParams,
+  GetStatsDetailResponse,
   GetStatsResponse,
 } from "@/src/types/stats/stats.types";
 
@@ -12,6 +14,13 @@ export const statsService = {
   getStats: () =>
     baseApi
       .get<ApiSuccessResponse<GetStatsResponse>>("/api/v1/stats")
+      .then((res) => res.data.data),
+
+  getStatsDetail: (params?: GetStatsDetailParams) =>
+    baseApi
+      .get<
+        ApiSuccessResponse<GetStatsDetailResponse>
+      >("/api/v1/stats/detail", { params })
       .then((res) => res.data.data),
 
   getPendingSchedules: (params?: GetPendingSchedulesParams) =>
