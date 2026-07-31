@@ -1,23 +1,11 @@
 import { baseApi } from "@/src/api/baseApi";
+import { createUpdateMeFormData } from "@/src/types/user/user.mappers";
 import type { ApiSuccessResponse } from "@/src/types/api/api.types";
 import type {
   GetMeResponse,
   UpdateMeParams,
   UpdateMeResponse,
 } from "@/src/types/user/user.types";
-
-function createUpdateMeFormData(params: UpdateMeParams) {
-  const formData = new FormData();
-
-  formData.append("name", params.name);
-  formData.append("email", params.email);
-
-  if (params.profileImage) {
-    formData.append("profileImage", params.profileImage as unknown as Blob);
-  }
-
-  return formData;
-}
 
 export const userService = {
   getMe: () =>

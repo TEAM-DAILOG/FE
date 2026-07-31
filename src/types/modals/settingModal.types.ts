@@ -7,6 +7,7 @@ export type EditProfileModalResult = {
 export type EditProfileModalProps = {
   initialEmail: string;
   initialNickname: string;
+  initialPhotoUri: string | null;
   onSave: (result: EditProfileModalResult) => void;
 };
 

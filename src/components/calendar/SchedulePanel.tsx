@@ -57,7 +57,7 @@ export function SchedulePanel({
         <View className="flex-col gap-3">
           {visibleSchedules.length === 0 ? (
             <Text className="text-gray-800 text-b-03-r">
-              등록된 가까운 일정이 없습니다.
+              다음 일주일 이내에 등록된 일정이 없습니다.
             </Text>
           ) : (
             visibleSchedules.map((schedule) => {

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useGetMe } from "@/src/hooks/queries/user/useGetMe";
 import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
+import { useChangePassword } from "@/src/hooks/mutations/auth/useChangePassword";
 import BambooLogo from "@/assets/images/bambooLogo.svg";
 import {
   Divider,
@@ -24,6 +25,7 @@ export default function SettingsScreen() {
   const openModal = useBaseModal((state) => state.openModal);
   const showToast = useToastStore((state) => state.showToast);
   const logoutMutation = useLogout();
+  const changePasswordMutation = useChangePassword();
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(false);
   const [isDiaryReplyEnabled, setIsDiaryReplyEnabled] = useState(false);
@@ -46,8 +48,15 @@ export default function SettingsScreen() {
   const openChangePasswordModal = () => {
     openModal("changePasswordModal", {
       props: {
-        onSave: (_result: ChangePasswordModalResult) => {
-          // TODO: 비밀번호 변경 API 연동
+        onSave: (result: ChangePasswordModalResult) => {
+          changePasswordMutation.mutate(result, {
+            onSuccess: () => {
+              showToast("비밀번호가 변경되었습니다.");
+            },
+            onError: () => {
+              showToast("기존 비밀번호가 일치하지 않습니다.");
+            },
+          });
         },
       },
     });
@@ -69,6 +78,7 @@ export default function SettingsScreen() {
       props: {
         initialEmail: email,
         initialNickname: nickname,
+        initialPhotoUri: photoUri,
         onSave: ({
           email: nextEmail,
           nickname: nextNickname,
