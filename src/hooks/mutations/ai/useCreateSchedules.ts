@@ -10,6 +10,8 @@ export function useCreateSchedules() {
     mutationFn: aiService.postSchedules,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["aiSchedules"] });
+      // 통계 메인 화면도 같은 "오늘의 추천 일정"을 보여주므로 함께 무효화
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
     },
   });
 }
