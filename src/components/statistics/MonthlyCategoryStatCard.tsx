@@ -19,7 +19,7 @@ import { MonthSelector } from "./MonthSelector";
 
 export type MonthlyCategoryStatCardProps = {
   date: Date;
-  topCategory: { label: string; color: CategoryColor };
+  topCategory: { label: string; color: CategoryColor } | null;
   data: CategoryBarChartItem[];
   onSelectMonth?: (date: Date) => void;
   className?: string;
@@ -45,26 +45,34 @@ export function MonthlyCategoryStatCard({
         <MonthSelector date={date} onSelectDate={onSelectMonth} />
 
         <View className="flex-row flex-wrap items-center gap-1">
-          <Text className="text-gray-900 text-b-04-m">
-            이번 달 일정이 제일 많았던 카테고리는
-          </Text>
-          <View className="flex-row items-center gap-0.5">
-            <View
-              className={cn(
-                "h-4 w-4 rounded-full",
-                CATEGORY_DOT_CLASS_NAMES[topCategory.color]
-              )}
-            />
-            <Text
-              className={cn(
-                "text-b-04-sb",
-                CATEGORY_TEXT_CLASS_NAMES[topCategory.color]
-              )}
-            >
-              {topCategory.label}
+          {topCategory ? (
+            <>
+              <Text className="text-gray-900 text-b-04-m">
+                이번 달 일정이 제일 많았던 카테고리는
+              </Text>
+              <View className="flex-row items-center gap-0.5">
+                <View
+                  className={cn(
+                    "h-4 w-4 rounded-full",
+                    CATEGORY_DOT_CLASS_NAMES[topCategory.color]
+                  )}
+                />
+                <Text
+                  className={cn(
+                    "text-b-04-sb",
+                    CATEGORY_TEXT_CLASS_NAMES[topCategory.color]
+                  )}
+                >
+                  {topCategory.label}
+                </Text>
+              </View>
+              <Text className="text-gray-900 text-b-04-m">입니다.</Text>
+            </>
+          ) : (
+            <Text className="text-gray-900 text-b-04-m">
+              등록된 카테고리가 없어요
             </Text>
-          </View>
-          <Text className="text-gray-900 text-b-04-m">입니다.</Text>
+          )}
         </View>
       </View>
 

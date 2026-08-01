@@ -7,40 +7,25 @@ import {
   ScheduleItem,
   ScreenContainer,
 } from "@/src/components/common";
-import type { CategoryColor } from "@/src/types/categories/category.types";
-
-// TODO: API 연동 전까지 더미 사용
-const DUMMY_RECOMMENDED_SCHEDULES: {
-  id: string;
-  categoryLabel: string;
-  categoryColor: CategoryColor;
-  description: string;
-}[] = [
-  {
-    id: "1",
-    categoryLabel: "CATEGORY",
-    categoryColor: "GREEN",
-    description: "Lorem ipsum dolor sit amet consectet.",
-  },
-  {
-    id: "2",
-    categoryLabel: "CATEGORY",
-    categoryColor: "BLUE",
-    description: "Lorem ipsum dolor sit amet consectet.",
-  },
-  {
-    id: "3",
-    categoryLabel: "CATEGORY",
-    categoryColor: "PURPLE",
-    description: "Lorem ipsum dolor sit amet consectet.",
-  },
-];
+import { useGetSchedules } from "@/src/hooks/queries/ai/useGetSchedules";
+import type { RecommendedSchedule } from "@/src/types/ai/ai.types";
 
 export default function DiaryRecommendationsScreen() {
   const router = useRouter();
+  const { data } = useGetSchedules();
+  const recommendedSchedules = data?.recommendedSchedules ?? [];
 
-  // TODO: API 연동되면 실제 일정 추가 로직 연결
-  const handleAddSchedule = (id: string) => {};
+  // 추천 일정의 제목/카테고리를 채운 채로 일정 등록 화면으로 이동
+  const handleAddSchedule = (schedule: RecommendedSchedule) => {
+    router.push({
+      pathname: "/schedule",
+      params: {
+        title: schedule.scheduleTitle,
+        categoryId: String(schedule.categoryId),
+        categoryColor: schedule.categoryColor,
+      },
+    });
+  };
 
   return (
     <ScreenContainer variant="stack">
@@ -59,19 +44,25 @@ export default function DiaryRecommendationsScreen() {
             <Text className="text-gray-900 text-b-03-m">추천 일정</Text>
 
             <View className="gap-2">
-              {DUMMY_RECOMMENDED_SCHEDULES.map((schedule) => (
-                <ScheduleItem
-                  key={schedule.id}
-                  categoryLabel={schedule.categoryLabel}
-                  categoryColor={schedule.categoryColor}
-                  description={schedule.description}
-                  action={{
-                    type: "button",
-                    label: "일정추가",
-                    onPress: () => handleAddSchedule(schedule.id),
-                  }}
-                />
-              ))}
+              {recommendedSchedules.length === 0 ? (
+                <Text className="text-gray-400 text-b-04-m">
+                  추천할 일정이 없어요
+                </Text>
+              ) : (
+                recommendedSchedules.map((schedule) => (
+                  <ScheduleItem
+                    key={schedule.recommendId}
+                    categoryLabel={schedule.categoryTitle}
+                    categoryColor={schedule.categoryColor}
+                    description={schedule.scheduleTitle}
+                    action={{
+                      type: "button",
+                      label: "일정추가",
+                      onPress: () => handleAddSchedule(schedule),
+                    }}
+                  />
+                ))
+              )}
             </View>
           </View>
         </View>

@@ -22,6 +22,8 @@ export type ScheduleRecommendSectionProps = {
   items: ScheduleRecommendItemData[];
   onPressAdd?: (id: string) => void;
   onPressRefresh?: () => void;
+  refreshLabel?: string;
+  isRefreshDisabled?: boolean;
   className?: string;
 };
 
@@ -29,6 +31,8 @@ export function ScheduleRecommendSection({
   items,
   onPressAdd,
   onPressRefresh,
+  refreshLabel = "다른 일정 추천받기",
+  isRefreshDisabled,
   className,
 }: ScheduleRecommendSectionProps) {
   const info = useAnchoredTrigger();
@@ -63,9 +67,10 @@ export function ScheduleRecommendSection({
       </View>
 
       <Button
-        label="다른 일정 추천받기"
+        label={refreshLabel}
         variant="fill-green"
         onPress={onPressRefresh}
+        disabled={isRefreshDisabled}
       />
 
       <AnchoredDropdown

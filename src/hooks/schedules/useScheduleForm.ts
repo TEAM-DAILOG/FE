@@ -3,10 +3,10 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView } from "react-native";
 
-import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { useCreateSchedule } from "@/src/hooks/mutations/schedules/useCreateSchedule";
 import { useDeleteSchedule } from "@/src/hooks/mutations/schedules/useDeleteSchedule";
 import { useUpdateSchedule } from "@/src/hooks/mutations/schedules/useUpdateSchedule";
+import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { CategoryColor } from "@/src/types/categories/category.types";
 import type {
@@ -29,6 +29,7 @@ export function useScheduleForm() {
     date: initialDate,
     scheduleId,
     title: initialTitle,
+    categoryId: initialCategoryId,
     categoryColor: initialCategoryColor,
     memo: initialMemo,
     groupId,
@@ -42,6 +43,7 @@ export function useScheduleForm() {
     date?: string;
     scheduleId?: string;
     title?: string;
+    categoryId?: string;
     categoryColor?: CategoryColor;
     memo?: string;
     groupId?: string;
@@ -66,19 +68,30 @@ export function useScheduleForm() {
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const hasAppliedInitialCategoryRef = useRef(false);
 
-  // 수정 진입 시 전달받은 카테고리 색상으로 목록 로딩 후 최초 1회만 초기 선택값을 채움
+  // 수정 진입 시 전달받은 카테고리 색상으로 목록 로딩 후 최초 1회만 초기 선택값을 채움 + 카테고리 id가 전달되면 id 우선으로 선택
   useEffect(() => {
     if (hasAppliedInitialCategoryRef.current) return;
-    if (!initialCategoryColor || categories.length === 0) return;
+    if (
+      (!initialCategoryId && !initialCategoryColor) ||
+      categories.length === 0
+    )
+      return;
 
-    const matched = categories.find(
-      (category) => category.color === initialCategoryColor
-    );
+    const matchedById = initialCategoryId
+      ? categories.find((category) => category.id === initialCategoryId)
+      : undefined;
+    // id로 못 찾으면 색상으로 폴백 추가
+    const matched =
+      matchedById ??
+      (initialCategoryColor
+        ? categories.find((category) => category.color === initialCategoryColor)
+        : undefined);
+
     if (matched) {
       setCategoryId(matched.id);
       hasAppliedInitialCategoryRef.current = true;
     }
-  }, [categories, initialCategoryColor]);
+  }, [categories, initialCategoryId, initialCategoryColor]);
 
   const [memo, setMemo] = useState(initialMemo ?? "");
   const [date, setDate] = useState(() =>
