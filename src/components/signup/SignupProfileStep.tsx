@@ -3,6 +3,7 @@ import { Image, Pressable, Text, View } from "react-native";
 import CloseIcon from "@/assets/icons/closeIcon.svg";
 import ImageIcon from "@/assets/icons/imageIcon.svg";
 import { Button, TextField } from "@/src/components/common";
+import { USER_NAME_MAX_LENGTH } from "@/src/constants/inputLimits";
 
 import { SignupProgressBar } from "./SignupProgressBar";
 
@@ -43,6 +44,7 @@ export function SignupProfileStep({
             placeholder="닉네임을 입력하세요."
             value={nickname}
             onChangeText={onChangeNickname}
+            maxLength={USER_NAME_MAX_LENGTH}
           />
         </View>
 

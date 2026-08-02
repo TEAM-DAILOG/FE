@@ -109,16 +109,17 @@ export function ScheduleItem({
 
         <View className="gap-0.5">
           <View className="flex-row items-center justify-between">
-            <View className="flex-row items-center gap-1">
+            <View className="shrink flex-row items-center gap-1">
               <View
                 className={cn(
-                  "h-4 w-4 rounded-full",
+                  "h-4 w-4 shrink-0 rounded-full",
                   CATEGORY_DOT_CLASS_NAMES[categoryColor]
                 )}
               />
               <Text
+                numberOfLines={1}
                 className={cn(
-                  "text-b-05-b",
+                  "shrink text-b-05-b",
                   CATEGORY_TEXT_CLASS_NAMES[categoryColor]
                 )}
               >

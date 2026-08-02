@@ -59,15 +59,19 @@ export function CategoryChip({
     <Pressable onPress={onPress}>
       <Animated.View
         className={cn(
-          "flex-row items-center gap-1 rounded-[100px] border px-2 py-1",
+          "max-w-[160px] flex-row items-center gap-1 rounded-[100px] border px-2 py-1",
           CATEGORY_SOLID_BORDER_CLASS_NAMES[color],
           className
         )}
         style={containerStyle}
       >
-        <Animated.View className="size-3 rounded-full" style={dotStyle} />
+        <Animated.View
+          className="size-3 shrink-0 rounded-full"
+          style={dotStyle}
+        />
         <Animated.Text
-          className={cn("text-b-04-r", selected && "text-b-04-sb")}
+          numberOfLines={1}
+          className={cn("shrink text-b-04-r", selected && "text-b-04-sb")}
           style={textStyle}
         >
           {label}

@@ -6,6 +6,7 @@ import { BackHeader, Divider, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { CategoryCircle } from "@/src/components/common/CategoryCircle";
 import { CATEGORY_COLORS } from "@/src/constants/categoryColors";
+import { CATEGORY_NAME_MAX_LENGTH } from "@/src/constants/inputLimits";
 import { useDeleteCategory } from "@/src/hooks/mutations/category/useDeleteCategory";
 import { useUpdateCategory } from "@/src/hooks/mutations/category/useUpdateCategory";
 import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
@@ -90,6 +91,7 @@ export default function CategoryEditScreen() {
           <TextInput
             value={name}
             onChangeText={setName}
+            maxLength={CATEGORY_NAME_MAX_LENGTH}
             className="p-0 text-gray-800 text-b-02-sb"
           />
           <Divider className="border-gray-100" />

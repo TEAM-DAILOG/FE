@@ -4,6 +4,7 @@ import { useCheckPassword } from "@/src/hooks/mutations/auth/useCheckPassword";
 import CloseIcon from "@/assets/icons/closeIcon.svg";
 import CheckIcon from "@/assets/icons/lightCheckIcon.svg";
 import { TextField } from "@/src/components/common";
+import { PASSWORD_MAX_LENGTH } from "@/src/constants/inputLimits";
 import { cn } from "@/src/lib/cn";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { ChangePasswordModalProps } from "@/src/types/modals/settingModal.types";
@@ -126,6 +127,7 @@ export function ChangePasswordModal({ onSave }: ChangePasswordModalProps) {
             secureTextEntry
             textContentType="oneTimeCode"
             placeholder="새 비밀번호를 입력하세요."
+            maxLength={PASSWORD_MAX_LENGTH}
           />
         </View>
         <View className="flex-row items-start gap-2">
@@ -149,6 +151,7 @@ export function ChangePasswordModal({ onSave }: ChangePasswordModalProps) {
             secureTextEntry
             textContentType="oneTimeCode"
             placeholder="새 비밀번호를 한 번 더 입력하세요."
+            maxLength={PASSWORD_MAX_LENGTH}
           />
         </View>
         {confirmPassword.length > 0 && (

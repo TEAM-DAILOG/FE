@@ -1,6 +1,10 @@
 import dayjs from "dayjs";
 
 import { WEEKDAYS } from "@/src/constants";
+import {
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from "@/src/constants/inputLimits";
 import type {
   DatePickerCell,
   ScheduleRepeatSummary,
@@ -113,7 +117,10 @@ export function hasRequiredCharacters(password: string) {
 
 // 비밀번호 길이가 8자 이상 16자 이하인지 검사하는 함수
 export function hasValidLength(password: string) {
-  return password.length >= 8 && password.length <= 16;
+  return (
+    password.length >= PASSWORD_MIN_LENGTH &&
+    password.length <= PASSWORD_MAX_LENGTH
+  );
 }
 
 // 초 단위 시간을 mm:ss 형식 문자열로 변환하는 함수
