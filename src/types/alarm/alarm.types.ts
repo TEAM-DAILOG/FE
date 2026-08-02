@@ -15,3 +15,12 @@ export interface PatchAlarmSettingsParams {
 
 // 알림 설정 수정 API 응답 타입
 export type PatchAlarmSettingsResponse = GetAlarmSettingsResponse;
+
+export type ReminderDay = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+
+// 리마인드 알림 설정 조회 API 응답 타입
+export interface GetReminderSettingsResponse {
+  reminderId: number;
+  days: ReminderDay[];
+  time: string;
+}
