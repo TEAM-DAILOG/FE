@@ -6,6 +6,7 @@ import {
   TabScrollView,
 } from "@/src/components/common";
 import { PillButton, PushAlarmCard } from "@/src/components/settings";
+import { usePatchAlarmSettings } from "@/src/hooks/mutations/alarm/usePatchAlarmSettings";
 import { useChangePassword } from "@/src/hooks/mutations/auth/useChangePassword";
 import { useLogout } from "@/src/hooks/mutations/auth/useLogout";
 import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
@@ -34,6 +35,7 @@ export default function SettingsScreen() {
   const { data: me } = useGetMe();
   const { data: alarmSettings } = useGetAlarmSettings();
   const updateMeMutation = useUpdateMe();
+  const patchAlarmSettingsMutation = usePatchAlarmSettings();
 
   useEffect(() => {
     if (!alarmSettings) {
@@ -43,6 +45,18 @@ export default function SettingsScreen() {
     setIsDiaryWriteEnabled(alarmSettings.isDiary);
     setIsDiaryReplyEnabled(alarmSettings.isDiaryReply);
   }, [alarmSettings]);
+
+  const handleChangePushEnabled = (value: boolean) => {
+    patchAlarmSettingsMutation.mutate({ isPush: value });
+  };
+
+  const handleChangeDiaryWriteEnabled = (value: boolean) => {
+    patchAlarmSettingsMutation.mutate({ isDiary: value });
+  };
+
+  const handleChangeDiaryReplyEnabled = (value: boolean) => {
+    patchAlarmSettingsMutation.mutate({ isDiaryReply: value });
+  };
 
   const email = me?.email ?? "";
   const nickname = me?.name ?? "";
@@ -156,13 +170,13 @@ export default function SettingsScreen() {
             <PushAlarmCard
               className="mt-4"
               isPushEnabled={isPushEnabled}
-              onChangePushEnabled={setIsPushEnabled}
+              onChangePushEnabled={handleChangePushEnabled}
               isDiaryWriteEnabled={isDiaryWriteEnabled}
-              onChangeDiaryWriteEnabled={setIsDiaryWriteEnabled}
+              onChangeDiaryWriteEnabled={handleChangeDiaryWriteEnabled}
               diaryWriteTimeLabel="오후 09:30"
               onPressDiaryWriteTime={() => router.push("/alarm")}
               isDiaryReplyEnabled={isDiaryReplyEnabled}
-              onChangeDiaryReplyEnabled={setIsDiaryReplyEnabled}
+              onChangeDiaryReplyEnabled={handleChangeDiaryReplyEnabled}
             />
           </View>
 

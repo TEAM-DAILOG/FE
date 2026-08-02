@@ -5,3 +5,13 @@ export interface GetAlarmSettingsResponse {
   isDiary: boolean;
   isDiaryReply: boolean;
 }
+
+// 알림 설정 수정 API 요청 타입
+export interface PatchAlarmSettingsParams {
+  isPush?: boolean;
+  isDiary?: boolean;
+  isDiaryReply?: boolean;
+}
+
+// 알림 설정 수정 API 응답 타입
+export type PatchAlarmSettingsResponse = GetAlarmSettingsResponse;
