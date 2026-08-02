@@ -13,6 +13,7 @@ import {
 } from "@/src/components/common";
 import { PillButton, PushAlarmCard } from "@/src/components/settings";
 import { useLogout } from "@/src/hooks/mutations/auth/useLogout";
+import { useWithdraw } from "@/src/hooks/mutations/auth/useWithdraw";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { useToastStore } from "@/src/store/toast/toastStore";
 import type {
@@ -25,6 +26,7 @@ export default function SettingsScreen() {
   const openModal = useBaseModal((state) => state.openModal);
   const showToast = useToastStore((state) => state.showToast);
   const logoutMutation = useLogout();
+  const withdrawMutation = useWithdraw();
   const changePasswordMutation = useChangePassword();
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(false);
@@ -63,11 +65,14 @@ export default function SettingsScreen() {
   };
 
   const openDeleteAccountModal = () => {
+    if (withdrawMutation.isPending) {
+      return;
+    }
+
     openModal("deleteAccountModal", {
       props: {
         onConfirm: () => {
-          // TODO: 회원탈퇴 API 연동 및 로그아웃 처리
-          showToast("회원탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
+          withdrawMutation.mutate();
         },
       },
     });
@@ -165,6 +170,7 @@ export default function SettingsScreen() {
             </Pressable>
             <Pressable
               className="border-b border-gray-400 pb-0.5"
+              disabled={withdrawMutation.isPending}
               onPress={openDeleteAccountModal}
             >
               <Text className="text-gray-400 text-b-04-m">회원탈퇴</Text>
