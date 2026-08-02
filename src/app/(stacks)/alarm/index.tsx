@@ -14,12 +14,17 @@ import {
   ScreenContainer,
   Toggle,
 } from "@/src/components/common";
+import { usePatchReminderSettings } from "@/src/hooks/mutations/alarm/usePatchReminderSettings";
 import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminderSettings";
-import { formatReminderSettings } from "@/src/utils/formatReminderSettings";
+import {
+  createPatchReminderSettingsParams,
+  formatReminderSettings,
+} from "@/src/types/alarm/alarm.mappers";
 import { formatTimeWheelValue } from "@/src/utils/formatTimeWheelValue";
 
 export default function AlarmScreen() {
   const { data: reminderSettings } = useGetReminderSettings();
+  const patchReminderSettingsMutation = usePatchReminderSettings();
 
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(true);
   const [selectedDays, setSelectedDays] = useState<Weekday[]>([]);
@@ -38,6 +43,16 @@ export default function AlarmScreen() {
   const handleToggleDay = (day: Weekday) => {
     setSelectedDays((prev) =>
       prev.includes(day) ? prev.filter((item) => item !== day) : [...prev, day]
+    );
+  };
+
+  const handleSave = () => {
+    if (!time) {
+      return;
+    }
+
+    patchReminderSettingsMutation.mutate(
+      createPatchReminderSettingsParams(selectedDays, time)
     );
   };
 
@@ -77,7 +92,11 @@ export default function AlarmScreen() {
       </View>
 
       <View className="flex-1 justify-end px-4 pb-12">
-        <Button label="저장" />
+        <Button
+          label="저장"
+          onPress={handleSave}
+          disabled={!time || patchReminderSettingsMutation.isPending}
+        />
       </View>
     </ScreenContainer>
   );

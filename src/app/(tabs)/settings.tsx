@@ -15,11 +15,11 @@ import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminder
 import { useGetMe } from "@/src/hooks/queries/user/useGetMe";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { useToastStore } from "@/src/store/toast/toastStore";
+import { formatReminderSettings } from "@/src/types/alarm/alarm.mappers";
 import type {
   ChangePasswordModalResult,
   EditProfileModalResult,
 } from "@/src/types/modals/settingModal.types";
-import { formatReminderSettings } from "@/src/utils/formatReminderSettings";
 import { formatTimeWheelValue } from "@/src/utils/formatTimeWheelValue";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
