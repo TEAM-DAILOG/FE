@@ -4,6 +4,8 @@ import type {
   GetReminderSettingsResponse,
   PatchAlarmSettingsParams,
   PatchAlarmSettingsResponse,
+  PatchReminderSettingsParams,
+  PatchReminderSettingsResponse,
 } from "@/src/types/alarm/alarm.types";
 import type { ApiSuccessResponse } from "@/src/types/api/api.types";
 
@@ -22,8 +24,15 @@ export const alarmService = {
 
   getReminderSettings: () =>
     baseApi
-      .get<ApiSuccessResponse<GetReminderSettingsResponse>>(
-        "/api/v1/alarms/reminder"
-      )
+      .get<
+        ApiSuccessResponse<GetReminderSettingsResponse>
+      >("/api/v1/alarms/reminder")
+      .then((res) => res.data.data),
+
+  patchReminderSettings: (params: PatchReminderSettingsParams) =>
+    baseApi
+      .patch<
+        ApiSuccessResponse<PatchReminderSettingsResponse>
+      >("/api/v1/alarms/reminder", params)
       .then((res) => res.data.data),
 };

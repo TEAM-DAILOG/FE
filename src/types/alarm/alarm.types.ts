@@ -24,3 +24,12 @@ export interface GetReminderSettingsResponse {
   days: ReminderDay[];
   time: string;
 }
+
+// 리마인드 알림 설정 수정 API 요청 타입
+export interface PatchReminderSettingsParams {
+  days: ReminderDay[];
+  time: string;
+}
+
+// 리마인드 알림 설정 수정 API 응답 타입
+export type PatchReminderSettingsResponse = GetReminderSettingsResponse;
