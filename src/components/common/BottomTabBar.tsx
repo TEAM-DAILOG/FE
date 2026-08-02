@@ -15,6 +15,7 @@ import { Pressable, Text, View } from "react-native";
 import Animated, {
   FadeIn,
   FadeOut,
+  interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -61,8 +62,11 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
 
   // 피그마 디졸브 배경색 계산 (Reanimated 스타일)
   const animatedBoxStyle = useAnimatedStyle(() => {
-    const backgroundColor =
-      animationProgress.value > 0.5 ? "#F5F9F6" : "#FCFDFD";
+    const backgroundColor = interpolateColor(
+      animationProgress.value,
+      [0, 1],
+      ["#FCFDFD", "#F5F9F6"]
+    );
     return {
       backgroundColor,
     };

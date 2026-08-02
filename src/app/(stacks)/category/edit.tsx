@@ -45,7 +45,9 @@ export default function CategoryEditScreen() {
   const canSave = hasChanged && trimmedName.length > 0;
 
   const handleSave = () => {
-    if (!canSave || !category || !selectedColor) return;
+    if (!canSave || updateCategory.isPending || !category || !selectedColor) {
+      return;
+    }
     updateCategory.mutate(
       {
         categoryId: id,
@@ -120,7 +122,11 @@ export default function CategoryEditScreen() {
           variant="stroke-green"
           onPress={openDeleteCategoryModal}
         />
-        <Button label="저장" onPress={handleSave} disabled={!canSave} />
+        <Button
+          label={updateCategory.isPending ? "저장 중" : "저장"}
+          onPress={handleSave}
+          disabled={!canSave || updateCategory.isPending}
+        />
       </View>
     </ScreenContainer>
   );
