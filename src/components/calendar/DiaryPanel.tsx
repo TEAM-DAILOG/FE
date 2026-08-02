@@ -32,7 +32,7 @@ export function DiaryPanel({
 
   return (
     <View className="flex-1 gap-4">
-      <View className="flex-row gap-2 border-b border-gray-200 px-4 pt-3">
+      <View className="flex-row gap-2 border-b border-gray-200 px-4">
         {TABS.map(({ key, label }) => (
           <Pressable
             key={key}
