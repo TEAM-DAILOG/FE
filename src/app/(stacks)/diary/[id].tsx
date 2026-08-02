@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -17,48 +18,17 @@ import {
 } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { DiaryDetailCard } from "@/src/components/diaries/DiaryDetailCard";
+import { useCreateAiAnswer } from "@/src/hooks/mutations/ai/useCreateAiAnswer";
 import { useDeleteDiary } from "@/src/hooks/mutations/diaries/useDeleteDiary";
+import { useGetAiAnswer } from "@/src/hooks/queries/ai/useGetAiAnswer";
+import { useGetSchedulesByDiary } from "@/src/hooks/queries/ai/useGetSchedulesByDiary";
 import { useGetDiaries } from "@/src/hooks/queries/diaries/useGetDiaries";
 import { useGetDiaryDetail } from "@/src/hooks/queries/diaries/useGetDiaryDetail";
 import { useBaseModal } from "@/src/store/modals/baseModal";
-import type { CategoryColor } from "@/src/types/categories/category.types";
 import { getErrorMessage } from "@/src/utils/getErrorMessage";
 
 const ICON_COLOR_ACTIVE = "#020303";
 const ICON_COLOR_DISABLED = "#AEB2B0";
-
-type DiaryRecommendation = {
-  id: string;
-  categoryName: string;
-  categoryColor: CategoryColor;
-  content: string;
-};
-
-// AI 답장 조회 API 연동 후 대체
-const DUMMY_AI_REPLY: string | null =
-  "Lorem ipsum dolor sit amet consectetur. Dignissim felis facilisi sed in. Urna lorem ac eu ipsum. Et eleifend vitae mi non mattis sem purus. Nunc at amet suspendisse orci tempor fames.";
-
-// AI 일정 추천 API 연동 후 대체
-const DUMMY_RECOMMENDATIONS: DiaryRecommendation[] = [
-  {
-    id: "1",
-    categoryName: "CATEGORY",
-    categoryColor: "BLUE",
-    content: "Lorem ipsum dolor sit amet consectetur.",
-  },
-  {
-    id: "2",
-    categoryName: "CATEGORY",
-    categoryColor: "BROWN",
-    content: "Lorem ipsum dolor sit amet consectetur.",
-  },
-  {
-    id: "3",
-    categoryName: "CATEGORY",
-    categoryColor: "GREEN",
-    content: "Lorem ipsum dolor sit amet consectetur.",
-  },
-];
 
 export default function DiaryDetailScreen() {
   const router = useRouter();
@@ -73,6 +43,21 @@ export default function DiaryDetailScreen() {
   } = useGetDiaryDetail(diaryId);
   const { data: diariesData } = useGetDiaries();
   const deleteDiaryMutation = useDeleteDiary();
+
+  // AI 답변 확인 -> 없으면(에러) 생성 호출
+  const { data: aiAnswer, isError: isAiAnswerError } =
+    useGetAiAnswer(diaryId);
+  const createAiAnswer = useCreateAiAnswer();
+
+  // AI 추천일정(일기별 조회)
+  const { data: schedulesByDiary } = useGetSchedulesByDiary(diaryId);
+  const recommendedSchedules = schedulesByDiary?.recommendedSchedules ?? [];
+
+  useEffect(() => {
+    if (isAiAnswerError && diaryId) {
+      createAiAnswer.mutate(diaryId);
+    }
+  }, [isAiAnswerError, diaryId]);
 
   const toTimeValue = (date: string | null) =>
     date ? dayjs(date).valueOf() : -Infinity;
@@ -220,11 +205,10 @@ export default function DiaryDetailScreen() {
         {hasQuestion && (
           <View className="gap-3">
             <Text className="text-gray-900 text-b-02-m">AI의 답장</Text>
-            {/* AI 답장 조회 API 연동 후 대체 예정 */}
-            {DUMMY_AI_REPLY ? (
+            {aiAnswer ? (
               <View className="rounded-xl bg-green-200 p-3">
                 <Text className="text-green-800 text-b-02-m">
-                  {DUMMY_AI_REPLY}
+                  {aiAnswer.answer}
                 </Text>
               </View>
             ) : (
@@ -238,23 +222,28 @@ export default function DiaryDetailScreen() {
         )}
 
         {/* AI 추천일정 */}
-        {/* AI 추천일정 생성 API 연동 후 대체 예정 */}
-        {DUMMY_RECOMMENDATIONS.length > 0 ? (
+        {recommendedSchedules.length > 0 ? (
           <View className="gap-3">
             <Text className="text-gray-900 text-b-02-m">AI 추천일정</Text>
 
             <View className="gap-2 rounded-xl border border-gray-100 bg-white p-3">
-              {DUMMY_RECOMMENDATIONS.map((rec) => (
+              {recommendedSchedules.map((schedule) => (
                 <ScheduleItem
-                  key={rec.id}
-                  categoryLabel={rec.categoryName}
-                  categoryColor={rec.categoryColor}
-                  description={rec.content}
+                  key={schedule.recommendId}
+                  categoryLabel={schedule.categoryTitle}
+                  categoryColor={schedule.categoryColor}
+                  description={schedule.scheduleTitle}
                   action={{
                     type: "button",
                     label: "일정추가",
                     onPress: () => {
-                      // TODO: API 연동 단계에서 일정 추가 로직 연결
+                      router.push({
+                        pathname: "/schedule",
+                        params: {
+                          categoryId: String(schedule.categoryId),
+                          categoryColor: schedule.categoryColor,
+                        },
+                      });
                     },
                   }}
                 />
