@@ -1,8 +1,8 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, Text, TextInput, View } from "react-native";
 
-import { BackHeader, ScreenContainer } from "@/src/components/common";
+import { BackHeader, Divider, ScreenContainer } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { CategoryCircle } from "@/src/components/common/CategoryCircle";
 import { CATEGORY_COLORS } from "@/src/constants/categoryColors";
@@ -24,21 +24,33 @@ export default function CategoryEditScreen() {
   const updateCategory = useUpdateCategory();
   const deleteCategory = useDeleteCategory();
 
+  const [name, setName] = useState("");
   const [selectedColor, setSelectedColor] = useState<CategoryColor | null>(
     null
   );
 
   useEffect(() => {
-    if (category) setSelectedColor(category.color);
+    if (category) {
+      setName(category.name);
+      setSelectedColor(category.color);
+    }
   }, [category]);
 
+  const trimmedName = name.trim();
   const hasChanged =
-    selectedColor !== null && category && selectedColor !== category.color;
+    !!category &&
+    selectedColor !== null &&
+    (trimmedName !== category.name || selectedColor !== category.color);
+  const canSave = hasChanged && trimmedName.length > 0;
 
   const handleSave = () => {
-    if (!hasChanged || !selectedColor) return;
+    if (!canSave || !category || !selectedColor) return;
     updateCategory.mutate(
-      { categoryId: id, color: selectedColor },
+      {
+        categoryId: id,
+        ...(trimmedName !== category.name ? { name: trimmedName } : {}),
+        ...(selectedColor !== category.color ? { color: selectedColor } : {}),
+      },
       { onSuccess: () => router.back() }
     );
   };
@@ -51,7 +63,7 @@ export default function CategoryEditScreen() {
     if (!category || !selectedColor) return;
     openModal("deleteCategoryModal", {
       props: {
-        categoryName: category.name,
+        categoryName: trimmedName || category.name,
         categoryColor: selectedColor,
         onConfirm: handleDelete,
       },
@@ -74,11 +86,13 @@ export default function CategoryEditScreen() {
       <BackHeader label="카테고리 설정" />
 
       <View className="flex-1 px-4 pt-5">
-        {/* TODO: 이 구분선(h-px bg-gray-100)은 category/index.tsx의 ItemSeparatorComponent와
-            중복됨 -> 공용 컴포넌트 분리 PR 머지되면 그걸로 교체 */}
         <View className="gap-4 rounded-lg border border-gray-100 bg-white px-4 py-6">
-          <Text className="text-gray-800 text-b-02-sb">{category.name}</Text>
-          <View className="h-px bg-gray-100" />
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            className="p-0 text-gray-800 text-b-02-sb"
+          />
+          <Divider className="border-gray-100" />
           <View className="flex-row justify-between">
             {CATEGORY_COLORS.map((color) => (
               <CategoryCircle
@@ -104,7 +118,7 @@ export default function CategoryEditScreen() {
           variant="stroke-green"
           onPress={openDeleteCategoryModal}
         />
-        <Button label="저장" onPress={handleSave} disabled={!hasChanged} />
+        <Button label="저장" onPress={handleSave} disabled={!canSave} />
       </View>
     </ScreenContainer>
   );
