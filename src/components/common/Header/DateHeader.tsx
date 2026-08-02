@@ -20,8 +20,6 @@ export type DateHeaderProps = {
   selectedCategoryIds: string[];
   onChangeSelectedCategoryIds: (ids: string[]) => void;
   onPressCategorySettings: () => void;
-  isAiSummaryEnabled: boolean;
-  onChangeAiSummaryEnabled: (value: boolean) => void;
   onPressToggle?: () => void;
   className?: string;
 };
@@ -33,8 +31,6 @@ export function DateHeader({
   selectedCategoryIds,
   onChangeSelectedCategoryIds,
   onPressCategorySettings,
-  isAiSummaryEnabled,
-  onChangeAiSummaryEnabled,
   onPressToggle,
   className,
 }: DateHeaderProps) {
@@ -109,8 +105,6 @@ export function DateHeader({
           selectedCategoryIds={selectedCategoryIds}
           onChangeSelectedCategoryIds={onChangeSelectedCategoryIds}
           onPressCategorySettings={handlePressCategorySettings}
-          isAiSummaryEnabled={isAiSummaryEnabled}
-          onChangeAiSummaryEnabled={onChangeAiSummaryEnabled}
         />
       </AnchoredDropdown>
     </HeaderContainer>

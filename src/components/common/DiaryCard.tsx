@@ -10,10 +10,7 @@ import type {
 
 const IMAGE_GAP_PX = 8;
 
-const CONTENT_LINE_COUNTS: Record<
-  Exclude<DiaryCardVariant, "summary">,
-  number
-> = {
+const CONTENT_LINE_COUNTS: Record<DiaryCardVariant, number> = {
   "no-image": 5,
   "one-image": 3,
   "two-images": 3,
@@ -32,25 +29,6 @@ export function DiaryCard(props: DiaryCardProps) {
   const handleImageRowLayout = (event: LayoutChangeEvent) => {
     setRowWidth(event.nativeEvent.layout.width);
   };
-
-  if (props.variant === "summary") {
-    return (
-      <View
-        className={cn(
-          "h-12 w-full justify-center rounded-xl bg-gray-0 px-4 shadow-card-1",
-          props.containerClassName
-        )}
-      >
-        <Text
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          className="text-gray-900 text-b-03-m"
-        >
-          {props.summary}
-        </Text>
-      </View>
-    );
-  }
 
   const imageVariant = props.variant === "no-image" ? null : props.variant;
 
