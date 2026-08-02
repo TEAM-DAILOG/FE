@@ -13,11 +13,16 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Animated, {
+  FadeIn,
+  FadeOut,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+
+const CONTENT_FADE_IN = FadeIn.duration(200);
+const CONTENT_FADE_OUT = FadeOut.duration(150);
 
 const TAB_ICONS = {
   index: TabHomeIcon,
@@ -71,100 +76,129 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
       }}
     >
       {/* ----------------- 왼쪽 박스 영역 ----------------- */}
-      {!isOpen ? (
-        <View
-          className="h-[60px] flex-1 flex-row items-center justify-between rounded-full bg-gray-0 px-3"
-          style={TAB_BAR_SHADOW_STYLE}
-        >
-          {state.routes.map((route, index) => {
-            const isFocused = state.index === index;
-            const TabIcon =
-              TAB_ICONS[route.name as keyof typeof TAB_ICONS] ?? TabHomeIcon;
-            const onPress = () => {
-              const event = navigation.emit({
-                type: "tabPress",
-                target: route.key,
-                canPreventDefault: true,
-              });
-              if (!isFocused && !event.defaultPrevented) {
-                navigation.navigate(route.name);
-              }
-            };
-            return (
-              <Pressable
-                key={route.key}
-                onPress={onPress}
-                className={cn(
-                  "h-10 w-[52px] flex-shrink-0 items-center justify-center rounded-full p-2.5 web:outline-none",
-                  isFocused ? "bg-green-600" : "bg-gray-0"
-                )}
-              >
-                <TabIcon
-                  width={24}
-                  height={24}
-                  color={isFocused ? "#FFFFFF" : "#C2DBD1"}
-                />
-              </Pressable>
-            );
-          })}
-        </View>
-      ) : (
-        // 플러스 버튼 열린 상태 (일정등록 | 일기작성)
-        <View
-          className="h-[60px] flex-1 flex-row items-center justify-between rounded-full border border-green-600 bg-gray-0 px-[28px]"
-          style={TAB_BAR_SHADOW_STYLE}
-        >
-          {/* 일정등록 버튼 */}
-          <Pressable
-            onPress={() => {
-              setIsOpen(false);
-              router.push("/schedule");
-            }}
-            className="h-7 flex-row items-center justify-center gap-2"
+      <View
+        className="h-[60px] flex-1 rounded-full"
+        style={TAB_BAR_SHADOW_STYLE}
+      >
+        {!isOpen ? (
+          <Animated.View
+            key="tabs"
+            entering={CONTENT_FADE_IN}
+            exiting={CONTENT_FADE_OUT}
+            collapsable={false}
+            className="h-full flex-1 flex-row items-center justify-between overflow-hidden rounded-full bg-gray-0 px-3 py-2.5"
           >
-            <Text className="text-center text-green-600 text-b-02-sb">
-              일정등록
-            </Text>
-            <ScheduleIcon width={28} height={28} color="#4D826C" />
-          </Pressable>
-
-          {/* 가운데 세로 구분선 */}
-          <View className="h-7 w-[1px] bg-green-600" />
-
-          {/* 일기작성 버튼 */}
-          <Pressable
-            onPress={() => {
-              setIsOpen(false);
-              router.push("/diary/write");
-            }}
-            className="h-7 flex-row items-center justify-center gap-2"
+            {state.routes.map((route, index) => {
+              const isFocused = state.index === index;
+              const TabIcon =
+                TAB_ICONS[route.name as keyof typeof TAB_ICONS] ?? TabHomeIcon;
+              const onPress = () => {
+                const event = navigation.emit({
+                  type: "tabPress",
+                  target: route.key,
+                  canPreventDefault: true,
+                });
+                if (!isFocused && !event.defaultPrevented) {
+                  navigation.navigate(route.name);
+                }
+              };
+              return (
+                <Pressable
+                  key={route.key}
+                  onPress={onPress}
+                  className={cn(
+                    "w-[52px] flex-shrink-0 items-center justify-center overflow-hidden rounded-full p-2.5 web:outline-none",
+                    isFocused ? "bg-green-600" : "bg-gray-0"
+                  )}
+                >
+                  <TabIcon
+                    width={24}
+                    height={24}
+                    color={isFocused ? "#FFFFFF" : "#C2DBD1"}
+                  />
+                </Pressable>
+              );
+            })}
+          </Animated.View>
+        ) : (
+          // 플러스 버튼 열린 상태 (일정등록 | 일기작성)
+          <Animated.View
+            key="actions"
+            entering={CONTENT_FADE_IN}
+            exiting={CONTENT_FADE_OUT}
+            collapsable={false}
+            className="h-full flex-1 flex-row items-center justify-between overflow-hidden rounded-full border border-green-600 bg-gray-0 py-4"
           >
-            <Text className="text-center text-green-600 text-b-02-sb">
-              일기작성
-            </Text>
-            <DiaryIcon width={28} height={28} color="#4D826C" />
-          </Pressable>
-        </View>
-      )}
+            {/* 일정등록 버튼 */}
+            <Pressable
+              onPress={() => {
+                setIsOpen(false);
+                router.push("/schedule");
+              }}
+              className="mx-auto flex-row items-center justify-center gap-2"
+            >
+              <Text className="text-center text-green-600 text-b-02-sb">
+                일정등록
+              </Text>
+              <ScheduleIcon width={28} height={28} color="#4D826C" />
+            </Pressable>
+
+            {/* 가운데 세로 구분선 */}
+            <View className="h-7 w-[1px] bg-green-600" />
+
+            {/* 일기작성 버튼 */}
+            <Pressable
+              onPress={() => {
+                setIsOpen(false);
+                router.push("/diary/write");
+              }}
+              className="mx-auto flex-row items-center justify-center gap-2"
+            >
+              <Text className="text-center text-green-600 text-b-02-sb">
+                일기작성
+              </Text>
+              <DiaryIcon width={28} height={28} color="#4D826C" />
+            </Pressable>
+          </Animated.View>
+        )}
+      </View>
 
       {/* ----------------- 오른쪽 박스: 플러스 / 엑스 버튼 ----------------- */}
       <Animated.View
-        className="h-[60px] w-[60px] items-center justify-center rounded-full"
-        style={[animatedBoxStyle, TAB_BAR_SHADOW_STYLE]}
+        className="h-[60px] w-[60px] rounded-full"
+        style={TAB_BAR_SHADOW_STYLE}
       >
-        <Pressable
-          onPress={() => setIsOpen(!isOpen)}
-          className="h-full w-full items-center justify-center rounded-full bg-transparent web:outline-none"
+        <Animated.View
+          collapsable={false}
+          className="h-full w-full items-center justify-center overflow-hidden rounded-full"
+          style={animatedBoxStyle}
         >
-          {isOpen ? (
-            <TabCancleIcon width={24} height={24} color="#4D826C" />
-          ) : (
-            <TabPlusIcon width={24} height={24} color="#4D826C" />
-          )}
-        </Pressable>
+          <Pressable
+            onPress={() => setIsOpen(!isOpen)}
+            className="h-full w-full items-center justify-center rounded-full bg-transparent web:outline-none"
+          >
+            {isOpen ? (
+              <Animated.View
+                key="cancel"
+                entering={CONTENT_FADE_IN}
+                exiting={CONTENT_FADE_OUT}
+                collapsable={false}
+              >
+                <TabCancleIcon width={24} height={24} color="#4D826C" />
+              </Animated.View>
+            ) : (
+              <Animated.View
+                key="plus"
+                entering={CONTENT_FADE_IN}
+                exiting={CONTENT_FADE_OUT}
+                collapsable={false}
+              >
+                <TabPlusIcon width={24} height={24} color="#4D826C" />
+              </Animated.View>
+            )}
+          </Pressable>
+        </Animated.View>
       </Animated.View>
     </View>
   );
 }
-
-export default BottomTabBar;
