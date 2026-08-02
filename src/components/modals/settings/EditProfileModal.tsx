@@ -94,6 +94,7 @@ export function EditProfileModal({
           keyboardType="email-address"
           autoCapitalize="none"
           placeholder="dailog@naver.com"
+          disabled={true}
         />
       </View>
 
