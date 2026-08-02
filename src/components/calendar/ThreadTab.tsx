@@ -3,7 +3,6 @@ import { Pressable, Text, View } from "react-native";
 
 import { DiaryThreadCard } from "@/src/components/calendar/DiaryThreadCard";
 import { Divider } from "@/src/components/common";
-import { DiaryCard } from "@/src/components/common/DiaryCard";
 import type { ThreadItem } from "@/src/types/calendar/diaryPanel.types";
 import {
   getThreadDateParts,
@@ -15,14 +14,9 @@ import { groupThreadItemsByMonth } from "@/src/utils/groupThreadItemsByMonth";
 type ThreadTabProps = {
   month: string;
   items: ThreadItem[];
-  isAiSummaryEnabled: boolean;
 };
 
-export function ThreadTab({
-  month,
-  items,
-  isAiSummaryEnabled,
-}: ThreadTabProps) {
+export function ThreadTab({ month, items }: ThreadTabProps) {
   const router = useRouter();
   const groups = groupThreadItemsByMonth(items);
   const currentMonthKey = getThreadMonthKey(month);
@@ -67,11 +61,7 @@ export function ThreadTab({
                   </View>
 
                   <Pressable onPress={() => openDiaryDetail(item.diaryId)}>
-                    {isAiSummaryEnabled ? (
-                      <DiaryCard variant="summary" summary={item.summary} />
-                    ) : (
-                      <DiaryThreadCard item={item} />
-                    )}
+                    <DiaryThreadCard item={item} />
                   </Pressable>
                 </View>
               );

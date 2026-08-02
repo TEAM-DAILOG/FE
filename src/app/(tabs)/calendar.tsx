@@ -27,7 +27,6 @@ export default function CalendarScreen() {
   const [viewMonth, setViewMonth] = useState(() =>
     dayjs().format("YYYY-MM-DD")
   );
-  const [isAiSummaryEnabled, setIsAiSummaryEnabled] = useState(false);
 
   // 카테고리 목록 조회
   const { data: categoriesData } = useGetCategories();
@@ -118,8 +117,6 @@ export default function CalendarScreen() {
         selectedCategoryIds={selectedCategoryIds}
         onChangeSelectedCategoryIds={setSelectedCategoryIds}
         onPressCategorySettings={() => router.push("/category")}
-        isAiSummaryEnabled={isAiSummaryEnabled}
-        onChangeAiSummaryEnabled={setIsAiSummaryEnabled}
         onPressToggle={() =>
           setMode((prev) => (prev === "schedule" ? "diary" : "schedule"))
         }
@@ -137,7 +134,6 @@ export default function CalendarScreen() {
             month={viewMonth}
             getDayInfo={getDayInfo}
             threadItems={threadItems}
-            isAiSummaryEnabled={isAiSummaryEnabled}
           />
         )}
       </TabScrollView>

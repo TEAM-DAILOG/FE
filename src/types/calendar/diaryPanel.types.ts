@@ -3,7 +3,6 @@ export type DiaryPanelTab = "calendar" | "thread";
 export type ThreadItem = {
   diaryId: number;
   date: string | null; // YYYY-MM-DD
-  summary: string;
   title: string;
   content: string;
   images: string[];

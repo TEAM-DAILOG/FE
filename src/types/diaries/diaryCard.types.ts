@@ -1,7 +1,6 @@
 import type { ImageSourcePropType } from "react-native";
 
 export type DiaryCardVariant =
-  | "summary"
   | "no-image"
   | "one-image"
   | "two-images"
@@ -9,11 +8,6 @@ export type DiaryCardVariant =
 
 type DiaryCardBaseProps = {
   containerClassName?: string;
-};
-
-export type DiaryCardSummaryProps = DiaryCardBaseProps & {
-  variant: "summary";
-  summary: string;
 };
 
 export type DiaryCardNoImageProps = DiaryCardBaseProps & {
@@ -44,7 +38,6 @@ export type DiaryCardThreeImagesProps = DiaryCardBaseProps & {
 };
 
 export type DiaryCardProps =
-  | DiaryCardSummaryProps
   | DiaryCardNoImageProps
   | DiaryCardOneImageProps
   | DiaryCardTwoImagesProps

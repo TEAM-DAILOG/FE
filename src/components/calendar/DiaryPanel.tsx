@@ -15,7 +15,6 @@ type DiaryPanelProps = {
   onDayPress?: (date: string, isCurrentMonth: boolean) => void;
   getDayInfo?: (date: string, isCurrentMonth: boolean) => CalendarDayInfo;
   threadItems: ThreadItem[];
-  isAiSummaryEnabled: boolean;
 };
 
 const TABS: { key: DiaryPanelTab; label: string }[] = [
@@ -28,7 +27,6 @@ export function DiaryPanel({
   onDayPress,
   getDayInfo,
   threadItems,
-  isAiSummaryEnabled,
 }: DiaryPanelProps) {
   const [tab, setTab] = useState<DiaryPanelTab>("calendar");
 
@@ -66,11 +64,7 @@ export function DiaryPanel({
             getDayInfo={getDayInfo}
           />
         ) : (
-          <ThreadTab
-            month={month}
-            items={threadItems}
-            isAiSummaryEnabled={isAiSummaryEnabled}
-          />
+          <ThreadTab month={month} items={threadItems} />
         )}
       </View>
     </View>

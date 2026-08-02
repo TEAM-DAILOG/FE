@@ -7,7 +7,6 @@ import DownIcon from "@/assets/icons/downIcon.svg";
 import RightIcon from "@/assets/icons/rightIcon.svg";
 import UpIcon from "@/assets/icons/upIcon.svg";
 import { Divider } from "@/src/components/common/Divider";
-import { Toggle } from "@/src/components/common/Toggle";
 import { CATEGORY_DOT_CLASS_NAMES } from "@/src/constants/categoryColors";
 import { cn } from "@/src/lib/cn";
 import type { Category } from "@/src/types/categories/category.types";
@@ -17,8 +16,6 @@ export type CalendarMenuBoxProps = {
   selectedCategoryIds: string[];
   onChangeSelectedCategoryIds: (ids: string[]) => void;
   onPressCategorySettings: () => void;
-  isAiSummaryEnabled: boolean;
-  onChangeAiSummaryEnabled: (value: boolean) => void;
 };
 
 function CheckSlot({ checked }: { checked: boolean }) {
@@ -36,8 +33,6 @@ export function CalendarMenuBox({
   selectedCategoryIds,
   onChangeSelectedCategoryIds,
   onPressCategorySettings,
-  isAiSummaryEnabled,
-  onChangeAiSummaryEnabled,
 }: CalendarMenuBoxProps) {
   const [isCategoryListOpen, setIsCategoryListOpen] = useState(false);
 
@@ -134,17 +129,6 @@ export function CalendarMenuBox({
         <Text className="text-gray-900 text-b-05-m">카테고리 설정</Text>
         <RightIcon width={16} height={16} color="#3B6352" />
       </Pressable>
-
-      <Divider className="border-gray-100" />
-
-      <View className="flex-row items-center justify-between">
-        <Text className="text-gray-900 text-b-05-m">AI 일기요약</Text>
-        <Toggle
-          size="sm"
-          value={isAiSummaryEnabled}
-          onValueChange={onChangeAiSummaryEnabled}
-        />
-      </View>
     </View>
   );
 }
