@@ -11,6 +11,7 @@ import { useChangePassword } from "@/src/hooks/mutations/auth/useChangePassword"
 import { useLogout } from "@/src/hooks/mutations/auth/useLogout";
 import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
 import { useGetAlarmSettings } from "@/src/hooks/queries/alarm/useGetAlarmSettings";
+import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminderSettings";
 import { useGetMe } from "@/src/hooks/queries/user/useGetMe";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { useToastStore } from "@/src/store/toast/toastStore";
@@ -18,6 +19,8 @@ import type {
   ChangePasswordModalResult,
   EditProfileModalResult,
 } from "@/src/types/modals/settingModal.types";
+import { formatReminderSettings } from "@/src/utils/formatReminderSettings";
+import { formatTimeWheelValue } from "@/src/utils/formatTimeWheelValue";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
@@ -34,8 +37,13 @@ export default function SettingsScreen() {
 
   const { data: me } = useGetMe();
   const { data: alarmSettings } = useGetAlarmSettings();
+  const { data: reminderSettings } = useGetReminderSettings();
   const updateMeMutation = useUpdateMe();
   const patchAlarmSettingsMutation = usePatchAlarmSettings();
+
+  const diaryWriteTimeLabel = reminderSettings
+    ? formatTimeWheelValue(formatReminderSettings(reminderSettings).time)
+    : "";
 
   useEffect(() => {
     if (!alarmSettings) {
@@ -173,7 +181,7 @@ export default function SettingsScreen() {
               onChangePushEnabled={handleChangePushEnabled}
               isDiaryWriteEnabled={isDiaryWriteEnabled}
               onChangeDiaryWriteEnabled={handleChangeDiaryWriteEnabled}
-              diaryWriteTimeLabel="오후 09:30"
+              diaryWriteTimeLabel={diaryWriteTimeLabel}
               onPressDiaryWriteTime={() => router.push("/alarm")}
               isDiaryReplyEnabled={isDiaryReplyEnabled}
               onChangeDiaryReplyEnabled={handleChangeDiaryReplyEnabled}
