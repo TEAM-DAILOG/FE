@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
 import {
@@ -14,20 +14,26 @@ import {
   ScreenContainer,
   Toggle,
 } from "@/src/components/common";
+import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminderSettings";
+import { formatReminderSettings } from "@/src/utils/formatReminderSettings";
 import { formatTimeWheelValue } from "@/src/utils/formatTimeWheelValue";
 
 export default function AlarmScreen() {
+  const { data: reminderSettings } = useGetReminderSettings();
+
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(true);
-  const [selectedDays, setSelectedDays] = useState<Weekday[]>([
-    "mon",
-    "wed",
-    "fri",
-  ]);
-  const [time, setTime] = useState<TimeWheelValue>({
-    period: "pm",
-    hour: 9,
-    minute: 30,
-  });
+  const [selectedDays, setSelectedDays] = useState<Weekday[]>([]);
+  const [time, setTime] = useState<TimeWheelValue | null>(null);
+
+  useEffect(() => {
+    if (!reminderSettings) {
+      return;
+    }
+    const { selectedDays: days, time: reminderTime } =
+      formatReminderSettings(reminderSettings);
+    setSelectedDays(days);
+    setTime(reminderTime);
+  }, [reminderSettings]);
 
   const handleToggleDay = (day: Weekday) => {
     setSelectedDays((prev) =>
@@ -49,14 +55,14 @@ export default function AlarmScreen() {
             />
           </View>
 
-          {isDiaryWriteEnabled ? (
+          {isDiaryWriteEnabled && time ? (
             <Text className="self-end text-green-900 text-b-03-m">
               {formatTimeWheelValue(time)}
             </Text>
           ) : null}
         </View>
 
-        {isDiaryWriteEnabled ? (
+        {isDiaryWriteEnabled && time ? (
           <>
             <Divider className="border-green-100" />
 
