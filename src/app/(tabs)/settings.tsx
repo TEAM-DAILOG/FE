@@ -1,9 +1,3 @@
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
-import { useGetMe } from "@/src/hooks/queries/user/useGetMe";
-import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
-import { useChangePassword } from "@/src/hooks/mutations/auth/useChangePassword";
 import BambooLogo from "@/assets/images/bambooLogo.svg";
 import {
   Divider,
@@ -12,13 +6,20 @@ import {
   TabScrollView,
 } from "@/src/components/common";
 import { PillButton, PushAlarmCard } from "@/src/components/settings";
+import { useChangePassword } from "@/src/hooks/mutations/auth/useChangePassword";
 import { useLogout } from "@/src/hooks/mutations/auth/useLogout";
+import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
+import { useGetAlarmSettings } from "@/src/hooks/queries/alarm/useGetAlarmSettings";
+import { useGetMe } from "@/src/hooks/queries/user/useGetMe";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { useToastStore } from "@/src/store/toast/toastStore";
 import type {
   ChangePasswordModalResult,
   EditProfileModalResult,
 } from "@/src/types/modals/settingModal.types";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { Image, Pressable, Text, View } from "react-native";
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -31,7 +32,17 @@ export default function SettingsScreen() {
   const [isDiaryReplyEnabled, setIsDiaryReplyEnabled] = useState(false);
 
   const { data: me } = useGetMe();
+  const { data: alarmSettings } = useGetAlarmSettings();
   const updateMeMutation = useUpdateMe();
+
+  useEffect(() => {
+    if (!alarmSettings) {
+      return;
+    }
+    setIsPushEnabled(alarmSettings.isPush);
+    setIsDiaryWriteEnabled(alarmSettings.isDiary);
+    setIsDiaryReplyEnabled(alarmSettings.isDiaryReply);
+  }, [alarmSettings]);
 
   const email = me?.email ?? "";
   const nickname = me?.name ?? "";
