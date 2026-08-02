@@ -10,6 +10,7 @@ import {
 } from "@/src/components/common/CategoryCircle";
 import { TextField } from "@/src/components/common/TextField";
 import { CATEGORY_COLORS } from "@/src/constants/categoryColors";
+import { CATEGORY_NAME_MAX_LENGTH } from "@/src/constants/inputLimits";
 import { useAddCategory } from "@/src/hooks/mutations/category/useAddCategory";
 import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import type { CategoryColor } from "@/src/types/categories/category.types";
@@ -56,6 +57,7 @@ export default function CategoryAddScreen() {
             value={name}
             onChangeText={setName}
             placeholder="카테고리명을 입력해주세요"
+            maxLength={CATEGORY_NAME_MAX_LENGTH}
           />
         </View>
 

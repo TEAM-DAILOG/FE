@@ -43,7 +43,7 @@ export function SchedulePanel({
   }));
 
   return (
-    <View className="flex-col gap-7 px-4 pt-5">
+    <View className="flex-col gap-7 px-4">
       <CalendarGrid
         month={month}
         mode="schedule"

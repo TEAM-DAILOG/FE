@@ -43,7 +43,7 @@ export default function StatisticsScreen() {
       <LogoHeader />
 
       <TabScrollView>
-        <View className="gap-7 px-4 pb-10 pt-5">
+        <View className="gap-7 px-4">
           <MonthAchieveCard
             month={data?.lastMonth ?? 0}
             achievementRate={data?.lastMonthCompletionRate ?? 0}

@@ -23,7 +23,9 @@ export function DiaryDetailCard({
         containerClassName
       )}
     >
-      <Text className="text-green-800 text-b-01">{title}</Text>
+      <Text numberOfLines={1} className="text-green-800 text-b-01">
+        {title}
+      </Text>
       <Divider className="border-gray-100" />
       <Text className="text-gray-800 text-b-02-m">{content}</Text>
 

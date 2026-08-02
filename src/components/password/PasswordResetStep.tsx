@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import CloseIcon from "@/assets/icons/closeIcon.svg";
 import CheckIcon from "@/assets/icons/lightCheckIcon.svg";
 import { TextField } from "@/src/components/common/TextField";
+import { PASSWORD_MAX_LENGTH } from "@/src/constants/inputLimits";
 import { cn } from "@/src/lib/cn";
 import { hasRequiredCharacters, hasValidLength } from "@/src/utils";
 
@@ -68,6 +69,7 @@ export function PasswordResetStep({
             secureTextEntry
             value={newPassword}
             onChangeText={onChangeNewPassword}
+            maxLength={PASSWORD_MAX_LENGTH}
           />
           <View className="flex-row gap-2">
             <RuleText
@@ -90,6 +92,7 @@ export function PasswordResetStep({
             secureTextEntry
             value={confirmPassword}
             onChangeText={onChangeConfirmPassword}
+            maxLength={PASSWORD_MAX_LENGTH}
           />
           {confirmPassword.length > 0 && (
             <Text

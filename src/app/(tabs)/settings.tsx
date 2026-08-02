@@ -116,7 +116,7 @@ export default function SettingsScreen() {
 
       <TabScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex-1">
-          <View className="items-center gap-3 pt-6">
+          <View className="items-center gap-3">
             <View className="items-center gap-2">
               <View className="size-[84px] items-center justify-center overflow-hidden rounded-lg bg-white">
                 {photoUri ? (
@@ -155,7 +155,7 @@ export default function SettingsScreen() {
             />
           </View>
 
-          <View className="flex-1 items-start justify-end gap-3 px-4 pb-10">
+          <View className="flex-1 items-start justify-end gap-3 px-4">
             <Pressable
               className="border-b border-gray-400 pb-0.5"
               disabled={logoutMutation.isPending}

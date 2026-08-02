@@ -19,6 +19,7 @@ import {
   DiaryTabBar,
   type DiaryTabType,
 } from "@/src/components/daily";
+import { DIARY_TITLE_MAX_LENGTH } from "@/src/constants/inputLimits";
 import { useCreateSchedules } from "@/src/hooks/mutations/ai/useCreateSchedules";
 import { useCreateDiary } from "@/src/hooks/mutations/diaries/useCreateDiary";
 import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
@@ -140,6 +141,7 @@ export default function DiaryWriteScreen() {
                 placeholder="제목을 입력하세요"
                 value={title}
                 onChangeText={setTitle}
+                maxLength={DIARY_TITLE_MAX_LENGTH}
               />
             </View>
           </View>

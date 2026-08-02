@@ -13,6 +13,7 @@ import { Button } from "@/src/components/common/Button";
 import { CategoryChip } from "@/src/components/common/CategoryChip";
 import { TextField } from "@/src/components/common/TextField";
 import { ScheduleRepeatSummary } from "@/src/components/schedule/ScheduleRepeatSummary";
+import { SCHEDULE_TITLE_MAX_LENGTH } from "@/src/constants/inputLimits";
 import { useScheduleForm } from "@/src/hooks/schedules/useScheduleForm";
 import { cn } from "@/src/lib/cn";
 
@@ -63,6 +64,7 @@ export default function ScheduleAddScreen() {
                   placeholder="제목을 입력하세요"
                   value={title}
                   onChangeText={setTitle}
+                  maxLength={SCHEDULE_TITLE_MAX_LENGTH}
                 />
               </View>
 
