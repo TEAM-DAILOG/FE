@@ -20,6 +20,7 @@ import type {
   ChangePasswordModalResult,
   EditProfileModalResult,
 } from "@/src/types/modals/settingModal.types";
+import { clearLocalSession } from "@/src/utils/logout";
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -72,7 +73,12 @@ export default function SettingsScreen() {
     openModal("deleteAccountModal", {
       props: {
         onConfirm: () => {
-          withdrawMutation.mutate();
+          withdrawMutation.mutate(undefined, {
+            onSuccess: async () => {
+              showToast("회원탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
+              await clearLocalSession();
+            },
+          });
         },
       },
     });
