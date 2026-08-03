@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 
 import {
@@ -32,15 +32,17 @@ export default function AlarmScreen() {
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(true);
   const [selectedDays, setSelectedDays] = useState<Weekday[]>([]);
   const [time, setTime] = useState<TimeWheelValue | null>(null);
+  const hasSyncedReminderSettingsRef = useRef(false);
 
   useEffect(() => {
-    if (!reminderSettings) {
+    if (!reminderSettings || hasSyncedReminderSettingsRef.current) {
       return;
     }
     const { selectedDays: days, time: reminderTime } =
       formatReminderSettings(reminderSettings);
     setSelectedDays(days);
     setTime(reminderTime);
+    hasSyncedReminderSettingsRef.current = true;
   }, [reminderSettings]);
 
   const handleChangeDiaryWriteEnabled = (value: boolean) => {
