@@ -14,6 +14,7 @@ import {
   ScreenContainer,
   Toggle,
 } from "@/src/components/common";
+import { usePatchAlarmSettings } from "@/src/hooks/mutations/alarm/usePatchAlarmSettings";
 import { usePatchReminderSettings } from "@/src/hooks/mutations/alarm/usePatchReminderSettings";
 import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminderSettings";
 import {
@@ -24,8 +25,10 @@ import { formatTimeWheelValue } from "@/src/utils/formatTimeWheelValue";
 
 export default function AlarmScreen() {
   const { data: reminderSettings } = useGetReminderSettings();
+  const patchAlarmSettingsMutation = usePatchAlarmSettings();
   const patchReminderSettingsMutation = usePatchReminderSettings();
 
+  // 이 화면은 PushAlarmCard에서 isDiary가 true일 때만 진입 가능하므로 true로 시작
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(true);
   const [selectedDays, setSelectedDays] = useState<Weekday[]>([]);
   const [time, setTime] = useState<TimeWheelValue | null>(null);
@@ -39,6 +42,11 @@ export default function AlarmScreen() {
     setSelectedDays(days);
     setTime(reminderTime);
   }, [reminderSettings]);
+
+  const handleChangeDiaryWriteEnabled = (value: boolean) => {
+    setIsDiaryWriteEnabled(value);
+    patchAlarmSettingsMutation.mutate({ isDiary: value });
+  };
 
   const handleToggleDay = (day: Weekday) => {
     setSelectedDays((prev) =>
@@ -66,7 +74,7 @@ export default function AlarmScreen() {
             <Text className="text-green-900 text-b-02-m">일기 작성 알림</Text>
             <Toggle
               value={isDiaryWriteEnabled}
-              onValueChange={setIsDiaryWriteEnabled}
+              onValueChange={handleChangeDiaryWriteEnabled}
             />
           </View>
 
@@ -95,7 +103,11 @@ export default function AlarmScreen() {
         <Button
           label="저장"
           onPress={handleSave}
-          disabled={!time || patchReminderSettingsMutation.isPending}
+          disabled={
+            !isDiaryWriteEnabled ||
+            !time ||
+            patchReminderSettingsMutation.isPending
+          }
         />
       </View>
     </ScreenContainer>
