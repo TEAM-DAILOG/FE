@@ -46,8 +46,16 @@ export default function AlarmScreen() {
   }, [reminderSettings]);
 
   const handleChangeDiaryWriteEnabled = (value: boolean) => {
+    const previousValue = isDiaryWriteEnabled;
     setIsDiaryWriteEnabled(value);
-    patchAlarmSettingsMutation.mutate({ isDiary: value });
+    patchAlarmSettingsMutation.mutate(
+      { isDiary: value },
+      {
+        onError: () => {
+          setIsDiaryWriteEnabled(previousValue);
+        },
+      }
+    );
   };
 
   const handleToggleDay = (day: Weekday) => {
