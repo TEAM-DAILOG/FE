@@ -103,14 +103,17 @@ export function CalendarMenuBox({
                 <CheckSlot
                   checked={selectedCategoryIds.includes(category.id)}
                 />
-                <View className="flex-row items-center justify-center gap-1 py-1">
+                <View className="shrink flex-row items-center justify-center gap-1 py-1">
                   <View
                     className={cn(
-                      "size-3 rounded-full",
+                      "size-3 shrink-0 rounded-full",
                       CATEGORY_DOT_CLASS_NAMES[category.color]
                     )}
                   />
-                  <Text className="text-gray-900 text-cap-r">
+                  <Text
+                    numberOfLines={1}
+                    className="shrink text-gray-900 text-cap-r"
+                  >
                     {category.name}
                   </Text>
                 </View>

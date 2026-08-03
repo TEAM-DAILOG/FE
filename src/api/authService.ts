@@ -89,6 +89,11 @@ export const authService = {
       .post<ApiSuccessResponse<null>>("/api/v1/auth/logout", params)
       .then((res) => res.data.data),
 
+  withdraw: () =>
+    baseApi
+      .delete<ApiSuccessResponse<null>>("/api/v1/auth/withdraw")
+      .then((res) => res.data.data),
+
   checkPassword: (params: CheckPasswordParams) =>
     baseApi
       .post<ApiSuccessResponse<null>>("/api/v1/auth/password/check", params)

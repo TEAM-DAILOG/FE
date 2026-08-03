@@ -33,8 +33,9 @@ export function DeleteCategoryModal({
             )}
           />
           <Text
+            numberOfLines={1}
             className={cn(
-              "text-b-02-sb",
+              "shrink text-b-02-sb",
               CATEGORY_TEXT_CLASS_NAMES[categoryColor]
             )}
           >

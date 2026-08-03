@@ -9,6 +9,7 @@ import { PillButton, PushAlarmCard } from "@/src/components/settings";
 import { usePatchAlarmSettings } from "@/src/hooks/mutations/alarm/usePatchAlarmSettings";
 import { useChangePassword } from "@/src/hooks/mutations/auth/useChangePassword";
 import { useLogout } from "@/src/hooks/mutations/auth/useLogout";
+import { useWithdraw } from "@/src/hooks/mutations/auth/useWithdraw";
 import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
 import { useGetAlarmSettings } from "@/src/hooks/queries/alarm/useGetAlarmSettings";
 import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminderSettings";
@@ -21,6 +22,7 @@ import type {
   EditProfileModalResult,
 } from "@/src/types/modals/settingModal.types";
 import { formatTimeWheelValue } from "@/src/utils/formatTimeWheelValue";
+import { clearLocalSession } from "@/src/utils/logout";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
@@ -30,6 +32,7 @@ export default function SettingsScreen() {
   const openModal = useBaseModal((state) => state.openModal);
   const showToast = useToastStore((state) => state.showToast);
   const logoutMutation = useLogout();
+  const withdrawMutation = useWithdraw();
   const changePasswordMutation = useChangePassword();
   const [isPushEnabled, setIsPushEnabled] = useState(false);
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(false);
@@ -96,11 +99,19 @@ export default function SettingsScreen() {
   };
 
   const openDeleteAccountModal = () => {
+    if (withdrawMutation.isPending) {
+      return;
+    }
+
     openModal("deleteAccountModal", {
       props: {
         onConfirm: () => {
-          // TODO: 회원탈퇴 API 연동 및 로그아웃 처리
-          showToast("회원탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
+          withdrawMutation.mutate(undefined, {
+            onSuccess: async () => {
+              showToast("회원탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.");
+              await clearLocalSession();
+            },
+          });
         },
       },
     });
@@ -149,7 +160,7 @@ export default function SettingsScreen() {
 
       <TabScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex-1">
-          <View className="items-center gap-3 pt-6">
+          <View className="items-center gap-3">
             <View className="items-center gap-2">
               <View className="size-[84px] items-center justify-center overflow-hidden rounded-lg bg-white">
                 {photoUri ? (
@@ -188,7 +199,7 @@ export default function SettingsScreen() {
             />
           </View>
 
-          <View className="flex-1 items-start justify-end gap-3 px-4 pb-10">
+          <View className="flex-1 items-start justify-end gap-3 px-4">
             <Pressable
               className="border-b border-gray-400 pb-0.5"
               disabled={logoutMutation.isPending}
@@ -198,6 +209,7 @@ export default function SettingsScreen() {
             </Pressable>
             <Pressable
               className="border-b border-gray-400 pb-0.5"
+              disabled={withdrawMutation.isPending}
               onPress={openDeleteAccountModal}
             >
               <Text className="text-gray-400 text-b-04-m">회원탈퇴</Text>

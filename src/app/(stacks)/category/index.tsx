@@ -60,7 +60,9 @@ export default function CategoryListScreen() {
           CATEGORY_DOT_CLASS_NAMES[item.color]
         )}
       />
-      <Text className="ml-2 flex-1 text-gray-900 text-b-03-m">{item.name}</Text>
+      <Text numberOfLines={1} className="ml-2 flex-1 text-gray-900 text-b-03-m">
+        {item.name}
+      </Text>
       <Pressable
         onPress={() =>
           router.push({

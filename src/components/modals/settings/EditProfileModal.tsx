@@ -4,6 +4,7 @@ import { Image, Linking, Pressable, Text, View } from "react-native";
 
 import BambooLogo from "@/assets/images/bambooLogo.svg";
 import { TextField } from "@/src/components/common";
+import { USER_NAME_MAX_LENGTH } from "@/src/constants/inputLimits";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { EditProfileModalProps } from "@/src/types/modals/settingModal.types";
 
@@ -94,6 +95,7 @@ export function EditProfileModal({
           keyboardType="email-address"
           autoCapitalize="none"
           placeholder="dailog@naver.com"
+          disabled={true}
         />
       </View>
 
@@ -103,6 +105,7 @@ export function EditProfileModal({
           value={nickname}
           onChangeText={setNickname}
           placeholder="닉네임"
+          maxLength={USER_NAME_MAX_LENGTH}
         />
       </View>
     </SettingsModalContainer>

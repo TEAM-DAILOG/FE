@@ -71,7 +71,7 @@ export default function HomeScreen() {
       <LogoHeader />
 
       <TabScrollView>
-        <View className="px-4 pb-10 pt-5">
+        <View className="px-4">
           {/* 날짜 */}
           <Text className="mb-4 text-green-900 text-h-01">{dateLabel}</Text>
 
