@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 
 import {
@@ -14,24 +14,63 @@ import {
   ScreenContainer,
   Toggle,
 } from "@/src/components/common";
+import { usePatchAlarmSettings } from "@/src/hooks/mutations/alarm/usePatchAlarmSettings";
+import { usePatchReminderSettings } from "@/src/hooks/mutations/alarm/usePatchReminderSettings";
+import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminderSettings";
+import {
+  createPatchReminderSettingsParams,
+  formatReminderSettings,
+} from "@/src/types/alarm/alarm.mappers";
 import { formatTimeWheelValue } from "@/src/utils/formatTimeWheelValue";
 
 export default function AlarmScreen() {
+  const { data: reminderSettings } = useGetReminderSettings();
+  const patchAlarmSettingsMutation = usePatchAlarmSettings();
+  const patchReminderSettingsMutation = usePatchReminderSettings();
+
+  // 이 화면은 PushAlarmCard에서 isDiary가 true일 때만 진입 가능하므로 true로 시작
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(true);
-  const [selectedDays, setSelectedDays] = useState<Weekday[]>([
-    "mon",
-    "wed",
-    "fri",
-  ]);
-  const [time, setTime] = useState<TimeWheelValue>({
-    period: "pm",
-    hour: 9,
-    minute: 30,
-  });
+  const [selectedDays, setSelectedDays] = useState<Weekday[]>([]);
+  const [time, setTime] = useState<TimeWheelValue | null>(null);
+  const hasSyncedReminderSettingsRef = useRef(false);
+
+  useEffect(() => {
+    if (!reminderSettings || hasSyncedReminderSettingsRef.current) {
+      return;
+    }
+    const { selectedDays: days, time: reminderTime } =
+      formatReminderSettings(reminderSettings);
+    setSelectedDays(days);
+    setTime(reminderTime);
+    hasSyncedReminderSettingsRef.current = true;
+  }, [reminderSettings]);
+
+  const handleChangeDiaryWriteEnabled = (value: boolean) => {
+    const previousValue = isDiaryWriteEnabled;
+    setIsDiaryWriteEnabled(value);
+    patchAlarmSettingsMutation.mutate(
+      { isDiary: value },
+      {
+        onError: () => {
+          setIsDiaryWriteEnabled(previousValue);
+        },
+      }
+    );
+  };
 
   const handleToggleDay = (day: Weekday) => {
     setSelectedDays((prev) =>
       prev.includes(day) ? prev.filter((item) => item !== day) : [...prev, day]
+    );
+  };
+
+  const handleSave = () => {
+    if (!time) {
+      return;
+    }
+
+    patchReminderSettingsMutation.mutate(
+      createPatchReminderSettingsParams(selectedDays, time)
     );
   };
 
@@ -45,18 +84,18 @@ export default function AlarmScreen() {
             <Text className="text-green-900 text-b-02-m">일기 작성 알림</Text>
             <Toggle
               value={isDiaryWriteEnabled}
-              onValueChange={setIsDiaryWriteEnabled}
+              onValueChange={handleChangeDiaryWriteEnabled}
             />
           </View>
 
-          {isDiaryWriteEnabled ? (
+          {isDiaryWriteEnabled && time ? (
             <Text className="self-end text-green-900 text-b-03-m">
               {formatTimeWheelValue(time)}
             </Text>
           ) : null}
         </View>
 
-        {isDiaryWriteEnabled ? (
+        {isDiaryWriteEnabled && time ? (
           <>
             <Divider className="border-green-100" />
 
@@ -71,7 +110,15 @@ export default function AlarmScreen() {
       </View>
 
       <View className="flex-1 justify-end px-4 pb-12">
-        <Button label="저장" />
+        <Button
+          label="저장"
+          onPress={handleSave}
+          disabled={
+            !isDiaryWriteEnabled ||
+            !time ||
+            patchReminderSettingsMutation.isPending
+          }
+        />
       </View>
     </ScreenContainer>
   );
