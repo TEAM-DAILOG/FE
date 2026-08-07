@@ -49,21 +49,25 @@ export const authService = {
     baseApi
       .post<
         ApiSuccessResponse<CheckSignupEmailResponse>
-      >("/api/v1/auth/signup/email/check", params)
+      >("/api/v1/auth/signup/email/check", params, { skipAuthRefresh: true })
       .then((res) => res.data.data),
 
   sendSignupEmailVerification: (params: SignupEmailParams) =>
     baseApi
       .post<
         ApiSuccessResponse<SendSignupEmailVerificationResponse>
-      >("/api/v1/auth/signup/email/verification/send", params)
+      >("/api/v1/auth/signup/email/verification/send", params, {
+        skipAuthRefresh: true,
+      })
       .then((res) => res.data.data),
 
   verifySignupEmailCode: (params: VerifySignupEmailCodeParams) =>
     baseApi
       .post<
         ApiSuccessResponse<VerifySignupEmailCodeResponse>
-      >("/api/v1/auth/signup/email/verification/verify", params)
+      >("/api/v1/auth/signup/email/verification/verify", params, {
+        skipAuthRefresh: true,
+      })
       .then((res) => res.data.data),
 
   signup: (params: SignupParams) =>
@@ -75,13 +79,16 @@ export const authService = {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          skipAuthRefresh: true,
         }
       )
       .then((res) => res.data.data),
 
   login: (params: LoginParams) =>
     baseApi
-      .post<ApiSuccessResponse<LoginResponse>>("/api/v1/auth/login", params)
+      .post<ApiSuccessResponse<LoginResponse>>("/api/v1/auth/login", params, {
+        skipAuthRefresh: true,
+      })
       .then((res) => res.data.data),
 
   logout: (params: LogoutParams) =>
@@ -108,18 +115,24 @@ export const authService = {
     baseApi
       .post<
         ApiSuccessResponse<SendResetPasswordEmailResponse>
-      >("/api/v1/auth/password/reset/email/verification/send", params)
+      >("/api/v1/auth/password/reset/email/verification/send", params, {
+        skipAuthRefresh: true,
+      })
       .then((res) => res.data.data),
 
   verifyResetPasswordEmail: (params: VerifyResetPasswordEmailParams) =>
     baseApi
       .post<
         ApiSuccessResponse<VerifyResetPasswordEmailResponse>
-      >("/api/v1/auth/password/reset/email/verification/verify", params)
+      >("/api/v1/auth/password/reset/email/verification/verify", params, {
+        skipAuthRefresh: true,
+      })
       .then((res) => res.data.data),
 
   resetPassword: (params: ResetPasswordParams) =>
     baseApi
-      .patch<ApiSuccessResponse<null>>("/api/v1/auth/password/reset", params)
+      .patch<ApiSuccessResponse<null>>("/api/v1/auth/password/reset", params, {
+        skipAuthRefresh: true,
+      })
       .then((res) => res.data),
 };

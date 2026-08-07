@@ -14,9 +14,16 @@ import type { ReissueAccessTokenResponse } from "@/src/types/auth/auth.types";
 
 type RetryableRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
+  skipAuthRefresh?: boolean;
 };
 
 let refreshTokenPromise: Promise<string> | null = null;
+
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipAuthRefresh?: boolean;
+  }
+}
 
 // 공통 axios 인스턴스
 export const baseApi = create({
@@ -71,7 +78,8 @@ baseApi.interceptors.response.use(
     if (
       error.response?.status !== 401 ||
       !originalRequest ||
-      originalRequest._retry
+      originalRequest._retry ||
+      originalRequest.skipAuthRefresh
     ) {
       return Promise.reject(error);
     }
