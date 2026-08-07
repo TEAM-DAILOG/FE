@@ -21,13 +21,11 @@ import { useAuthStore } from "@/src/store/auth/authStore";
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const loginMutation = useLogin();
   const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
 
   const handleLogin = () => {
     Keyboard.dismiss();
-    setErrorMessage("");
 
     loginMutation.mutate(
       {
@@ -40,9 +38,6 @@ export default function LoginScreen() {
           await tokenStorage.setTokens(accessToken, refreshToken);
           setAuthenticated(true);
           router.replace("/(tabs)");
-        },
-        onError: (error) => {
-          setErrorMessage(error.message);
         },
       }
     );
@@ -118,12 +113,6 @@ export default function LoginScreen() {
                 </Pressable>
               </Link>
             </View>
-
-            {errorMessage ? (
-              <Text className="mt-4 text-red-500 text-b-04-r">
-                {errorMessage}
-              </Text>
-            ) : null}
 
             <Button
               label={loginMutation.isPending ? "로그인 중" : "로그인"}
