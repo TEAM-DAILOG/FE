@@ -81,7 +81,7 @@ export default function RootLayout() {
             </Stack>
             <ModalPage />
             <Toast />
-            <StatusBar style="auto" />
+            <StatusBar style="dark" />
           </ThemeProvider>
         </SafeAreaProvider>
       </QueryClientProvider>
