@@ -87,7 +87,7 @@ export default function DiaryWriteScreen() {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const isFormValid = content.trim().length > 0;
+  const isFormValid = content.trim().length > 0 && title.trim().length > 0;
 
   const handleSave = () => {
     if (!isFormValid) return;
