@@ -19,6 +19,11 @@ export const alarmService = {
       >("/api/v1/alarms/push-token", params)
       .then((res) => res.data.data),
 
+  deletePushToken: (tokenId: number) =>
+    baseApi
+      .delete<ApiSuccessResponse<null>>(`/api/v1/alarms/push-token/${tokenId}`)
+      .then((res) => res.data.data),
+
   getAlarmSettings: () =>
     baseApi
       .get<ApiSuccessResponse<GetAlarmSettingsResponse>>("/api/v1/alarms")
