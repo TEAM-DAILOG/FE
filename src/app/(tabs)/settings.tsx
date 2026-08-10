@@ -66,11 +66,15 @@ export default function SettingsScreen() {
     if (value) {
       registerForPushNotificationsAsync({
         showSettingsAlertIfDenied: true,
-      }).then((pushToken) => {
-        if (pushToken) {
-          postPushTokenMutation.mutate(pushToken);
-        }
-      });
+      })
+        .then((pushToken) => {
+          if (pushToken) {
+            postPushTokenMutation.mutate(pushToken);
+          }
+        })
+        .catch((error) => {
+          console.error("푸시 토큰 등록 실패", error);
+        });
     }
   };
 

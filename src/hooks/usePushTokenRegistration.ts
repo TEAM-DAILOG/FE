@@ -14,11 +14,15 @@ export function usePushTokenRegistration() {
       return;
     }
 
-    registerForPushNotificationsAsync().then((pushToken) => {
-      if (pushToken) {
-        postPushTokenMutation.mutate(pushToken);
-      }
-    });
+    registerForPushNotificationsAsync()
+      .then((pushToken) => {
+        if (pushToken) {
+          postPushTokenMutation.mutate(pushToken);
+        }
+      })
+      .catch((error) => {
+        console.error("푸시 토큰 등록 실패", error);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 }
