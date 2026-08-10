@@ -20,6 +20,7 @@ import {
   type DiaryTabType,
 } from "@/src/components/daily";
 import { DIARY_TITLE_MAX_LENGTH } from "@/src/constants/inputLimits";
+import { useCreateAiAnswer } from "@/src/hooks/mutations/ai/useCreateAiAnswer";
 import { useCreateSchedules } from "@/src/hooks/mutations/ai/useCreateSchedules";
 import { useCreateDiary } from "@/src/hooks/mutations/diaries/useCreateDiary";
 import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
@@ -39,6 +40,7 @@ export default function DiaryWriteScreen() {
     useGetTodayQuestion();
   const createDiary = useCreateDiary();
   const createSchedules = useCreateSchedules();
+  const createAiAnswer = useCreateAiAnswer();
 
   const handleAddPhoto = async () => {
     if (images.length >= PHOTO_MAX_COUNT) return;
@@ -98,7 +100,11 @@ export default function DiaryWriteScreen() {
         images,
       },
       {
-        onSuccess: () => {
+        onSuccess: (diary) => {
+          if (diary.diaryType === "QUESTION") {
+            createAiAnswer.mutate(diary.diaryId);
+          }
+
           createSchedules.mutate(undefined, {
             onSettled: () => {
               router.push("/diary/recommendations");
