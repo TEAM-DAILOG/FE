@@ -17,6 +17,7 @@ import { Toast } from "@/src/components/common/Toast";
 import { ModalPage } from "@/src/components/modals/ModalPage";
 import { useAuthBootstrap } from "@/src/hooks/useAuthBootstrap";
 import { useColorScheme } from "@/src/hooks/useColorScheme";
+import { usePushTokenRegistration } from "@/src/hooks/usePushTokenRegistration";
 import { queryClient } from "@/src/lib/queryClient";
 import { useAuthStore } from "@/src/store/auth/authStore";
 import "../../global.css";
@@ -32,6 +33,7 @@ export default function RootLayout() {
   const segments = useSegments();
   const { isBootstrapping } = useAuthBootstrap();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  usePushTokenRegistration();
   const [fontsLoaded] = useFonts({
     "SUIT-Regular": require("@/assets/fonts/SUIT-Regular.otf"),
     "SUIT-Medium": require("@/assets/fonts/SUIT-Medium.otf"),
