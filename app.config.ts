@@ -47,6 +47,7 @@ const config: ExpoConfig = {
     "expo-secure-store",
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
+    "./plugins/withFirebaseMessagingManifestFix.js",
     [
       "expo-notifications",
       {
