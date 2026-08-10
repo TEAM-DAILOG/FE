@@ -205,6 +205,7 @@ export function ScheduleItem({
         date: scheduleDate,
         description,
         isRepeating: groupId !== null,
+        deleteAllOnly: repeatType === "PERIOD",
         onConfirm: (scope: ScheduleScope) => {
           deleteScheduleMutation.mutate({ scheduleId: Number(id), scope });
         },

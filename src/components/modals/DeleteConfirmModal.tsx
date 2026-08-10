@@ -28,6 +28,7 @@ export type DeleteConfirmModalProps = {
   date?: string;
   description?: string;
   isRepeating?: boolean;
+  deleteAllOnly?: boolean;
   onConfirm: (scope: "SINGLE" | "ALL") => void;
 };
 
@@ -36,13 +37,18 @@ export function DeleteConfirmModal({
   date,
   description,
   isRepeating = false,
+  deleteAllOnly = false,
   onConfirm,
 }: DeleteConfirmModalProps) {
   const closeModal = useBaseModal((state) => state.closeModal);
   const [isDeletingAll, setIsDeletingAll] = useState(false);
 
+  const showDeleteAllCheckbox = isRepeating && !deleteAllOnly;
+
   const handleConfirm = () => {
-    onConfirm(isRepeating && isDeletingAll ? "ALL" : "SINGLE");
+    onConfirm(
+      deleteAllOnly || (isRepeating && isDeletingAll) ? "ALL" : "SINGLE"
+    );
     closeModal();
   };
 
@@ -79,7 +85,7 @@ export function DeleteConfirmModal({
           <Text className="text-gray-900 text-b-04-m">{caption}</Text>
         </View>
 
-        {isRepeating && (
+        {showDeleteAllCheckbox && (
           <View className="flex-row items-center gap-1.5">
             <Checkbox
               checked={isDeletingAll}

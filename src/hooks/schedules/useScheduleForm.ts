@@ -204,6 +204,7 @@ export function useScheduleForm() {
         date,
         description: title,
         isRepeating: isRepeatingSchedule,
+        deleteAllOnly: initialRepeatType === "PERIOD",
         onConfirm: (scope: ScheduleScope) => {
           deleteScheduleMutation.mutate(
             { scheduleId: Number(scheduleId), scope },
