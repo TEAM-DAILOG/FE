@@ -7,6 +7,7 @@ import {
 } from "@/src/components/common";
 import { PillButton, PushAlarmCard } from "@/src/components/settings";
 import { usePatchAlarmSettings } from "@/src/hooks/mutations/alarm/usePatchAlarmSettings";
+import { usePostPushToken } from "@/src/hooks/mutations/alarm/usePostPushToken";
 import { useChangePassword } from "@/src/hooks/mutations/auth/useChangePassword";
 import { useLogout } from "@/src/hooks/mutations/auth/useLogout";
 import { useWithdraw } from "@/src/hooks/mutations/auth/useWithdraw";
@@ -14,6 +15,7 @@ import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
 import { useGetAlarmSettings } from "@/src/hooks/queries/alarm/useGetAlarmSettings";
 import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminderSettings";
 import { useGetMe } from "@/src/hooks/queries/user/useGetMe";
+import { registerForPushNotificationsAsync } from "@/src/lib/pushNotifications";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { useToastStore } from "@/src/store/toast/toastStore";
 import { formatReminderSettings } from "@/src/types/alarm/alarm.mappers";
@@ -43,6 +45,7 @@ export default function SettingsScreen() {
   const { data: reminderSettings } = useGetReminderSettings();
   const updateMeMutation = useUpdateMe();
   const patchAlarmSettingsMutation = usePatchAlarmSettings();
+  const postPushTokenMutation = usePostPushToken();
 
   const diaryWriteTimeLabel = reminderSettings
     ? formatTimeWheelValue(formatReminderSettings(reminderSettings).time)
@@ -59,6 +62,20 @@ export default function SettingsScreen() {
 
   const handleChangePushEnabled = (value: boolean) => {
     patchAlarmSettingsMutation.mutate({ isPush: value });
+
+    if (value) {
+      registerForPushNotificationsAsync({
+        showSettingsAlertIfDenied: true,
+      })
+        .then((pushToken) => {
+          if (pushToken) {
+            postPushTokenMutation.mutate(pushToken);
+          }
+        })
+        .catch((error) => {
+          console.error("푸시 토큰 등록 실패", error);
+        });
+    }
   };
 
   const handleChangeDiaryWriteEnabled = (value: boolean) => {
