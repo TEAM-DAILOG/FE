@@ -43,7 +43,10 @@ export default function DiaryDetailScreen() {
   const deleteDiaryMutation = useDeleteDiary();
 
   // AI 답변 조회
-  const { data: aiAnswer } = useGetAiAnswer(diaryId);
+  const { data: aiAnswer } = useGetAiAnswer(
+    diaryId,
+    diary?.diaryType === "QUESTION"
+  );
 
   // AI 추천일정(일기별 조회)
   const { data: schedulesByDiary } = useGetSchedulesByDiary(diaryId);
