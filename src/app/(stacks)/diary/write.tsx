@@ -24,6 +24,7 @@ import { useCreateAiAnswer } from "@/src/hooks/mutations/ai/useCreateAiAnswer";
 import { useCreateSchedules } from "@/src/hooks/mutations/ai/useCreateSchedules";
 import { useCreateDiary } from "@/src/hooks/mutations/diaries/useCreateDiary";
 import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
+import { useToastStore } from "@/src/store/toast/toastStore";
 import type { DiaryImageFile } from "@/src/types/diaries/diary.types";
 
 const PHOTO_MAX_COUNT = 3;
@@ -41,6 +42,7 @@ export default function DiaryWriteScreen() {
   const createDiary = useCreateDiary();
   const createSchedules = useCreateSchedules();
   const createAiAnswer = useCreateAiAnswer();
+  const showToast = useToastStore((state) => state.showToast);
 
   const handleAddPhoto = async () => {
     if (images.length >= PHOTO_MAX_COUNT) return;
@@ -101,6 +103,8 @@ export default function DiaryWriteScreen() {
       },
       {
         onSuccess: (diary) => {
+          showToast("일기가 저장되었습니다.", "icon");
+
           if (diary.diaryType === "QUESTION") {
             createAiAnswer.mutate(diary.diaryId);
           }
