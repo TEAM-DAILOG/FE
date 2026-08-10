@@ -17,6 +17,7 @@ import { Toast } from "@/src/components/common/Toast";
 import { ModalPage } from "@/src/components/modals/ModalPage";
 import { useAuthBootstrap } from "@/src/hooks/useAuthBootstrap";
 import { useColorScheme } from "@/src/hooks/useColorScheme";
+import { usePushTokenRegistration } from "@/src/hooks/usePushTokenRegistration";
 import { queryClient } from "@/src/lib/queryClient";
 import { useAuthStore } from "@/src/store/auth/authStore";
 import "../../global.css";
@@ -26,6 +27,11 @@ export const unstable_settings = {
 };
 
 SplashScreen.preventAutoHideAsync();
+
+function PushTokenRegistrar() {
+  usePushTokenRegistration();
+  return null;
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -70,6 +76,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
+        <PushTokenRegistrar />
         <SafeAreaProvider>
           <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
