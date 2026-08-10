@@ -136,7 +136,10 @@ export default function DiaryWriteScreen() {
             <DiaryDateCard date={selectedDate} />
 
             <View className="gap-3">
-              <Text className="text-gray-900 text-b-02-m">제목</Text>
+              <Text className="text-gray-900 text-b-02-m">
+                <Text className="text-green-600">* </Text>
+                제목
+              </Text>
               <TextField
                 placeholder="제목을 입력하세요"
                 value={title}
