@@ -8,6 +8,7 @@ import { useDeleteSchedule } from "@/src/hooks/mutations/schedules/useDeleteSche
 import { useUpdateSchedule } from "@/src/hooks/mutations/schedules/useUpdateSchedule";
 import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories";
 import { useBaseModal } from "@/src/store/modals/baseModal";
+import { useToastStore } from "@/src/store/toast/toastStore";
 import { CategoryColor } from "@/src/types/categories/category.types";
 import type {
   DatePickerModalResult,
@@ -114,6 +115,7 @@ export function useScheduleForm() {
   const [isRepeatDirty, setIsRepeatDirty] = useState(false);
 
   const openModal = useBaseModal((state) => state.openModal);
+  const showToast = useToastStore((state) => state.showToast);
   const createScheduleMutation = useCreateSchedule();
   const updateScheduleMutation = useUpdateSchedule();
   const deleteScheduleMutation = useDeleteSchedule();
@@ -190,7 +192,10 @@ export function useScheduleForm() {
     }
 
     createScheduleMutation.mutate(params, {
-      onSuccess: () => router.push("/(tabs)/calendar"),
+      onSuccess: () => {
+        showToast("일정이 등록되었습니다.", "icon");
+        router.push("/(tabs)/calendar");
+      },
     });
   };
 
@@ -204,6 +209,7 @@ export function useScheduleForm() {
         date,
         description: title,
         isRepeating: isRepeatingSchedule,
+        deleteAllOnly: initialRepeatType === "PERIOD",
         onConfirm: (scope: ScheduleScope) => {
           deleteScheduleMutation.mutate(
             { scheduleId: Number(scheduleId), scope },

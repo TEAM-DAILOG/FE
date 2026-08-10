@@ -2,6 +2,7 @@ import { Text, View } from "react-native";
 
 import { CalendarGrid } from "@/src/components/calendar/CalendarGrid";
 import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
+import { useUpcomingSchedules } from "@/src/hooks/queries/schedules/useUpcomingSchedules";
 import type { CalendarDayInfo } from "@/src/types/calendar/calendarGrid.types";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
 import { getScheduleDday } from "@/src/utils";
@@ -22,6 +23,7 @@ export function SchedulePanel({
   upcomingSchedules,
 }: SchedulePanelProps) {
   const completeScheduleMutation = useCompleteSchedule();
+  const { dataUpdatedAt } = useUpcomingSchedules();
 
   const toggleSchedule = (id: string, checked: boolean) => {
     completeScheduleMutation.mutate({
@@ -31,8 +33,12 @@ export function SchedulePanel({
   };
 
   const pendingVariables = completeScheduleMutation.variables;
+  const isOptimisticOverrideValid =
+    completeScheduleMutation.submittedAt > dataUpdatedAt;
   const isMutationSettled =
-    completeScheduleMutation.isPending || completeScheduleMutation.isSuccess;
+    (completeScheduleMutation.isPending ||
+      completeScheduleMutation.isSuccess) &&
+    isOptimisticOverrideValid;
 
   const visibleSchedules = upcomingSchedules.map((schedule) => ({
     ...schedule,
@@ -41,6 +47,18 @@ export function SchedulePanel({
         ? pendingVariables.isCompleted
         : schedule.checked,
   }));
+
+  const scheduleGroups = visibleSchedules.reduce<
+    { date: string; schedules: typeof visibleSchedules }[]
+  >((groups, schedule) => {
+    const lastGroup = groups[groups.length - 1];
+    if (lastGroup?.date === schedule.date) {
+      lastGroup.schedules.push(schedule);
+    } else {
+      groups.push({ date: schedule.date, schedules: [schedule] });
+    }
+    return groups;
+  }, []);
 
   return (
     <View className="flex-col gap-7 px-4">
@@ -60,13 +78,13 @@ export function SchedulePanel({
               다음 일주일 이내에 등록된 일정이 없습니다.
             </Text>
           ) : (
-            visibleSchedules.map((schedule) => {
+            scheduleGroups.map((group) => {
               const { ddayLabel, dateLabel, weekdayLabel } = getScheduleDday(
-                schedule.date
+                group.date
               );
 
               return (
-                <View key={schedule.id} className="gap-2">
+                <View key={group.date} className="gap-2">
                   <View className="flex-row items-center gap-1">
                     <Text className="text-gray-800 text-b-04-m">
                       {ddayLabel}
@@ -81,16 +99,21 @@ export function SchedulePanel({
                     </View>
                   </View>
 
-                  <ScheduleItem
-                    categoryLabel={schedule.categoryLabel}
-                    categoryColor={schedule.categoryColor}
-                    description={schedule.description}
-                    action={buildScheduleCheckboxAction(schedule, {
-                      checked: schedule.checked,
-                      onToggle: () =>
-                        toggleSchedule(schedule.id, schedule.checked),
-                    })}
-                  />
+                  <View className="gap-2">
+                    {group.schedules.map((schedule) => (
+                      <ScheduleItem
+                        key={schedule.id}
+                        categoryLabel={schedule.categoryLabel}
+                        categoryColor={schedule.categoryColor}
+                        description={schedule.description}
+                        action={buildScheduleCheckboxAction(schedule, {
+                          checked: schedule.checked,
+                          onToggle: () =>
+                            toggleSchedule(schedule.id, schedule.checked),
+                        })}
+                      />
+                    ))}
+                  </View>
                 </View>
               );
             })

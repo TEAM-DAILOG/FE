@@ -5,7 +5,7 @@ import CheckCircleIcon from "@/assets/icons/checkCircleIcon.svg";
 import { useBottomTabBarHeight } from "@/src/hooks/useBottomTabBarHeight";
 import { useToastStore } from "@/src/store/toast/toastStore";
 
-const TOAST_DURATION_MS = 3000;
+const TOAST_DURATION_MS = 1000;
 
 export function Toast() {
   const message = useToastStore((state) => state.message);

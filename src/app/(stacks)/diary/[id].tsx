@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -18,7 +17,6 @@ import {
 } from "@/src/components/common";
 import { Button } from "@/src/components/common/Button";
 import { DiaryDetailCard } from "@/src/components/diaries/DiaryDetailCard";
-import { useCreateAiAnswer } from "@/src/hooks/mutations/ai/useCreateAiAnswer";
 import { useDeleteDiary } from "@/src/hooks/mutations/diaries/useDeleteDiary";
 import { useGetAiAnswer } from "@/src/hooks/queries/ai/useGetAiAnswer";
 import { useGetSchedulesByDiary } from "@/src/hooks/queries/ai/useGetSchedulesByDiary";
@@ -44,20 +42,15 @@ export default function DiaryDetailScreen() {
   const { data: diariesData } = useGetDiaries();
   const deleteDiaryMutation = useDeleteDiary();
 
-  // AI 답변 확인 -> 없으면(에러) 생성 호출
-  const { data: aiAnswer, isError: isAiAnswerError } =
-    useGetAiAnswer(diaryId);
-  const createAiAnswer = useCreateAiAnswer();
+  // AI 답변 조회
+  const { data: aiAnswer } = useGetAiAnswer(
+    diaryId,
+    diary?.diaryType === "QUESTION"
+  );
 
   // AI 추천일정(일기별 조회)
   const { data: schedulesByDiary } = useGetSchedulesByDiary(diaryId);
   const recommendedSchedules = schedulesByDiary?.recommendedSchedules ?? [];
-
-  useEffect(() => {
-    if (isAiAnswerError && diaryId) {
-      createAiAnswer.mutate(diaryId);
-    }
-  }, [isAiAnswerError, diaryId]);
 
   const toTimeValue = (date: string | null) =>
     date ? dayjs(date).valueOf() : -Infinity;

@@ -20,9 +20,11 @@ import {
   type DiaryTabType,
 } from "@/src/components/daily";
 import { DIARY_TITLE_MAX_LENGTH } from "@/src/constants/inputLimits";
+import { useCreateAiAnswer } from "@/src/hooks/mutations/ai/useCreateAiAnswer";
 import { useCreateSchedules } from "@/src/hooks/mutations/ai/useCreateSchedules";
 import { useCreateDiary } from "@/src/hooks/mutations/diaries/useCreateDiary";
 import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
+import { useToastStore } from "@/src/store/toast/toastStore";
 import type { DiaryImageFile } from "@/src/types/diaries/diary.types";
 
 const PHOTO_MAX_COUNT = 3;
@@ -39,6 +41,8 @@ export default function DiaryWriteScreen() {
     useGetTodayQuestion();
   const createDiary = useCreateDiary();
   const createSchedules = useCreateSchedules();
+  const createAiAnswer = useCreateAiAnswer();
+  const showToast = useToastStore((state) => state.showToast);
 
   const handleAddPhoto = async () => {
     if (images.length >= PHOTO_MAX_COUNT) return;
@@ -83,7 +87,7 @@ export default function DiaryWriteScreen() {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const isFormValid = content.trim().length > 0;
+  const isFormValid = content.trim().length > 0 && title.trim().length > 0;
 
   const handleSave = () => {
     if (!isFormValid) return;
@@ -98,7 +102,13 @@ export default function DiaryWriteScreen() {
         images,
       },
       {
-        onSuccess: () => {
+        onSuccess: (diary) => {
+          showToast("일기가 저장되었습니다.", "icon");
+
+          if (diary.diaryType === "QUESTION") {
+            createAiAnswer.mutate(diary.diaryId);
+          }
+
           createSchedules.mutate(undefined, {
             onSettled: () => {
               router.push("/diary/recommendations");
@@ -136,7 +146,10 @@ export default function DiaryWriteScreen() {
             <DiaryDateCard date={selectedDate} />
 
             <View className="gap-3">
-              <Text className="text-gray-900 text-b-02-m">제목</Text>
+              <Text className="text-gray-900 text-b-02-m">
+                <Text className="text-green-600">* </Text>
+                제목
+              </Text>
               <TextField
                 placeholder="제목을 입력하세요"
                 value={title}
