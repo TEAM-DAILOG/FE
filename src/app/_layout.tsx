@@ -28,12 +28,16 @@ export const unstable_settings = {
 
 SplashScreen.preventAutoHideAsync();
 
+function PushTokenRegistrar() {
+  usePushTokenRegistration();
+  return null;
+}
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const segments = useSegments();
   const { isBootstrapping } = useAuthBootstrap();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  usePushTokenRegistration();
   const [fontsLoaded] = useFonts({
     "SUIT-Regular": require("@/assets/fonts/SUIT-Regular.otf"),
     "SUIT-Medium": require("@/assets/fonts/SUIT-Medium.otf"),
@@ -72,6 +76,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
+        <PushTokenRegistrar />
         <SafeAreaProvider>
           <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
