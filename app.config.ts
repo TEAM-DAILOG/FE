@@ -5,7 +5,7 @@ const isProductionBuild = process.env.EAS_BUILD_PROFILE === "production";
 const config: ExpoConfig = {
   name: "DAILOG",
   slug: "dailog",
-  version: "1.0.2",
+  version: "1.0.3",
   orientation: "portrait",
   icon: "./assets/images/appLogo.png",
   scheme: "dailog",
