@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "88383439355",
+    "project_id": "dailog-7c45e",
+    "storage_bucket": "dailog-7c45e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88383439355:android:6dde05d47a613d70990b5e",
+        "android_client_info": {
+          "package_name": "com.hyochan02steam.dailog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBun83U6B7zkvPMliq9YdSimBr7_meRXvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
