@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 
@@ -24,6 +25,7 @@ import {
 import { formatTimeWheelValue } from "@/src/utils/formatTimeWheelValue";
 
 export default function AlarmScreen() {
+  const router = useRouter();
   const { data: reminderSettings } = useGetReminderSettings();
   const patchAlarmSettingsMutation = usePatchAlarmSettings();
   const patchReminderSettingsMutation = usePatchReminderSettings();
@@ -70,7 +72,8 @@ export default function AlarmScreen() {
     }
 
     patchReminderSettingsMutation.mutate(
-      createPatchReminderSettingsParams(selectedDays, time)
+      createPatchReminderSettingsParams(selectedDays, time),
+      { onSuccess: () => router.back() }
     );
   };
 

@@ -23,7 +23,9 @@ import { formatStatsScheduleItem } from "@/src/utils/formatStatsScheduleItem";
 export default function StatisticIncompleteScreen() {
   const router = useRouter();
   const [isCompletedOpen, setIsCompletedOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(() =>
+    dayjs().subtract(1, "month").toDate()
+  );
   const { year, month } = formatYearMonth(selectedDate);
 
   const { data: pendingData } = useGetPendingSchedules({ year, month });
