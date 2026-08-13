@@ -7,7 +7,7 @@ export const usePatchReminderSettings = () => {
   return useMutation({
     mutationFn: alarmService.patchReminderSettings,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reminderSettings"] });
+      return queryClient.invalidateQueries({ queryKey: ["reminderSettings"] });
     },
   });
 };
