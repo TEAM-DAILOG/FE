@@ -2,6 +2,7 @@ import WheelPicker, {
   type PickerItem,
   type ValueChangedEvent,
 } from "@quidone/react-native-wheel-picker";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
 import {
@@ -40,6 +41,12 @@ export function TimeWheelPicker({
   onChange,
   className,
 }: TimeWheelPickerProps) {
+  const [mountKey, setMountKey] = useState(0);
+  useEffect(() => {
+    const timer = setTimeout(() => setMountKey((prev) => prev + 1), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handlePeriodChanged = ({
     item,
   }: ValueChangedEvent<PickerItem<Period>>) => {
@@ -73,6 +80,7 @@ export function TimeWheelPicker({
       </View>
 
       <WheelPicker
+        key={`period-${mountKey}`}
         data={PERIOD_DATA}
         value={value.period}
         onValueChanged={handlePeriodChanged}
@@ -88,6 +96,7 @@ export function TimeWheelPicker({
 
       <View className="flex-row items-center gap-3">
         <WheelPicker
+          key={`hour-${mountKey}`}
           data={HOUR_DATA}
           value={value.hour}
           onValueChanged={handleHourChanged}
@@ -102,6 +111,7 @@ export function TimeWheelPicker({
         />
         <Text className="text-green-700 text-b-02-sb">:</Text>
         <WheelPicker
+          key={`minute-${mountKey}`}
           data={MINUTE_DATA}
           value={value.minute}
           onValueChanged={handleMinuteChanged}
