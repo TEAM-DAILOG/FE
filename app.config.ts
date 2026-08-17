@@ -45,6 +45,15 @@ const config: ExpoConfig = {
       },
     ],
     "expo-secure-store",
+    [
+      "expo-image-picker",
+      {
+        photosPermission:
+          "일기 사진 첨부와 프로필 사진 변경을 위해 사진 라이브러리 접근 권한이 필요합니다.",
+        cameraPermission: false,
+        microphonePermission: false,
+      },
+    ],
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
     "./plugins/withFirebaseMessagingManifestFix.js",
