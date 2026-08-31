@@ -49,7 +49,7 @@ const config: ExpoConfig = {
       "expo-image-picker",
       {
         photosPermission:
-          "일기 사진 첨부와 프로필 사진 변경을 위해 사진 라이브러리 접근 권한이 필요합니다.",
+          "선택한 사진은 작성 중인 일기 게시물에 첨부되어 저장되거나, 프로필 사진으로 설정하는 데 사용됩니다. 예를 들어 오늘의 일기에 사진을 추가하거나 마이페이지에서 프로필 사진을 변경할 때 사진 보관함에 접근합니다.",
         cameraPermission: false,
         microphonePermission: false,
       },
