@@ -7,6 +7,7 @@ import TabPlusIcon from "@/assets/icons/tabPlusIcon.svg";
 import TabSettingIcon from "@/assets/icons/tabSettingIcon.svg";
 import TabStatisticIcon from "@/assets/icons/tabStatisticIcon.svg";
 import { useBottomTabBarOffset } from "@/src/hooks/useBottomTabBarHeight";
+import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { cn } from "@/src/lib/cn";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { router } from "expo-router";
@@ -43,6 +44,7 @@ const TAB_BAR_SHADOW_STYLE = {
 export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
   const bottomOffset = useBottomTabBarOffset();
   const [isOpen, setIsOpen] = useState(false);
+  const { requireAuth } = useRequireAuth();
 
   // 애니메이션 값 설정 (0: 닫힘/플러스, 1: 열림/엑스)
   const animationProgress = useSharedValue(0);
@@ -137,7 +139,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
             <Pressable
               onPress={() => {
                 setIsOpen(false);
-                router.push("/schedule");
+                requireAuth(() => router.push("/schedule"));
               }}
               className="mx-auto flex-row items-center justify-center gap-2"
             >
@@ -154,7 +156,7 @@ export function BottomTabBar({ state, navigation }: BottomTabBarProps) {
             <Pressable
               onPress={() => {
                 setIsOpen(false);
-                router.push("/diary/write");
+                requireAuth(() => router.push("/diary/write"));
               }}
               className="mx-auto flex-row items-center justify-center gap-2"
             >

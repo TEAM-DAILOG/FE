@@ -12,6 +12,7 @@ import {
   type ScheduleListModalProps,
 } from "./calendar/ScheduleListModal";
 import { DeleteCategoryModal } from "./category/DeleteCategoryModal";
+import { LoginRequiredModal } from "./auth/LoginRequiredModal";
 import {
   DeleteConfirmModal,
   type DeleteConfirmModalProps,
@@ -64,6 +65,7 @@ export function ModalPage() {
           {...(modalProps as unknown as DeleteConfirmModalProps)}
         />
       ) : null}
+      {modalType === "loginRequiredModal" ? <LoginRequiredModal /> : null}
     </ModalBackground>
   );
 }

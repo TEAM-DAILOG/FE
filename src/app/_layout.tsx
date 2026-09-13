@@ -59,11 +59,6 @@ export default function RootLayout() {
     const rootSegment = segments[0];
     const isAuthRoute = rootSegment === "(auth)";
 
-    if (!isAuthenticated && !isAuthRoute) {
-      router.replace("/login");
-      return;
-    }
-
     if (isAuthenticated && isAuthRoute) {
       router.replace("/(tabs)");
     }
