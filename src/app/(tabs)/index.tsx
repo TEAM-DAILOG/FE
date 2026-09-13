@@ -8,6 +8,7 @@ import { TabScrollView } from "@/src/components/common/TabScrollView";
 import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
 import { useGetTodayQuestion } from "@/src/hooks/queries/ai/useGetTodayQuestion";
 import { useGetSchedules } from "@/src/hooks/queries/schedules/useGetSchedules";
+import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { buildScheduleCheckboxAction } from "@/src/utils/buildScheduleCheckboxAction";
 import { formatScheduleItem } from "@/src/utils/formatScheduleItem";
 import dayjs from "dayjs";
@@ -29,6 +30,7 @@ export default function HomeScreen() {
   const { month, day, weekday } = useDateParts();
   const dateLabel = `${month}월 ${day}일 ${weekday}요일`;
   const [isQuestionAnswered, setIsQuestionAnswered] = useState(false);
+  const { requireAuth } = useRequireAuth();
   const { data: todayQuestion, isLoading: isQuestionLoading } =
     useGetTodayQuestion();
 
@@ -98,7 +100,9 @@ export default function HomeScreen() {
                 ))}
               </View>
             )}
-            <AddScheduleButton onPress={() => router.push("/schedule")} />
+            <AddScheduleButton
+              onPress={() => requireAuth(() => router.push("/schedule"))}
+            />
           </View>
 
           {hasSchedules && (
@@ -136,7 +140,9 @@ export default function HomeScreen() {
                   </View>
                   <Button
                     label="질문 답변하기"
-                    onPress={() => router.push("/diary/write")} // 질문 데이터 전달 필요
+                    onPress={() =>
+                      requireAuth(() => router.push("/diary/write"))
+                    }
                   />
                 </View>
               ) : (

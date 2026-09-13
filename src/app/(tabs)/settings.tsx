@@ -15,6 +15,7 @@ import { useUpdateMe } from "@/src/hooks/mutations/user/useUpdateMe";
 import { useGetAlarmSettings } from "@/src/hooks/queries/alarm/useGetAlarmSettings";
 import { useGetReminderSettings } from "@/src/hooks/queries/alarm/useGetReminderSettings";
 import { useGetMe } from "@/src/hooks/queries/user/useGetMe";
+import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { registerForPushNotificationsAsync } from "@/src/lib/pushNotifications";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import { useToastStore } from "@/src/store/toast/toastStore";
@@ -33,6 +34,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const openModal = useBaseModal((state) => state.openModal);
   const showToast = useToastStore((state) => state.showToast);
+  const { isAuthenticated, requireAuth } = useRequireAuth();
   const logoutMutation = useLogout();
   const withdrawMutation = useWithdraw();
   const changePasswordMutation = useChangePassword();
@@ -40,9 +42,13 @@ export default function SettingsScreen() {
   const [isDiaryWriteEnabled, setIsDiaryWriteEnabled] = useState(false);
   const [isDiaryReplyEnabled, setIsDiaryReplyEnabled] = useState(false);
 
-  const { data: me } = useGetMe();
-  const { data: alarmSettings } = useGetAlarmSettings();
-  const { data: reminderSettings } = useGetReminderSettings();
+  const { data: me } = useGetMe({ enabled: isAuthenticated });
+  const { data: alarmSettings } = useGetAlarmSettings({
+    enabled: isAuthenticated,
+  });
+  const { data: reminderSettings } = useGetReminderSettings({
+    enabled: isAuthenticated,
+  });
   const updateMeMutation = useUpdateMe();
   const patchAlarmSettingsMutation = usePatchAlarmSettings();
   const postPushTokenMutation = usePostPushToken();
@@ -61,29 +67,33 @@ export default function SettingsScreen() {
   }, [alarmSettings]);
 
   const handleChangePushEnabled = (value: boolean) => {
-    patchAlarmSettingsMutation.mutate({ isPush: value });
+    requireAuth(() => {
+      patchAlarmSettingsMutation.mutate({ isPush: value });
 
-    if (value) {
-      registerForPushNotificationsAsync({
-        showSettingsAlertIfDenied: true,
-      })
-        .then((pushToken) => {
-          if (pushToken) {
-            postPushTokenMutation.mutate(pushToken);
-          }
+      if (value) {
+        registerForPushNotificationsAsync({
+          showSettingsAlertIfDenied: true,
         })
-        .catch((error) => {
-          console.error("푸시 토큰 등록 실패", error);
-        });
-    }
+          .then((pushToken) => {
+            if (pushToken) {
+              postPushTokenMutation.mutate(pushToken);
+            }
+          })
+          .catch((error) => {
+            console.error("푸시 토큰 등록 실패", error);
+          });
+      }
+    });
   };
 
   const handleChangeDiaryWriteEnabled = (value: boolean) => {
-    patchAlarmSettingsMutation.mutate({ isDiary: value });
+    requireAuth(() => patchAlarmSettingsMutation.mutate({ isDiary: value }));
   };
 
   const handleChangeDiaryReplyEnabled = (value: boolean) => {
-    patchAlarmSettingsMutation.mutate({ isDiaryReply: value });
+    requireAuth(() =>
+      patchAlarmSettingsMutation.mutate({ isDiaryReply: value })
+    );
   };
 
   const email = me?.email ?? "";
@@ -186,15 +196,20 @@ export default function SettingsScreen() {
                   <BambooLogo width={84} height={84} color="#4D826C" />
                 )}
               </View>
-              <Text className="text-gray-900 text-b-02-m">{nickname}</Text>
+              <Text className="text-gray-900 text-b-02-m">
+                {isAuthenticated ? nickname : "게스트"}
+              </Text>
             </View>
 
             <View className="flex-row items-center gap-2">
               <PillButton
                 label="비밀번호 변경"
-                onPress={openChangePasswordModal}
+                onPress={() => requireAuth(openChangePasswordModal)}
               />
-              <PillButton label="내 정보 수정" onPress={openEditProfileModal} />
+              <PillButton
+                label="내 정보 수정"
+                onPress={() => requireAuth(openEditProfileModal)}
+              />
             </View>
           </View>
 
@@ -210,27 +225,40 @@ export default function SettingsScreen() {
               isDiaryWriteEnabled={isDiaryWriteEnabled}
               onChangeDiaryWriteEnabled={handleChangeDiaryWriteEnabled}
               diaryWriteTimeLabel={diaryWriteTimeLabel}
-              onPressDiaryWriteTime={() => router.push("/alarm")}
+              onPressDiaryWriteTime={() =>
+                requireAuth(() => router.push("/alarm"))
+              }
               isDiaryReplyEnabled={isDiaryReplyEnabled}
               onChangeDiaryReplyEnabled={handleChangeDiaryReplyEnabled}
             />
           </View>
 
           <View className="flex-1 items-start justify-end gap-3 px-4">
-            <Pressable
-              className="border-b border-gray-400 pb-0.5"
-              disabled={logoutMutation.isPending}
-              onPress={handleLogout}
-            >
-              <Text className="text-gray-400 text-b-04-m">로그아웃</Text>
-            </Pressable>
-            <Pressable
-              className="border-b border-gray-400 pb-0.5"
-              disabled={withdrawMutation.isPending}
-              onPress={openDeleteAccountModal}
-            >
-              <Text className="text-gray-400 text-b-04-m">회원탈퇴</Text>
-            </Pressable>
+            {isAuthenticated ? (
+              <>
+                <Pressable
+                  className="border-b border-gray-400 pb-0.5"
+                  disabled={logoutMutation.isPending}
+                  onPress={handleLogout}
+                >
+                  <Text className="text-gray-400 text-b-04-m">로그아웃</Text>
+                </Pressable>
+                <Pressable
+                  className="border-b border-gray-400 pb-0.5"
+                  disabled={withdrawMutation.isPending}
+                  onPress={openDeleteAccountModal}
+                >
+                  <Text className="text-gray-400 text-b-04-m">회원탈퇴</Text>
+                </Pressable>
+              </>
+            ) : (
+              <Pressable
+                className="border-b border-gray-400 pb-0.5"
+                onPress={() => router.push("/login")}
+              >
+                <Text className="text-gray-400 text-b-04-m">로그인</Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </TabScrollView>

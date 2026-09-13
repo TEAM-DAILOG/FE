@@ -120,6 +120,16 @@ export default function LoginScreen() {
               disabled={loginMutation.isPending}
               onPress={handleLogin}
             />
+
+            <Pressable
+              hitSlop={8}
+              className="mt-4 items-center"
+              onPress={() => router.replace("/(tabs)")}
+            >
+              <Text className="text-gray-600 text-b-04-r">
+                게스트 모드로 둘러보기
+              </Text>
+            </Pressable>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
