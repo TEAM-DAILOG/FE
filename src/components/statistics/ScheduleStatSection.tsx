@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 import RightIcon from "@/assets/icons/rightIcon.svg";
+import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { cn } from "@/src/lib/cn";
 
 export type ScheduleStatSectionProps = {
@@ -10,7 +11,8 @@ export type ScheduleStatSectionProps = {
 
 export function ScheduleStatSection({ className }: ScheduleStatSectionProps) {
   const router = useRouter();
-  const goToDetail = () => router.push("/statistic/detail");
+  const { requireAuth } = useRequireAuth();
+  const goToDetail = () => requireAuth(() => router.push("/statistic/detail"));
 
   return (
     <View className={cn("gap-4", className)}>

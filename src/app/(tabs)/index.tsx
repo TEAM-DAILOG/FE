@@ -30,7 +30,7 @@ export default function HomeScreen() {
   const { month, day, weekday } = useDateParts();
   const dateLabel = `${month}월 ${day}일 ${weekday}요일`;
   const [isQuestionAnswered, setIsQuestionAnswered] = useState(false);
-  const { requireAuth } = useRequireAuth();
+  const { isAuthenticated, requireAuth } = useRequireAuth();
   const { data: todayQuestion, isLoading: isQuestionLoading } =
     useGetTodayQuestion();
 
@@ -38,10 +38,13 @@ export default function HomeScreen() {
   const TODAY = dayjs().format("YYYY-MM-DD");
 
   // 오늘 날짜 기준 일정 조회
-  const { data: schedulesData } = useGetSchedules({
-    startDate: TODAY,
-    endDate: TODAY,
-  });
+  const { data: schedulesData } = useGetSchedules(
+    {
+      startDate: TODAY,
+      endDate: TODAY,
+    },
+    { enabled: isAuthenticated }
+  );
   const completeScheduleMutation = useCompleteSchedule();
 
   const pendingVariables = completeScheduleMutation.variables;

@@ -14,10 +14,12 @@ import {
 } from "@/src/components/statistics";
 import { useRegenerateSchedules } from "@/src/hooks/mutations/ai/useRegenerateSchedules";
 import { useGetStats } from "@/src/hooks/queries/stats/useGetStats";
+import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 
 export default function StatisticsScreen() {
   const router = useRouter();
-  const { data } = useGetStats();
+  const { isAuthenticated, requireAuth } = useRequireAuth();
+  const { data } = useGetStats({ enabled: isAuthenticated });
   const recommendedSchedules = data?.recommendedSchedules ?? [];
 
   const regenerateSchedules = useRegenerateSchedules();
@@ -28,14 +30,16 @@ export default function StatisticsScreen() {
     );
     if (!schedule) return;
 
-    router.push({
-      pathname: "/schedule",
-      params: {
-        title: schedule.scheduleTitle,
-        categoryId: String(schedule.categoryId),
-        categoryColor: schedule.categoryColor,
-      },
-    });
+    requireAuth(() =>
+      router.push({
+        pathname: "/schedule",
+        params: {
+          title: schedule.scheduleTitle,
+          categoryId: String(schedule.categoryId),
+          categoryColor: schedule.categoryColor,
+        },
+      })
+    );
   };
 
   return (
@@ -47,7 +51,9 @@ export default function StatisticsScreen() {
           <MonthAchieveCard
             month={data?.lastMonth ?? 0}
             achievementRate={data?.lastMonthCompletionRate ?? 0}
-            onPressIncomplete={() => router.push("/statistic/incomplete")}
+            onPressIncomplete={() =>
+              requireAuth(() => router.push("/statistic/incomplete"))
+            }
           />
 
           <ScheduleStatSection />
@@ -62,8 +68,12 @@ export default function StatisticsScreen() {
               description: schedule.scheduleTitle,
             }))}
             onPressAdd={handleAddSchedule}
-            onPressRefresh={() => regenerateSchedules.mutate()}
-            isRefreshDisabled={regenerateSchedules.isPending}
+            onPressRefresh={() =>
+              requireAuth(() => regenerateSchedules.mutate())
+            }
+            isRefreshDisabled={
+              !isAuthenticated || regenerateSchedules.isPending
+            }
           />
         </View>
       </TabScrollView>
