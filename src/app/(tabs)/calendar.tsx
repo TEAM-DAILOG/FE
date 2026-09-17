@@ -12,6 +12,7 @@ import { useGetCategories } from "@/src/hooks/queries/category/useGetCategories"
 import { useGetDiaries } from "@/src/hooks/queries/diaries/useGetDiaries";
 import { useGetSchedules } from "@/src/hooks/queries/schedules/useGetSchedules";
 import { useUpcomingSchedules } from "@/src/hooks/queries/schedules/useUpcomingSchedules";
+import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { useBaseModal } from "@/src/store/modals/baseModal";
 import type { CalendarMode } from "@/src/types/calendar/calendarGrid.types";
 import type { CategoryColor } from "@/src/types/categories/category.types";
@@ -22,6 +23,7 @@ import { formatScheduleItem } from "@/src/utils/formatScheduleItem";
 export default function CalendarScreen() {
   const router = useRouter();
   const openModal = useBaseModal((state) => state.openModal);
+  const { isAuthenticated, requireAuth } = useRequireAuth();
 
   const [mode, setMode] = useState<CalendarMode>("schedule");
   const [viewMonth, setViewMonth] = useState(() =>
@@ -29,7 +31,9 @@ export default function CalendarScreen() {
   );
 
   // 카테고리 목록 조회
-  const { data: categoriesData } = useGetCategories();
+  const { data: categoriesData } = useGetCategories({
+    enabled: isAuthenticated,
+  });
   const categories = categoriesData ?? [];
 
   // 카테고리별 노출 여부
@@ -50,6 +54,8 @@ export default function CalendarScreen() {
   const { data: schedulesData } = useGetSchedules({
     startDate: dayjs(viewMonth).startOf("month").format("YYYY-MM-DD"),
     endDate: dayjs(viewMonth).endOf("month").format("YYYY-MM-DD"),
+  }, {
+    enabled: isAuthenticated,
   });
   // 노출 카테고리로 필터링한 일정 목록
   const schedules = (schedulesData?.schedules ?? []).filter(isCategoryVisible);
@@ -58,7 +64,10 @@ export default function CalendarScreen() {
   const monthScheduleItems = schedules.map(formatScheduleItem);
 
   // 가까운 일정 목록 조회
-  const { data: upcomingData } = useUpcomingSchedules();
+  const { data: upcomingData, dataUpdatedAt: upcomingDataUpdatedAt } =
+    useUpcomingSchedules({
+      enabled: isAuthenticated,
+    });
 
   // 가까운 일정 목록을 노출 카테고리로 필터링 후 사용 형식에 맞게 변환
   const nearbySchedules = (upcomingData?.schedules ?? [])
@@ -76,7 +85,9 @@ export default function CalendarScreen() {
   }
 
   // 일기 목록 조회
-  const { data: diariesData } = useGetDiaries();
+  const { data: diariesData } = useGetDiaries({
+    enabled: isAuthenticated,
+  });
 
   // 일기 목록을 스레드 탭이 쓰는 형태로 변환
   const threadItems = (diariesData ?? []).map(formatDiaryThreadItem);
@@ -100,10 +111,12 @@ export default function CalendarScreen() {
           (schedule) => schedule.date === date
         ),
         onPressAddSchedule: () =>
-          router.push({
-            pathname: "/schedule",
-            params: { date },
-          }),
+          requireAuth(() =>
+            router.push({
+              pathname: "/schedule",
+              params: { date },
+            })
+          ),
       },
     });
   };
@@ -116,7 +129,9 @@ export default function CalendarScreen() {
         categories={categories}
         selectedCategoryIds={selectedCategoryIds}
         onChangeSelectedCategoryIds={setSelectedCategoryIds}
-        onPressCategorySettings={() => router.push("/category")}
+        onPressCategorySettings={() =>
+          requireAuth(() => router.push("/category"))
+        }
         onPressToggle={() =>
           setMode((prev) => (prev === "schedule" ? "diary" : "schedule"))
         }
@@ -128,6 +143,7 @@ export default function CalendarScreen() {
             onDayPress={(date) => openScheduleListModal(date)}
             getDayInfo={getDayInfo}
             upcomingSchedules={nearbySchedules}
+            upcomingSchedulesDataUpdatedAt={upcomingDataUpdatedAt}
           />
         ) : (
           <DiaryPanel

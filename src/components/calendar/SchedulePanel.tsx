@@ -2,7 +2,6 @@ import { Text, View } from "react-native";
 
 import { CalendarGrid } from "@/src/components/calendar/CalendarGrid";
 import { useCompleteSchedule } from "@/src/hooks/mutations/schedules/useCompleteSchedule";
-import { useUpcomingSchedules } from "@/src/hooks/queries/schedules/useUpcomingSchedules";
 import type { CalendarDayInfo } from "@/src/types/calendar/calendarGrid.types";
 import type { UpcomingSchedule } from "@/src/types/calendar/schedulePanel.types";
 import { getScheduleDday } from "@/src/utils";
@@ -14,6 +13,7 @@ type SchedulePanelProps = {
   onDayPress?: (date: string, isCurrentMonth: boolean) => void;
   getDayInfo?: (date: string, isCurrentMonth: boolean) => CalendarDayInfo;
   upcomingSchedules: UpcomingSchedule[];
+  upcomingSchedulesDataUpdatedAt: number;
 };
 
 export function SchedulePanel({
@@ -21,9 +21,9 @@ export function SchedulePanel({
   onDayPress,
   getDayInfo,
   upcomingSchedules,
+  upcomingSchedulesDataUpdatedAt,
 }: SchedulePanelProps) {
   const completeScheduleMutation = useCompleteSchedule();
-  const { dataUpdatedAt } = useUpcomingSchedules();
 
   const toggleSchedule = (id: string, checked: boolean) => {
     completeScheduleMutation.mutate({
@@ -34,7 +34,7 @@ export function SchedulePanel({
 
   const pendingVariables = completeScheduleMutation.variables;
   const isOptimisticOverrideValid =
-    completeScheduleMutation.submittedAt > dataUpdatedAt;
+    completeScheduleMutation.submittedAt > upcomingSchedulesDataUpdatedAt;
   const isMutationSettled =
     (completeScheduleMutation.isPending ||
       completeScheduleMutation.isSuccess) &&
