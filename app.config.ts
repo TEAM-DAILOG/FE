@@ -54,6 +54,15 @@ const config: ExpoConfig = {
         microphonePermission: false,
       },
     ],
+    [
+      "expo-build-properties",
+      {
+        // Firebase iOS SDK는 Swift로 작성된 모듈을 포함하므로 프레임워크 링크가 필요하다.
+        // withFirebaseDisableSPM으로 CocoaPods 경로를 쓰기 때문에 static이 가능하다.
+        ios: { useFrameworks: "static" },
+      },
+    ],
+    "./plugins/withFirebaseDisableSPM.js",
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
     "./plugins/withFirebaseMessagingManifestFix.js",
